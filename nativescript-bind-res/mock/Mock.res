@@ -1,7 +1,7 @@
-@module("./mock/window") @new
+@module("./window") @new
 external newWindow: unit => Dom.window = "Window"
 
-@module("./mock/window") @val
+@module("./window") @val
 external patchInsertBefore: Dom.window => unit = "patchInsertBefore"
 
 @get
@@ -12,7 +12,7 @@ external hTMLElement: Dom.window => Obj.t = "HTMLElement"
 
 type customElement = {define: (string, Obj.t) => unit}
 
-@val
+@get
 external customElements: Dom.window => customElement = "customElements"
 
 @send

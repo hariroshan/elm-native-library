@@ -2,18 +2,20 @@ type global
 
 type elmModule
 
-type nativeInterface = {
-  tagName: string,
-  make: Obj.t => Obj.t,
-}
-
 type rec context = {
   window: Dom.window,
+  document: Dom.document,
   initElements: context => unit,
   elm: unit => elmModule,
+  flags: Js.Nullable.t<Obj.t>,
+  initPorts: Js.Nullable.t<Obj.t => unit>,
   createFunctions: Obj.t => Obj.t,
-  elements: array<nativeInterface>,
+  elements: array<Types.customElement>,
 }
+
+type htmlElement = {children: array<string>}
+
+type globalDocument = {body: htmlElement}
 
 %%private(
   external global: global = "global"
@@ -21,33 +23,8 @@ type rec context = {
   @set
   external setGlobalDocument: (global, Dom.document) => unit = "document"
 
-  @module("./Main.elm")
-  external elmModule: unit => elmModule = "Elm"
-
-  /* export default function ({ window, app }) {
-  const { HTMLElement, customElements } = window
-  const { mixins, elements } = app
-
-  const mix = (klass, mixin) => mixin(klass)
-  const UIElement = mixins.reduce(mix, HTMLElement)
-
-  elements.forEach(rawElement => {
-    const name = rawElement.tagName
-    const element = rawElement.asElement(UIElement, window)
-    customElements.define(name, element)
-  })
-
-  Application.run({
-    create() {
-      return document.body.children[0].object
-    }
-  })
-} */
-
-  let nativeElements: array<nativeInterface> = [
-    {tagName: TextView.tagName, make: TextView.make},
-    // {tagName: TextView.tagName, make: TextView.make},
-  ]
+  let getRootLayout: unit => NativescriptCore.rootLayout = _ =>
+    %raw(`document.body.children[0].object`)
 
   let initElements = (params: context) => {
     let htmlElement = params.window->Mock.hTMLElement
@@ -58,10 +35,21 @@ type rec context = {
     params.elements->Belt.Array.forEach(element => {
       element.tagName->customElements.define(htmlElement->element.make)
     })
+
+    NativescriptCore.Application.run({
+      create: getRootLayout,
+    })
   }
 )
 
-let start = _ => {
+type config = {
+  elmModule: unit => elmModule,
+  elmModuleName: string,
+  flags: Js.Nullable.t<Obj.t>,
+  initPorts: Js.Nullable.t<Obj.t => unit>,
+}
+
+let start: config => unit = config => {
   let mockWindow = Mock.newWindow()
   mockWindow->Mock.patchInsertBefore
 
@@ -70,9 +58,12 @@ let start = _ => {
 
   let context = {
     window: mockWindow,
+    document,
     initElements,
-    elm: elmModule,
-    elements: nativeElements,
+    flags: config.flags,
+    initPorts: config.initPorts,
+    elm: config.elmModule,
+    elements: Native.allElements,
     createFunctions: CustomElement.createFunctions,
   }
 
@@ -80,15 +71,15 @@ let start = _ => {
   let elmRoot = "elm-root"
 
   let elmInitScript = `
-  const el = elm().Main.init({
-    node: document.getElementById('${elmRoot}')
+  const el = elm().${config.elmModuleName}.init({
+    node: document.getElementById('${elmRoot}'),
+    flags: flags
   })
-  console.log(el)
+  if(initPorts !== undefined || initPorts !== null)
+    initPorts(el.ports)
    `
 
-  let html = `
-     <html><head><title>App</title></head><body><div id='${elmRoot}'></div></body></html>
-   `
+  let html = `<html><head><title>App</title></head><body><div id='${elmRoot}'></div></body></html>`
 
   document->Mock.writeString(html)
 
