@@ -1,12 +1,11 @@
 import Elm from "./Main.elm";
-import App from "../nativescript-bind-res/App.bs"
+import { start } from "../nativescript-bind-res/App.bs"
 
-App.start(
+start(
   {
     elmModule: Elm,
     elmModuleName: "Main",
-    flags: null,
-    initPorts: elmPorts => { }
+    initPorts: _elmPorts => { }
   }
 )
 /*

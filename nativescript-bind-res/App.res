@@ -13,10 +13,6 @@ type rec context = {
   elements: array<Types.customElement>,
 }
 
-type htmlElement = {children: array<string>}
-
-type globalDocument = {body: htmlElement}
-
 %%private(
   external global: global = "global"
 
