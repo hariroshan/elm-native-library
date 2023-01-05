@@ -29,3 +29,7 @@ typings/
 
 # Rescript
 lib
+*.bs.js
+
+# Elm
+elm-stuff

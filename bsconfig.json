@@ -13,5 +13,6 @@
     }
   ],
   "suffix": ".bs.js",
+  "bsc-flags": [],
   "bs-dependencies": []
 }
