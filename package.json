@@ -1,20 +1,25 @@
 {
   "name": "elm-native",
   "main": "app/app.ts",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "res:build": "rescript",
-    "res:dev": "rescript build -w"
+    "res:dev": "rescript build -w",
+    "build:elm": "elm make src/Main.elm --output ./dist/elm.js",
+    "run:ios": "ns run ios",
+    "build:webpack": "webpack --mode development"
   },
   "dependencies": {
     "@nativescript/core": "~8.4.0",
-    "@nativescript/theme": "~3.0.2"
+    "@nativescript/theme": "~3.0.2",
+    "elm": "^0.19.1-5"
   },
   "devDependencies": {
     "@nativescript/types": "~8.4.0",
     "@nativescript/webpack": "~5.0.12",
-    "typescript": "~4.8.4",
-    "rescript": "^10.0.1"
+    "elm-webpack-loader": "^8.0.0",
+    "rescript": "^10.0.1",
+    "typescript": "~4.8.4"
   }
 }
