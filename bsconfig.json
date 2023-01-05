@@ -2,7 +2,7 @@
   "name": "elm-native",
   "sources": [
     {
-      "dir": "src",
+      "dir": "bind-res",
       "subdirs": true
     }
   ],

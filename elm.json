@@ -1,7 +1,7 @@
 {
     "type": "application",
     "source-directories": [
-        "src"
+        "bind-elm"
     ],
     "elm-version": "0.19.1",
     "dependencies": {
