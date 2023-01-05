@@ -268,6 +268,24 @@
   resolved "https://registry.yarnpkg.com/@nativescript/theme/-/theme-3.0.2.tgz#9584ad8988dea937f0f32629b80954de886c6c20"
   integrity sha512-ypwYyasTFRWbaxNwdqXgql9MUZsq82Stgd+zj4LEjp5cBQPPIWFeJ8uxWdtbpjHjjuTWYW/FCMmnuayOF7uK/g==
 
+"@nativescript/types-android@~8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@nativescript/types-android/-/types-android-8.4.0.tgz#2fa1325f43cd1343e53ddc51ef0ad1b42297c433"
+  integrity sha512-WmDVH72ZeBlxy7k5OAJFk7wPSW9K2xjRzFwHAkQ1mjKr7k+UcFzGkpbAXjtgQZ5SybBPCzYGLGcvv7kJDNJ/mQ==
+
+"@nativescript/types-ios@~8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@nativescript/types-ios/-/types-ios-8.4.0.tgz#4c0a0ee1d4f5e9ce237a768a6f8797a24723b13f"
+  integrity sha512-6Sx4yuSar2qk4UpYtZCs9B53Jv0wLRGvrg6Vsg5tC8mdYeQOKsizNxPa625pHbFrNjTF8NkdoGOGZiFM/XkiOQ==
+
+"@nativescript/types@~8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@nativescript/types/-/types-8.4.0.tgz#7b68c25ce1971b5ad37004c250d648bf9ef4a764"
+  integrity sha512-AsHLbzYi/3rNAQYxG5etVlTiq96KG+RHJ+UgZ3zynER4vw+mLN6TkVJ9hR6ciKMfFhQBM0JZvxBuHqm3xmlRzw==
+  dependencies:
+    "@nativescript/types-android" "~8.4.0"
+    "@nativescript/types-ios" "~8.4.0"
+
 "@nativescript/webpack@~5.0.12":
   version "5.0.12"
   resolved "https://registry.yarnpkg.com/@nativescript/webpack/-/webpack-5.0.12.tgz#7fb73f6cc2bd622ef1df39374590d46d1831aca3"
@@ -2270,6 +2288,11 @@ tslib@^2.0.0:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.1.tgz#0d0bfbaac2880b91e22df0768e55be9753a5b17e"
   integrity sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==
+
+typescript@~4.8.4:
+  version "4.8.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
+  integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
 
 universalify@^2.0.0:
   version "2.0.0"
