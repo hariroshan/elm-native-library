@@ -9,7 +9,7 @@ type rec context = {
   elm: unit => elmModule,
   flags: Js.Nullable.t<Obj.t>,
   initPorts: Js.Nullable.t<Obj.t => unit>,
-  createFunctions: Obj.t => Obj.t,
+  withCustomElements: (. Obj.t, Types.handler) => Obj.t,
   elements: array<Types.customElement>,
 }
 
@@ -20,16 +20,15 @@ type rec context = {
   external setGlobalDocument: (global, Dom.document) => unit = "document"
 
   let getRootLayout: unit => NativescriptCore.rootLayout = _ =>
-    %raw(`document.body.children[0].object`)
+    %raw(`document.body.children[0].data`)
 
   let initElements = (params: context) => {
     let htmlElement = params.window->Mock.hTMLElement
     let customElements = params.window->Mock.customElements
 
-    htmlElement->params.createFunctions->ignore
-
     params.elements->Belt.Array.forEach(element => {
-      element.tagName->customElements.define(htmlElement->element.make)
+      let newClass = params.withCustomElements(. htmlElement, element.handler)
+      customElements.define(. element.tagName, newClass)
     })
 
     NativescriptCore.Application.run({
@@ -60,10 +59,10 @@ let start: config => unit = config => {
     initPorts: config.initPorts,
     elm: config.elmModule,
     elements: Native.allElements,
-    createFunctions: CustomElement.createFunctions,
+    withCustomElements: CustomElement.withCustomElements,
   }
 
-  let defineCustomElements = `initElements({window, createFunctions, elements})`
+  let defineCustomElements = `initElements({window, withCustomElements, elements})`
   let elmRoot = "elm-root"
 
   let elmInitScript = `

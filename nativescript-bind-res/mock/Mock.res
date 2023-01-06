@@ -10,7 +10,7 @@ external document: Dom.window => Dom.document = "document"
 @get
 external hTMLElement: Dom.window => Obj.t = "HTMLElement"
 
-type customElement = {define: (string, Obj.t) => unit}
+type customElement = {define: (. string, Obj.t) => unit}
 
 @get
 external customElements: Dom.window => customElement = "customElements"

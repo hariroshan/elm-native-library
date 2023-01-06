@@ -1,18 +1,18 @@
 import Document from "./document";
-import Node_1 from "happy-dom/lib/nodes/node/Node";
-import CustomEvent_1 from "happy-dom/lib/event/events/CustomEvent";
-import HTMLElement_1 from "happy-dom/lib/nodes/html-element/HTMLElement";
-import CustomElementRegistry_1 from "happy-dom/lib/custom-element/CustomElementRegistry";
-import EventTarget_1 from "happy-dom/lib/event/EventTarget";
+const Node_1 = require("../../node_modules/happy-dom/lib/nodes/node/Node");
+const CustomEvent_1 = require("../../node_modules/happy-dom/lib/event/events/CustomEvent");
+const HTMLElement_1 = require("../../node_modules/happy-dom/lib/nodes/html-element/HTMLElement");
+const CustomElementRegistry_1 = require("../../node_modules/happy-dom/lib/custom-element/CustomElementRegistry");
+const EventTarget_1 = require("../../node_modules/happy-dom/lib/event/EventTarget");
 
-export class Window extends EventTarget_1 {
+export class Window extends EventTarget_1.default {
   constructor() {
     super();
-    this.Node = Node_1;
-    this.CustomEvent = CustomEvent_1;
-    this.HTMLElement = HTMLElement_1;
-    this.customElements = new CustomElementRegistry_1();
-    const document = new Document(this)
+    this.Node = Node_1.default;
+    this.CustomEvent = CustomEvent_1.default;
+    this.HTMLElement = HTMLElement_1.default;
+    this.customElements = new CustomElementRegistry_1.default();
+    const document =  new Document(this)
     this.document = document;
   }
 }

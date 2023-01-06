@@ -1,4 +1,4 @@
-declare module "App.bs" {
+declare module "App.bs.js" {
   type port = any
   type config = {
     elmModule: () => any,

@@ -1,24 +1,27 @@
 "use strict";
-const Element_1 = (require("happy-dom/lib/nodes/element/Element"));
-const HTMLUnknownElement_1 = (require("happy-dom/lib/nodes/html-unknown-element/HTMLUnknownElement"));
-const Text_1 = (require("happy-dom/lib/nodes/text/Text"));
-const Comment_1 = (require("happy-dom/lib/nodes/comment/Comment"));
-const Node_1 = (require("happy-dom/lib/nodes/node/Node"));
-const TreeWalker_1 = (require("happy-dom/lib/tree-walker/TreeWalker"));
-const DocumentFragment_1 = (require("happy-dom/lib/nodes/document-fragment/DocumentFragment"));
-const XMLParser_1 = (require("happy-dom/lib/xml-parser/XMLParser"));
-const Event_1 = (require("happy-dom/lib/event/Event"));
-const DOMImplementation_1 = (require("happy-dom/lib/dom-implementation/DOMImplementation"));
-const Attr_1 = (require("happy-dom/lib/attribute/Attr"));
-const NamespaceURI_1 = (require("happy-dom/lib/config/NamespaceURI"));
-const DocumentType_1 = (require("happy-dom/lib/nodes/document-type/DocumentType"));
-const ParentNodeUtility_1 = (require("happy-dom/lib/nodes/parent-node/ParentNodeUtility"));
-const QuerySelector_1 = (require("happy-dom/lib/query-selector/QuerySelector"));
-const DOMException_1 = (require("happy-dom/lib/exception/DOMException"));
-const HTMLCollectionFactory_1 = (require("happy-dom/lib/nodes/element/HTMLCollectionFactory"));
-const DocumentReadyStateEnum_1 = (require("happy-dom/lib/nodes/document/DocumentReadyStateEnum"));
-const DocumentReadyStateManager_1 = (require("happy-dom/lib/nodes/document/DocumentReadyStateManager"));
-const Selection_1 = (require("happy-dom/lib/selection/Selection"));
+const Element_1 = (require("../../node_modules/happy-dom/lib/nodes/element/Element"));
+const HTMLUnknownElement_1 = (require("../../node_modules/happy-dom/lib/nodes/html-unknown-element/HTMLUnknownElement"));
+const Text_1 = (require("../../node_modules/happy-dom/lib/nodes/text/Text"));
+const Comment_1 = (require("../../node_modules/happy-dom/lib/nodes/comment/Comment"));
+const Node_1 = (require("../../node_modules/happy-dom/lib/nodes/node/Node"));
+const TreeWalker_1 = (require("../../node_modules/happy-dom/lib/tree-walker/TreeWalker"));
+const DocumentFragment_1 = (require("../../node_modules/happy-dom/lib/nodes/document-fragment/DocumentFragment"));
+const XMLParser_1 = (require("../../node_modules/happy-dom/lib/xml-parser/XMLParser"));
+const Event_1 = (require("../../node_modules/happy-dom/lib/event/Event"));
+const DOMImplementation_1 = (require("../../node_modules/happy-dom/lib/dom-implementation/DOMImplementation"));
+
+// const ElementTag_1 = (require("../../node_modules/happy-dom/lib/config/ElementTag"));
+
+const Attr_1 = (require("../../node_modules/happy-dom/lib/attribute/Attr"));
+const NamespaceURI_1 = (require("../../node_modules/happy-dom/lib/config/NamespaceURI"));
+const DocumentType_1 = (require("../../node_modules/happy-dom/lib/nodes/document-type/DocumentType"));
+const ParentNodeUtility_1 = (require("../../node_modules/happy-dom/lib/nodes/parent-node/ParentNodeUtility"));
+const QuerySelector_1 = (require("../../node_modules/happy-dom/lib/query-selector/QuerySelector"));
+const DOMException_1 = (require("../../node_modules/happy-dom/lib/exception/DOMException"));
+const HTMLCollectionFactory_1 = (require("../../node_modules/happy-dom/lib/nodes/element/HTMLCollectionFactory"));
+const DocumentReadyStateEnum_1 = (require("../../node_modules/happy-dom/lib/nodes/document/DocumentReadyStateEnum"));
+const DocumentReadyStateManager_1 = (require("../../node_modules/happy-dom/lib/nodes/document/DocumentReadyStateManager"));
+const Selection_1 = (require("../../node_modules/happy-dom/lib/selection/Selection"));
 /**
  * Document.
  */
