@@ -26,6 +26,7 @@ type NavPage
 
 type alias Model =
     { count : Int
+    , current : NavPage
     , next : Maybe NavPage
     , history : List NavPage
     }
@@ -37,7 +38,11 @@ init =
         _ =
             Debug.log "HEllo from ELM" "World"
     in
-    { count = 0, history = [ Details ], next = Nothing  }
+    { count = 0
+    , current = Details
+    , history = [ Details ]
+    , next = Just Details
+    }
 
 
 type Msg
@@ -74,9 +79,7 @@ update msg model =
 
 detailsPage : Model -> Page.Page Msg
 detailsPage _ =
-    Page.page [
-        -- Event.on "navigatedTo" (D.succeed Destory)
-        ]
+    Page.page [  ] -- Event.on "navigatedTo" (D.succeed Destory)
         (rootLayout []
             [ Native.label [ Native.Attributes.text "Hello from elm" ] []
             ]
@@ -85,8 +88,7 @@ detailsPage _ =
 
 view : Model -> Html Msg
 view model =
-    Frame.frame
-        model
+    Frame.frame model
         [ ( Details, detailsPage )
         ]
         []

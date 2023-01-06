@@ -1,6 +1,6 @@
 {
   "name": "elm-native",
-  "main": "src/index.js",
+  "main": "src/app.js",
   "version": "0.1.0",
   "private": true,
   "scripts": {

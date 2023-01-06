@@ -8,20 +8,20 @@ type Frame msg
     = Frame (Html msg)
 
 
-frame : { a | next : Maybe page, history : List page } -> List ( page, { a | next : Maybe page, history : List page } -> Page msg ) -> List (Attribute msg) -> Frame msg
+frame : { a | current : page, next : Maybe page, history : List page } -> List ( page, { a | current : page, next : Maybe page, history : List page } -> Page msg ) -> List (Attribute msg) -> Frame msg
 frame model pages attrs =
     Frame
         (Html.node "ns-frame"
             attrs
-            (model.history
-                |> List.foldl
-                    (\next acc ->
+            (   -- model.history
+                -- |> List.foldl
+                --     (\next acc ->
                         pages
-                            |> getPage next model
-                            |> Maybe.map (\x -> x :: acc)
-                            |> Maybe.withDefault acc
-                    )
-                    []
+                            |> getPage model.current model
+                            |> Maybe.map (List.singleton)
+                            |> Maybe.withDefault []
+                --     )
+                --     []
             )
          -- ([ pages
          --     |> getPage model.current model

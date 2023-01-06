@@ -5,7 +5,6 @@ export const withCustomElements = (UIElement, handler) =>
       super()
       this.handler = handler
       this.data = this.handler.init()
-      console.log(`${this.tagName} created`)
     }
     static get observedAttributes() {
       return handler.observedAttributes
