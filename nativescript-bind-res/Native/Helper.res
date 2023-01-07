@@ -34,7 +34,7 @@ external typeOf: 'a => string = "typeof"
 
 let getPropsForObject: Obj.t => array<string> = %raw(`
   function(object){
-    let arr = []
+    const arr = []
     for (var prop in object) {
       if (prop.startsWith("_")) continue
       if (typeof object[prop] === "function") continue
@@ -43,6 +43,8 @@ let getPropsForObject: Obj.t => array<string> = %raw(`
     return arr
   }
   `)
+
+
 
 let addView: (. 'a, 'b) => unit = %raw(`
     function(parentElement, thisElement) {

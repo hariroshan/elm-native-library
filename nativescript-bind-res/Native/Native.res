@@ -2,15 +2,12 @@ module Frame = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "Frame"
-    let frame = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(frame))
-    frame.destroyNode(.)
   )
   let tagName = "ns-frame"
 
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.frameBase,
     update: NativescriptCore.update,
     render: Js.Nullable.null,
     pageAdded: Js.Nullable.return((. current: Types.this) => {
@@ -36,15 +33,12 @@ module Page = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "Page"
-    let page = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(page))
-    page.destroyNode(.)
   )
 
   let tagName = "ns-page"
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.pageBase,
     update: NativescriptCore.update,
     render: Js.Nullable.return((. current: Types.this, nativeObject) => {
       // page should have one child which is a layout

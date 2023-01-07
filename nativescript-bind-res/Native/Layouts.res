@@ -14,15 +14,12 @@ module AbsoluteLayout = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "AbsoluteLayout"
-    let layout = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(layout))
-    layout.destroyNode(.)
   )
 
   let tagName = "ns-absolute-layout"
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.layoutBase,
     render,
     pageAdded: Js.Nullable.null,
     update: NativescriptCore.update,
@@ -36,15 +33,12 @@ module DockLayout = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "DockLayout"
-    let layout = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(layout))
-    layout.destroyNode(.)
   )
 
   let tagName = "ns-dock-layout"
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.dockLayout,
     render,
     pageAdded: Js.Nullable.null,
     update: NativescriptCore.update,
@@ -58,15 +52,12 @@ module GridLayout = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "GridLayout"
-    let layout = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(layout))
-    layout.destroyNode(.)
   )
 
   let tagName = "ns-grid-layout"
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.layoutBase,
     render,
     pageAdded: Js.Nullable.null,
     update: NativescriptCore.update,
@@ -80,15 +71,12 @@ module StackLayout = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "StackLayout"
-    let layout = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(layout))
-    layout.destroyNode(.)
   )
 
   let tagName = "ns-stack-layout"
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.stackLayout,
     render,
     pageAdded: Js.Nullable.null,
     update: NativescriptCore.update,
@@ -102,15 +90,12 @@ module RootLayout = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "RootLayout"
-    let layout = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(layout))
-    layout.destroyNode(.)
   )
 
   let tagName = "ns-root-layout"
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.layoutBase,
     render,
     pageAdded: Js.Nullable.null,
     update: NativescriptCore.update,
@@ -124,15 +109,12 @@ module WrapLayout = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "WrapLayout"
-    let layout = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(layout))
-    layout.destroyNode(.)
   )
 
   let tagName = "ns-wrap-layout"
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.wrapLayout,
     render,
     pageAdded: Js.Nullable.null,
     update: NativescriptCore.update,
@@ -146,15 +128,12 @@ module FlexboxLayout = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "FlexboxLayout"
-    let layout = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(layout))
-    layout.destroyNode(.)
   )
 
   let tagName = "ns-flexbox-layout"
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.flexboxLayout,
     render,
     pageAdded: Js.Nullable.null,
     update: NativescriptCore.update,

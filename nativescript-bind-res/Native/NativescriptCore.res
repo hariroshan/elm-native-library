@@ -7,8 +7,9 @@ module Application = {
   external run: config => unit = "run"
 }
 
-let update = (. nativeObject, attr, newValue) =>
-  nativeObject->Obj.magic->Helper.update(attr, newValue)
+let update = (. nativeObject, attr, newValue) => {
+  nativeObject->Obj.magic->Helper.update(Constants.camelCased(attr), newValue)
+}
 
 let dispose = (. nativeObject: Types.nativeObject) => nativeObject.destroyNode(.)
 

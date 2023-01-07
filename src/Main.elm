@@ -81,13 +81,37 @@ helloWorld count =
     Native.label [ Native.Attributes.text ("count " ++ String.fromInt count) ] []
 
 
+
+--     helloWorld model.count
+-- , Native.button [ Native.Attributes.text "Tap", Event.on "tap" (D.succeed Inc) ] []
+
+
 detailsPage : Model -> Page.Page Msg
 detailsPage model =
     Page.page []
         -- Event.on "navigatedTo" (D.succeed Destory)
-        (Layout.stackLayout []
-            [ helloWorld model.count
-            , Native.button [ Native.Attributes.text "Tap", Event.on "tap" (D.succeed Inc) ] []
+        (Layout.flexboxLayout
+            [ Native.Attributes.flexDirection "column"
+            , Native.Attributes.backgroundColor "#3c495e"
+            ]
+            [ Native.label
+                [ Native.Attributes.text "first"
+                , Native.Attributes.backgroundColor "#43b883"
+                , Native.Attributes.width "70"
+                ]
+                []
+            , Native.label
+                [ Native.Attributes.text "second"
+                , Native.Attributes.backgroundColor "#1c6b48"
+                , Native.Attributes.width "70"
+                ]
+                []
+            , Native.label
+                [ Native.Attributes.text "third"
+                , Native.Attributes.backgroundColor "#289062"
+                , Native.Attributes.width "70"
+                ]
+                []
             ]
         )
 
@@ -96,11 +120,8 @@ view : Model -> Html Msg
 view model =
     detailsPage model
         |> Page.unwrap
-
-
-
--- Frame.frame model
---     [ ( Details, detailsPage )
---     ]
---     []
---     |> Frame.root
+    -- Frame.frame model
+    --     [ ( Details, detailsPage )
+    --     ]
+    --     []
+    --     |> Frame.root

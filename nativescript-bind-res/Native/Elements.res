@@ -2,15 +2,12 @@ module Label = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "Label"
-    let label = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(label))
-    label.destroyNode(.)
   )
   let tagName = "ns-label"
 
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.textBase,
     render: Js.Nullable.return((. current: Types.this, _) =>
       Helper.addView(. current.parentElement, current)
     ),
@@ -26,15 +23,12 @@ module Button = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "Button"
-    let button = new()
-    let attributes = Helper.getPropsForObject(Obj.magic(button))
-    button.destroyNode(.)
   )
   let tagName = "ns-button"
 
   let handler: Types.handler = {
     init: (. ()) => new(),
-    observedAttributes: attributes,
+    observedAttributes: Constants.button,
     render: Js.Nullable.return((. current: Types.this, _) =>
       Helper.addView(. current.parentElement, current)
     ),
