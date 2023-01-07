@@ -2,5 +2,6 @@
 @import '@nativescript/theme/css/default.css';
 
 Label {
-  font-size: 25;
+  font-size: 23;
+  color: red;
 }

@@ -14,10 +14,17 @@ module Frame = {
     update: NativescriptCore.update,
     render: Js.Nullable.null,
     pageAdded: Js.Nullable.return((. current: Types.this) => {
-      current.data->Types.navigate({
-        create: _ =>
-          (current.children->Array.unsafe_get(current.children->Array.length - 1)).data,
-      })
+      current.data
+      ->Js.Nullable.toOption
+      ->Belt.Option.forEach(data =>
+        data->Types.navigate({
+          create: _ =>
+            current.children
+            ->Belt.Array.get(current.children->Array.length - 1)
+            ->Belt.Option.flatMap(x => x.data->Js.Nullable.toOption)
+            ->Belt.Option.getWithDefault(data),
+        })
+      )
     }),
     dispose: NativescriptCore.dispose,
     addEventListener: NativescriptCore.addEventListener,
@@ -41,11 +48,15 @@ module Page = {
     update: NativescriptCore.update,
     render: Js.Nullable.return((. current: Types.this, nativeObject) => {
       // page should have one child which is a layout
-      nativeObject->Types.setContent((current.children->Array.unsafe_get(0)).data)
+      current.children
+      ->Belt.Array.get(0)
+      ->Belt.Option.flatMap(x => x.data->Js.Nullable.toOption)
+      ->Belt.Option.forEach(data => nativeObject->Types.setContent(data))
 
       Types.requestAnimationFrame(._ => {
-        current.parentElement.handler.pageAdded
+        current.parentElement.handler
         ->Js.Nullable.toOption
+        ->Belt.Option.flatMap(handler => handler.pageAdded->Js.Nullable.toOption)
         ->Belt.Option.forEach(fx => fx(. current.parentElement))
       })
     }),

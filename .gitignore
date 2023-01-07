@@ -30,6 +30,7 @@ typings/
 # Rescript
 lib
 *.bs.js
+.bsb.lock
 
 # Elm
 elm-stuff

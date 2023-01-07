@@ -46,6 +46,7 @@ let getPropsForObject: Obj.t => array<string> = %raw(`
 
 let addView: (. 'a, 'b) => unit = %raw(`
     function(parentElement, thisElement) {
+        if (parentElement.data == null) return
         requestAnimationFrame(() => {
             const children = Array.from(parentElement.children)
             const hasActionBar = children.some(x =>

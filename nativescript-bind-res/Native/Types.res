@@ -37,8 +37,8 @@ and this = {
   style: string,
   constructor: constructor,
   parentElement: this,
-  handler: handler,
-  data: nativeObject,
+  handler: Js.Nullable.t<handler>,
+  data: Js.Nullable.t<nativeObject>,
   children: array<this>,
   navigate: this => unit,
 }

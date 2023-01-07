@@ -7,7 +7,7 @@ import Native
 import Native.Attributes
 import Native.Event as Event
 import Native.Frame as Frame
-import Native.Layout exposing (rootLayout)
+import Native.Layout as Layout exposing (rootLayout)
 import Native.Page as Page
 
 
@@ -34,10 +34,6 @@ type alias Model =
 
 init : Model
 init =
-    let
-        _ =
-            Debug.log "HEllo from ELM" "World"
-    in
     { count = 0
     , current = Details
     , history = [ Details ]
@@ -48,8 +44,11 @@ init =
 type Msg
     = Inc
     | Dec
-    | GoToDetails
-    | Destory
+
+
+
+-- | GoToDetails
+-- | Destory
 
 
 update : Msg -> Model -> Model
@@ -61,35 +60,47 @@ update msg model =
         Inc ->
             { model | count = model.count + 1 }
 
-        GoToDetails ->
-            { model | history = Details :: model.history, next = Just Details }
 
-        Destory ->
-            { model
-                | next = Nothing
-                , history =
-                    case model.next of
-                        Nothing ->
-                            model.history |> List.drop 1
 
-                        Just _ ->
-                            model.history
-            }
+-- GoToDetails ->
+--     { model | history = Details :: model.history, next = Just Details }
+-- Destory ->
+--     { model
+--         | next = Nothing
+--         , history =
+--             case model.next of
+--                 Nothing ->
+--                     model.history |> List.drop 1
+--                 Just _ ->
+--                     model.history
+--     }
+
+
+helloWorld : Int -> Html msg
+helloWorld count =
+    Native.label [ Native.Attributes.text ("count " ++ String.fromInt count) ] []
 
 
 detailsPage : Model -> Page.Page Msg
-detailsPage _ =
-    Page.page [  ] -- Event.on "navigatedTo" (D.succeed Destory)
-        (rootLayout []
-            [ Native.label [ Native.Attributes.text "Hello from elm" ] []
+detailsPage model =
+    Page.page []
+        -- Event.on "navigatedTo" (D.succeed Destory)
+        (Layout.stackLayout []
+            [ helloWorld model.count
+            , Native.button [ Native.Attributes.text "Tap", Event.on "tap" (D.succeed Inc) ] []
             ]
         )
 
 
 view : Model -> Html Msg
 view model =
-    Frame.frame model
-        [ ( Details, detailsPage )
-        ]
-        []
-        |> Frame.root
+    detailsPage model
+        |> Page.unwrap
+
+
+
+-- Frame.frame model
+--     [ ( Details, detailsPage )
+--     ]
+--     []
+--     |> Frame.root
