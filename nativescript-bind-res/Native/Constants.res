@@ -200,22 +200,22 @@ let pageBase =
     ]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
-Js.log("****************************")
-[
-  "accessibilityAnnouncePageEnabled",
-  "actionBarHidden",
-  "androidStatusBarBackground",
-  "backgroundSpanUnderStatusBar",
-  "enableSwipeBackNavigation",
-  "statusBarStyle",
-]
-->Belt.Array.map(dashed)
-->Belt.Array.forEach(prop =>
-  Js.log(
-    `
-${camelCased(prop)} =  attribute "${prop}"
-    `,
-  )
-)
+// Js.log("****************************")
+// [
+//   "accessibilityAnnouncePageEnabled",
+//   "actionBarHidden",
+//   "androidStatusBarBackground",
+//   "backgroundSpanUnderStatusBar",
+//   "enableSwipeBackNavigation",
+//   "statusBarStyle",
+// ]
+// ->Belt.Array.map(dashed)
+// ->Belt.Array.forEach(prop =>
+//   Js.log(
+//     `
+// ${camelCased(prop)} =  attribute "${prop}"
+//     `,
+//   )
+// )
 
-Js.log("****************************")
+// Js.log("****************************")

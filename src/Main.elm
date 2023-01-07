@@ -78,7 +78,12 @@ update msg model =
 
 helloWorld : Int -> Html msg
 helloWorld count =
-    Native.label [ Native.Attributes.text ("count " ++ String.fromInt count) ] []
+    Native.label
+        [ Native.Attributes.text (String.fromInt count)
+        , Native.Attributes.color "red"
+        , Native.Attributes.fontSize "32"
+        ]
+        []
 
 
 
@@ -89,29 +94,34 @@ helloWorld count =
 detailsPage : Model -> Page.Page Msg
 detailsPage model =
     Page.page []
-        -- Event.on "navigatedTo" (D.succeed Destory)
-        (Layout.flexboxLayout
-            [ Native.Attributes.flexDirection "column"
-            , Native.Attributes.backgroundColor "#3c495e"
-            ]
-            [ Native.label
-                [ Native.Attributes.text "first"
-                , Native.Attributes.backgroundColor "#43b883"
-                , Native.Attributes.width "70"
+        (Layout.stackLayout []
+            [ -- Event.on "navigatedTo" (D.succeed Destory)
+              Native.label
+                [ Native.Attributes.text "Elm Counter"
+                , Native.Attributes.textAlignment "center"
+                , Native.Attributes.color "#610fc8"
+                , Native.Attributes.fontSize "40"
                 ]
                 []
-            , Native.label
-                [ Native.Attributes.text "second"
-                , Native.Attributes.backgroundColor "#1c6b48"
-                , Native.Attributes.width "70"
-                ]
-                []
-            , Native.label
-                [ Native.Attributes.text "third"
-                , Native.Attributes.backgroundColor "#289062"
-                , Native.Attributes.width "70"
-                ]
-                []
+            , Layout.asElement <|
+                Layout.flexboxLayout
+                    [ Native.Attributes.justifyContent "space-between"
+                    , Native.Attributes.height "70%"
+                    ]
+                    [ Native.button
+                        [ Native.Attributes.text "Increment"
+                        , Event.on "tap" (D.succeed Inc)
+                        , Native.Attributes.fontSize "24"
+                        ]
+                        []
+                    , helloWorld model.count
+                    , Native.button
+                        [ Native.Attributes.text "Decrement"
+                        , Event.on "tap" (D.succeed Dec)
+                        , Native.Attributes.fontSize "24"
+                        ]
+                        []
+                    ]
             ]
         )
 
@@ -120,8 +130,11 @@ view : Model -> Html Msg
 view model =
     detailsPage model
         |> Page.unwrap
-    -- Frame.frame model
-    --     [ ( Details, detailsPage )
-    --     ]
-    --     []
-    --     |> Frame.root
+
+
+
+-- Frame.frame model
+--     [ ( Details, detailsPage )
+--     ]
+--     []
+--     |> Frame.root
