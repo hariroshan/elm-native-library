@@ -149,6 +149,26 @@ module SearchBar = {
   let handler: Types.handler = buildHandler(new, Constants.searchBar, Helper.addView)
 }
 
+module SegmentedBar = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "SegmentedBar"
+  )
+  let tagName = "ns-segmented-bar"
+
+  let handler: Types.handler = buildHandler(new, Constants.segmentedBar, Helper.addView)
+}
+
+module SegmentedBarItem = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "SegmentedBarItem"
+  )
+  let tagName = "ns-segmented-bar-item"
+
+  let handler: Types.handler = buildHandler(new, Constants.segmentedBarItem, Helper.addItems)
+}
+
 let all: array<Types.customElement> = [
   {
     tagName: Label.tagName,
@@ -197,5 +217,13 @@ let all: array<Types.customElement> = [
   {
     tagName: SearchBar.tagName,
     handler: SearchBar.handler,
+  },
+  {
+    tagName: SegmentedBar.tagName,
+    handler: SegmentedBar.handler,
+  },
+  {
+    tagName: SegmentedBarItem.tagName,
+    handler: SegmentedBarItem.handler,
   },
 ]

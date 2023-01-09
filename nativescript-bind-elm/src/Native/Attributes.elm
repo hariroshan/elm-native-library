@@ -908,3 +908,15 @@ textFieldBackgroundColor =
 textFieldHintColor : String -> Attribute msg
 textFieldHintColor =
     attribute "text-field-hint-color"
+
+
+title : String -> Attribute msg
+title =
+    attribute "title"
+
+
+selectedBackgroundColor : String -> Attribute msg
+selectedBackgroundColor =
+    attribute "selected-background-color"
+
+

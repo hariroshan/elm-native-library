@@ -1,4 +1,4 @@
-module Native exposing (activityIndicator, button, datePicker, formattedString, htmlView, image, label, listPicker, progress, scrollView, span, searchBar)
+module Native exposing (activityIndicator, button, datePicker, formattedString, htmlView, image, label, listPicker, progress, scrollView, span, searchBar, segmentedBar, segmentedBarItem)
 
 import Html exposing (Attribute, Html)
 
@@ -66,3 +66,12 @@ scrollView =
 searchBar : List (Attribute msg) -> List (Html msg) -> Html msg
 searchBar =
     buildElement "ns-search-bar"
+
+segmentedBar : List (Attribute msg) -> List (Html msg) -> Html msg
+segmentedBar =
+    buildElement "ns-segmented-bar"
+
+
+segmentedBarItem : List (Attribute msg) -> List (Html msg) -> Html msg
+segmentedBarItem =
+    buildElement "ns-segmented-bar-item"

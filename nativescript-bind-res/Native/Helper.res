@@ -71,6 +71,20 @@ let addSpan: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     }
     `)
 
+
+let addItems: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
+    function(parentElement, thisElement) {
+        if (parentElement.data == null) return
+        requestAnimationFrame(() => {
+            const children = Array.from(parentElement.children)
+            const index = children.indexOf(thisElement)
+            if (parentElement.data.items == null)
+              return (parentElement.data.items = [thisElement.data])
+
+            parentElement.data.items.push(thisElement.data)
+        })
+    }
+    `)
 let dbg = x => {
   Js.log(x)
   x

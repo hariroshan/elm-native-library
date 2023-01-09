@@ -270,15 +270,23 @@ let searchBar =
     ["hint", "text", "textFieldBackgroundColor", "textFieldHintColor"]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
-Js.log("****************************")
-["hint", "text", "textFieldBackgroundColor", "textFieldHintColor"]
-->Belt.Array.map(dashed)
-->Belt.Array.forEach(prop =>
-  Js.log(
-    `
-${camelCased(prop)} =  attribute "${prop}"
-    `,
-  )
-)
+let segmentedBarItem = [view, ["title"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
-Js.log("****************************")
+let segmentedBar =
+  [
+    view,
+    ["selectedBackgroundColor", "selectedIndex"]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
+
+// Js.log("****************************")
+// ["hint", "text", "textFieldBackgroundColor", "textFieldHintColor"]
+// ->Belt.Array.map(dashed)
+// ->Belt.Array.forEach(prop =>
+//   Js.log(
+//     `
+// ${camelCased(prop)} =  attribute "${prop}"
+//     `,
+//   )
+// )
+
+// Js.log("****************************")

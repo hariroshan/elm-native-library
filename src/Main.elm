@@ -188,13 +188,13 @@ counter model =
                 ]
                 []
 
-            , Native.listPicker
-                [ E.list E.string
-                    [ "2022", "2021", "2020" ]
-                    |> NA.items
-                , NA.selectedIndex "1"
-                ]
-                []
+        , Native.listPicker
+            [ E.list E.string
+                [ "2022", "2021", "2020" ]
+                |> NA.items
+            , NA.selectedIndex "1"
+            ]
+            []
 -}
 
 
@@ -203,7 +203,11 @@ detailsPage model =
     Page.page []
         -- Event.on "navigatedTo" (D.succeed Destory)
         (Layout.stackLayout []
-            [ Native.searchBar [ NA.hint "Enter search term here..", NA.text "Hello" ] []
+            [ Native.segmentedBar [ NA.selectedBackgroundColor "red" ]
+                [ Native.segmentedBarItem [ NA.title "First" ] []
+                , Native.segmentedBarItem [ NA.title "Second" ] []
+                , Native.segmentedBarItem [ NA.title "Third" ] []
+                ]
             ]
         )
 
