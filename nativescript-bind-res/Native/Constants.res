@@ -10,7 +10,7 @@ let dashed: string => string = %raw(`
     }
     `)
 /* copy(Array.from(temp1.children).map(x => x.innerText).filter(x => !(x.startsWith('_') || x.endsWith("Event"))).filter(x => !textBase.includes(x))) */
-let viewBase: array<string> =
+let view: array<string> =
   [
     "accessibilityHidden",
     "accessibilityHint",
@@ -132,14 +132,14 @@ let paddings: array<string> =
 
 let layoutBase: array<string> =
   [
-    viewBase,
+    view,
     paddings,
     ["clipToBounds", "isPassThroughParentEnabled"]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
 let textBase: array<string> =
   [
-    viewBase,
+    view,
     paddings,
     [
       "fontSize",
@@ -180,7 +180,7 @@ let button = [textBase, ["textWrap"]->Belt.Array.map(dashed)]->Belt.Array.concat
 
 let frameBase =
   [
-    viewBase,
+    view,
     [
       "actionBarVisibility",
       "animated",
@@ -192,7 +192,7 @@ let frameBase =
 
 let pageBase =
   [
-    viewBase,
+    view,
     [
       "accessibilityAnnouncePageEnabled",
       "actionBarHidden",
@@ -203,7 +203,16 @@ let pageBase =
     ]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
-let activityIndicator = [viewBase, ["busy"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+let activityIndicator = [view, ["busy"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
+/* for simplicity using view instead of viewBase */
+let formattedString =
+  [
+    view,
+    ["fontStyle", "style", "fontFamily", "fontWeight"]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
+
+let span = [formattedString, ["text"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
 // Js.log("****************************")
 // [

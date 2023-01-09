@@ -41,7 +41,30 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
             x.tagName.toLowerCase() === "ns-action-bar"
             )
             const index = children.indexOf(thisElement)
-            parentElement.data.insertChild(thisElement.data, hasActionBar ? index - 1 : index);
+            const currentIdx = hasActionBar ? index - 1 : index
+            parentElement.data.insertChild(thisElement.data, currentIdx)
+        })
+    }
+    `)
+
+let addFormattedText: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
+    function(parentElement, thisElement) {
+        if (parentElement.data == null) return
+        requestAnimationFrame(() => {
+            const children = Array.from(parentElement.children)
+            const index = children.indexOf(thisElement)
+            parentElement.data.formattedText = thisElement.data
+        })
+    }
+    `)
+
+let addSpan: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
+    function(parentElement, thisElement) {
+        if (parentElement.data == null) return
+        requestAnimationFrame(() => {
+            const children = Array.from(parentElement.children)
+            const index = children.indexOf(thisElement)
+            parentElement.data.spans.push(thisElement.data)
         })
     }
     `)

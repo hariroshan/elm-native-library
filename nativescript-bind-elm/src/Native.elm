@@ -1,10 +1,6 @@
-module Native exposing (button, label, activityIndicator)
+module Native exposing (activityIndicator, button, formattedString, label, span)
 
 import Html exposing (Attribute, Html)
-
-
-type Native
-    = Native
 
 
 buildElement : String -> List (Attribute msg) -> List (Html msg) -> Html msg
@@ -21,6 +17,17 @@ button : List (Attribute msg) -> List (Html msg) -> Html msg
 button =
     buildElement "ns-button"
 
+
 activityIndicator : List (Attribute msg) -> List (Html msg) -> Html msg
 activityIndicator =
     buildElement "ns-activity-indicator"
+
+
+formattedString : List (Attribute msg) -> List (Html msg) -> Html msg
+formattedString =
+    buildElement "ns-formatted-string"
+
+
+span : List (Attribute msg) -> List (Html msg) -> Html msg
+span =
+    buildElement "ns-span"

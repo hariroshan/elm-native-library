@@ -9,6 +9,11 @@ fontSize =
     attribute "font-size"
 
 
+fontStyle : String -> Attribute msg
+fontStyle =
+    attribute "font-style"
+
+
 formattedText : String -> Attribute msg
 formattedText =
     attribute "formatted-text"
@@ -32,6 +37,11 @@ nativeTextViewProtected =
 text : String -> Attribute msg
 text =
     attribute "text"
+
+
+style : String -> Attribute msg
+style =
+    attribute "style"
 
 
 textAlignment : String -> Attribute msg

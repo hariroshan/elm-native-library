@@ -121,11 +121,19 @@ detailsPage model =
                         []
                     , helloWorld model.count
                     , Native.button
-                        [ NA.text "Decrement"
-                        , Event.on "tap" (D.succeed Dec)
+                        [ Event.on "tap" (D.succeed Dec)
                         , NA.fontSize "24"
                         ]
-                        []
+                        [ Native.formattedString []
+                            [
+                                Native.span
+                                    [ NA.text "Decrement"
+                                    , NA.style "color: red"
+                                    , NA.fontStyle "italic"
+                                    ]
+                                    []
+                            ]
+                        ]
                     ]
             ]
         )

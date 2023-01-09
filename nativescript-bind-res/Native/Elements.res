@@ -1,14 +1,16 @@
-let render = Js.Nullable.return((. current: Types.htmlElement, _) =>
-  Helper.addView(. current.parentElement, current)
-)
+let render = helperAdd =>
+  Js.Nullable.return((. current: Types.htmlElement, _) =>
+    helperAdd(. current.parentElement, current)
+  )
 
-let buildHandler: (unit => Types.nativeObject, array<string>) => Types.handler = (
-  new,
-  observedAttributes,
-) => {
+let buildHandler: (
+  unit => Types.nativeObject,
+  array<string>,
+  (. Types.htmlElement, Types.htmlElement) => unit,
+) => Types.handler = (new, observedAttributes, helperAdd) => {
   init: (. ()) => new(),
   observedAttributes,
-  render,
+  render: render(helperAdd),
   handlerKind: Types.Element,
   update: NativescriptCore.update,
   dispose: NativescriptCore.dispose,
@@ -23,7 +25,7 @@ module Label = {
   )
   let tagName = "ns-label"
 
-  let handler: Types.handler = buildHandler(new, Constants.textBase)
+  let handler: Types.handler = buildHandler(new, Constants.textBase, Helper.addView)
 }
 
 module Button = {
@@ -33,7 +35,7 @@ module Button = {
   )
   let tagName = "ns-button"
 
-  let handler: Types.handler = buildHandler(new, Constants.button)
+  let handler: Types.handler = buildHandler(new, Constants.button, Helper.addView)
 }
 
 module ActivityIndicator = {
@@ -42,8 +44,26 @@ module ActivityIndicator = {
     external new: unit => Types.nativeObject = "ActivityIndicator"
   )
   let tagName = "ns-activity-indicator"
+  let handler: Types.handler = buildHandler(new, Constants.activityIndicator, Helper.addView)
+}
 
-  let handler: Types.handler = buildHandler(new, Constants.activityIndicator)
+module FormattedString = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "FormattedString"
+  )
+  let tagName = "ns-formatted-string"
+
+  let handler: Types.handler = buildHandler(new, Constants.formattedString, Helper.addFormattedText)
+}
+module Span = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "Span"
+  )
+  let tagName = "ns-span"
+
+  let handler: Types.handler = buildHandler(new, Constants.span, Helper.addSpan)
 }
 
 let all: array<Types.customElement> = [
@@ -58,5 +78,13 @@ let all: array<Types.customElement> = [
   {
     tagName: ActivityIndicator.tagName,
     handler: ActivityIndicator.handler,
+  },
+  {
+    tagName: FormattedString.tagName,
+    handler: FormattedString.handler,
+  },
+  {
+    tagName: Span.tagName,
+    handler: Span.handler,
   },
 ]
