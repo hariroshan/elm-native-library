@@ -43,7 +43,7 @@ and htmlElement = {
   handler: Js.Nullable.t<handler>,
   data: Js.Nullable.t<nativeObject>,
   children: array<htmlElement>,
-  items: array<string>
+  items: array<string>,
 }
 and frameMethods = {pageAdded: (. htmlElement) => unit}
 and handlerKind =
@@ -56,3 +56,8 @@ type customElement = {
   tagName: string,
   handler: handler,
 }
+
+type setter<'a> = {set: 'a => unit}
+
+@scope("Object") @val
+external definePropertyInHtml: (. htmlElement, string, setter<'a>) => unit = "defineProperty"

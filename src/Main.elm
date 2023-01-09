@@ -10,14 +10,17 @@ import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout exposing (rootLayout)
 import Native.Page as Page
+import Process
+import Task
 
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = init
+    Browser.element
+        { init = always init
         , view = view
         , update = update
+        , subscriptions = subscriptions
         }
 
 
@@ -27,24 +30,29 @@ type NavPage
 
 type alias Model =
     { count : Int
+    , options : List String
     , current : NavPage
     , next : Maybe NavPage
     , history : List NavPage
     }
 
 
-init : Model
+init : ( Model, Cmd Msg )
 init =
-    { count = 0
-    , current = Details
-    , history = [ Details ]
-    , next = Just Details
-    }
+    ( { count = 0
+      , options = [ "2022", "2021", "2020" ]
+      , current = Details
+      , history = [ Details ]
+      , next = Just Details
+      }
+    , Cmd.none
+    )
 
 
 type Msg
     = Inc
     | Dec
+    | Replace
 
 
 
@@ -52,14 +60,26 @@ type Msg
 -- | Destory
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        Replace ->
+            ( { model
+                | options =
+                    List.range 0 model.count
+                        |> List.map String.fromInt
+              }
+            , Cmd.none
+            )
+
         Dec ->
-            { model | count = model.count - 1 }
+            ( { model | count = model.count - 1 }
+            , Process.sleep 2000
+                |> Task.perform (always Replace)
+            )
 
         Inc ->
-            { model | count = model.count + 1 }
+            ( { model | count = model.count + 1 }, Cmd.none )
 
 
 
@@ -203,11 +223,12 @@ detailsPage model =
     Page.page []
         -- Event.on "navigatedTo" (D.succeed Destory)
         (Layout.stackLayout []
-            [ Native.segmentedBar [ NA.selectedBackgroundColor "red" ]
-                [ Native.segmentedBarItem [ NA.title "First" ] []
-                , Native.segmentedBarItem [ NA.title "Second" ] []
-                , Native.segmentedBarItem [ NA.title "Third" ] []
+            [ counter model
+            , Native.listPicker
+                [ E.list E.string model.options |> NA.items
+                , NA.selectedIndex "1"
                 ]
+                []
             ]
         )
 
@@ -224,3 +245,8 @@ view model =
 --     ]
 --     []
 --     |> Frame.root
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none

@@ -106,6 +106,9 @@ module ListPicker = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "ListPicker"
+    let setItems = (current: Types.htmlElement, data) => {
+      data->Types.setItems(current.items)
+    }
   )
   let tagName = "ns-list-picker"
 
@@ -114,12 +117,8 @@ module ListPicker = {
     init: (. ()) => new(),
     observedAttributes: Constants.listPicker,
     render: Js.Nullable.return((. current: Types.htmlElement, _) => {
-      current.data
-      ->Js.Nullable.toOption
-      ->Belt.Option.forEach(data => {
-        data->Types.setItems(current.items)
-      })
-
+      current.data->Js.Nullable.toOption->Belt.Option.forEach(setItems(current))
+      Types.definePropertyInHtml(. current, "items", {set: setItems(current)})
       Helper.addView(. current.parentElement, current)
     }),
     handlerKind: Types.Element,
