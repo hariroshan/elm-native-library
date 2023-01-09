@@ -3,6 +3,7 @@ module Main exposing (main)
 import Browser
 import Html exposing (Html)
 import Json.Decode as D
+import Json.Encode as E
 import Native
 import Native.Attributes as NA
 import Native.Event as Event
@@ -120,6 +121,41 @@ counter model =
             ]
 
 
+
+{-
+   Native.datePicker
+       [ NA.year "1980"
+       , NA.month "4"
+       , NA.day "20"
+       , NA.minDate "1980-02-01"
+       ]
+       []
+       , Native.htmlView
+       [ NA.html """
+       <!DOCTYPE html>
+       <html>
+           <head>
+           </head>
+           <body>
+               <span style="color: green">Hello World</span>
+           </body>
+       </html>
+       """
+       ]
+       []
+
+       Native.label [ NA.textWrap "true" ]
+                           [ Native.formattedString []
+                               [ Native.span
+                                   [ NA.text "red"
+                                   , NA.style "color: red"
+                                   ]
+                                   []
+                               ]
+                           ]
+-}
+
+
 detailsPage : Model -> Page.Page Msg
 detailsPage model =
     Page.page []
@@ -141,30 +177,11 @@ detailsPage model =
                 Layout.flexboxLayout
                     [ NA.flexDirection "column"
                     ]
-                    [ Native.datePicker
-                        [ NA.year "1980"
-                        , NA.month "4"
-                        , NA.day "20"
-                        , NA.minDate "1980-02-01"
-                        ]
-                        []
-                    , Native.htmlView
-                        [ NA.html """
-                        <!DOCTYPE html>
-                        <html>
-                            <head>
-                            </head>
-                            <body>
-                                <span style="color: green">Hello World</span>
-                            </body>
-                        </html>
-                        """
-                        ]
-                        []
-                    , Native.image
-                        [ NA.src "https://art.nativescript.org/logo/export/NativeScript_Logo_Blue_White.png"
-                        , NA.stretch "aspectFill"
-                        , NA.height "40%"
+                    [ Native.listPicker
+                        [ E.list E.string
+                            [ "2022", "2021", "2020" ]
+                            |> NA.items
+                        , NA.selectedIndex "1"
                         ]
                         []
                     ]

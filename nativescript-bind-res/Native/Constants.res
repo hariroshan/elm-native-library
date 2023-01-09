@@ -153,6 +153,7 @@ let textBase: array<string> =
       "textShadow",
       "textTransform",
       "whiteSpace",
+      "textWrap",
     ]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
@@ -245,16 +246,10 @@ let image =
     ]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
+let listPicker = [view, ["items", "selectedIndex"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
 // Js.log("****************************")
-// [
-//   "decodeHeight",
-//   "decodeWidth",
-//   "isLoading",
-//   "loadMode",
-//   "src",
-//   "stretch",
-//   "tintColor",
-// ]
+// ["items", "selectedIndex"]
 // ->Belt.Array.map(dashed)
 // ->Belt.Array.forEach(prop =>
 //   Js.log(

@@ -92,6 +92,32 @@ module Image = {
 
   let handler: Types.handler = buildHandler(new, Constants.image, Helper.addView)
 }
+module ListPicker = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "ListPicker"
+  )
+  let tagName = "ns-list-picker"
+
+  let handler: Types.handler = {
+    init: (. ()) => new(),
+    observedAttributes: Constants.listPicker,
+    render: Js.Nullable.return((. current: Types.htmlElement, _) => {
+      current.data
+      ->Js.Nullable.toOption
+      ->Belt.Option.forEach(data => {
+        data->Types.setItems(current.items)
+      })
+
+      Helper.addView(. current.parentElement, current)
+    }),
+    handlerKind: Types.Element,
+    update: NativescriptCore.update,
+    dispose: NativescriptCore.dispose,
+    addEventListener: NativescriptCore.addEventListener,
+    removeEventListener: NativescriptCore.removeEventListener,
+  }
+}
 
 let all: array<Types.customElement> = [
   {
@@ -125,5 +151,9 @@ let all: array<Types.customElement> = [
   {
     tagName: Image.tagName,
     handler: Image.handler,
+  },
+  {
+    tagName: ListPicker.tagName,
+    handler: ListPicker.handler,
   },
 ]

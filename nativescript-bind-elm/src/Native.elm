@@ -1,4 +1,4 @@
-module Native exposing (activityIndicator, button, datePicker, formattedString, htmlView, label, span, image)
+module Native exposing (activityIndicator, button, datePicker, formattedString, htmlView, image, label, listPicker, span)
 
 import Html exposing (Attribute, Html)
 
@@ -42,6 +42,12 @@ htmlView : List (Attribute msg) -> List (Html msg) -> Html msg
 htmlView =
     buildElement "ns-html-view"
 
+
 image : List (Attribute msg) -> List (Html msg) -> Html msg
 image =
     buildElement "ns-image"
+
+
+listPicker : List (Attribute msg) -> List (Html msg) -> Html msg
+listPicker =
+    buildElement "ns-list-picker"

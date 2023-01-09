@@ -2,6 +2,8 @@ module Native.Attributes exposing (..)
 
 import Html exposing (Attribute)
 import Html.Attributes exposing (attribute)
+import Html.Attributes exposing (property)
+import Json.Encode as E
 
 
 fontSize : String -> Attribute msg
@@ -842,3 +844,13 @@ stretch =
 tintColor : String -> Attribute msg
 tintColor =
     attribute "tint-color"
+
+
+items : E.Value -> Attribute msg
+items =
+    property "items"
+
+
+selectedIndex : String -> Attribute msg
+selectedIndex =
+    attribute "selected-index"

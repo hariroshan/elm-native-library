@@ -17,6 +17,9 @@ type constructor = {
 @set
 external setContent: (nativeObject, 'a) => unit = "content"
 
+@set
+external setItems: (nativeObject, 'a) => unit = "items"
+
 type navigationConfig = {create: unit => nativeObject}
 
 @send
@@ -40,6 +43,7 @@ and htmlElement = {
   handler: Js.Nullable.t<handler>,
   data: Js.Nullable.t<nativeObject>,
   children: array<htmlElement>,
+  items: array<string>
 }
 and frameMethods = {pageAdded: (. htmlElement) => unit}
 and handlerKind =
