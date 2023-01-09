@@ -171,6 +171,15 @@ counter model =
                         ]
                         []
                     ]
+
+        Native.progress
+                [ NA.value "50"
+                , NA.maxValue "100"
+                , NA.backgroundColor "red"
+                , NA.color "green"
+                , NA.scaleY "2"
+                ]
+                []
 -}
 
 
@@ -184,14 +193,6 @@ detailsPage model =
                 , NA.textAlignment "center"
                 , NA.color "#610fc8"
                 , NA.fontSize "40"
-                ]
-                []
-            , Native.progress
-                [ NA.value "50"
-                , NA.maxValue "100"
-                , NA.backgroundColor "red"
-                , NA.color "green"
-                , NA.scaleY "2"
                 ]
                 []
             ]
