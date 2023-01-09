@@ -767,3 +767,38 @@ enableSwipeBackNavigation =
 statusBarStyle : String -> Attribute msg
 statusBarStyle =
     attribute "status-bar-style"
+
+
+date : String -> Attribute msg
+date =
+    attribute "date"
+
+
+iosPreferredDatePickerStyle : String -> Attribute msg
+iosPreferredDatePickerStyle =
+    attribute "ios-preferred-date-picker-style"
+
+
+maxDate : String -> Attribute msg
+maxDate =
+    attribute "max-date"
+
+
+minDate : String -> Attribute msg
+minDate =
+    attribute "min-date"
+
+
+day : String -> Attribute msg
+day =
+    attribute "day"
+
+
+month : String -> Attribute msg
+month =
+    attribute "month"
+
+
+year : String -> Attribute msg
+year =
+    attribute "year"

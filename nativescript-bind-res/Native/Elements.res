@@ -65,6 +65,15 @@ module Span = {
 
   let handler: Types.handler = buildHandler(new, Constants.span, Helper.addSpan)
 }
+module DatePicker = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "DatePicker"
+  )
+  let tagName = "ns-datepicker"
+
+  let handler: Types.handler = buildHandler(new, Constants.datePicker, Helper.addView)
+}
 
 let all: array<Types.customElement> = [
   {
@@ -86,5 +95,9 @@ let all: array<Types.customElement> = [
   {
     tagName: Span.tagName,
     handler: Span.handler,
+  },
+  {
+    tagName: DatePicker.tagName,
+    handler: DatePicker.handler,
   },
 ]

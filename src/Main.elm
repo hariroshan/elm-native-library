@@ -91,6 +91,35 @@ helloWorld count =
 -- , Native.button [ NA.text "Tap", Event.on "tap" (D.succeed Inc) ] []
 
 
+counter model =
+    Layout.asElement <|
+        Layout.flexboxLayout
+            [ NA.justifyContent "space-between"
+            , NA.height "70%"
+            ]
+            [ Native.button
+                [ NA.text "Increment"
+                , Event.on "tap" (D.succeed Inc)
+                , NA.fontSize "24"
+                ]
+                []
+            , helloWorld model.count
+            , Native.button
+                [ Event.on "tap" (D.succeed Dec)
+                , NA.fontSize "24"
+                ]
+                [ Native.formattedString []
+                    [ Native.span
+                        [ NA.text "Decrement"
+                        , NA.style "color: red"
+                        , NA.fontStyle "italic"
+                        ]
+                        []
+                    ]
+                ]
+            ]
+
+
 detailsPage : Model -> Page.Page Msg
 detailsPage model =
     Page.page []
@@ -110,30 +139,15 @@ detailsPage model =
                 []
             , Layout.asElement <|
                 Layout.flexboxLayout
-                    [ NA.justifyContent "space-between"
-                    , NA.height "70%"
+                    [ NA.flexDirection "column"
                     ]
-                    [ Native.button
-                        [ NA.text "Increment"
-                        , Event.on "tap" (D.succeed Inc)
-                        , NA.fontSize "24"
+                    [ Native.datePicker
+                        [ NA.year "1980"
+                        , NA.month "4"
+                        , NA.day "20"
+                        , NA.minDate "1980-02-01"
                         ]
                         []
-                    , helloWorld model.count
-                    , Native.button
-                        [ Event.on "tap" (D.succeed Dec)
-                        , NA.fontSize "24"
-                        ]
-                        [ Native.formattedString []
-                            [
-                                Native.span
-                                    [ NA.text "Decrement"
-                                    , NA.style "color: red"
-                                    , NA.fontStyle "italic"
-                                    ]
-                                    []
-                            ]
-                        ]
                     ]
             ]
         )

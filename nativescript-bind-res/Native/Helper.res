@@ -37,9 +37,7 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
         if (parentElement.data == null) return
         requestAnimationFrame(() => {
             const children = Array.from(parentElement.children)
-            const hasActionBar = children.some(x =>
-            x.tagName.toLowerCase() === "ns-action-bar"
-            )
+            const hasActionBar = children.some(x => x.tagName.toLowerCase() === "ns-action-bar")
             const index = children.indexOf(thisElement)
             const currentIdx = hasActionBar ? index - 1 : index
             parentElement.data.insertChild(thisElement.data, currentIdx)

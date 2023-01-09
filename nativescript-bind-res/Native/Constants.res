@@ -214,15 +214,10 @@ let formattedString =
 
 let span = [formattedString, ["text"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
+let datePicker = [view, ["date", "day", "iosPreferredDatePickerStyle", "maxDate", "minDate", "month", "year"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
 // Js.log("****************************")
-// [
-//   "accessibilityAnnouncePageEnabled",
-//   "actionBarHidden",
-//   "androidStatusBarBackground",
-//   "backgroundSpanUnderStatusBar",
-//   "enableSwipeBackNavigation",
-//   "statusBarStyle",
-// ]
+// ["date", "day", "iosPreferredDatePickerStyle", "maxDate", "minDate", "month", "year"]
 // ->Belt.Array.map(dashed)
 // ->Belt.Array.forEach(prop =>
 //   Js.log(
