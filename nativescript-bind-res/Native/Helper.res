@@ -32,21 +32,7 @@ let update = setAttribute
 
 external typeOf: 'a => string = "typeof"
 
-let getPropsForObject: Obj.t => array<string> = %raw(`
-  function(object){
-    const arr = []
-    for (var prop in object) {
-      if (prop.startsWith("_")) continue
-      if (typeof object[prop] === "function") continue
-      arr.push(prop)
-    }
-    return arr
-  }
-  `)
-
-
-
-let addView: (. 'a, 'b) => unit = %raw(`
+let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
         requestAnimationFrame(() => {
@@ -54,7 +40,7 @@ let addView: (. 'a, 'b) => unit = %raw(`
             const hasActionBar = children.some(x =>
             x.tagName.toLowerCase() === "ns-action-bar"
             )
-            const index = (Array.from(parentElement.children).indexOf(thisElement))
+            const index = children.indexOf(thisElement)
             parentElement.data.insertChild(thisElement.data, hasActionBar ? index - 1 : index);
         })
     }
@@ -70,7 +56,3 @@ let dbg2 = (x, lbl) => {
 }
 
 let flip: (('a, 'b) => 'c, 'b, 'a) => 'c = (fx, x, y) => fx(y, x)
-
-/*
-
- */

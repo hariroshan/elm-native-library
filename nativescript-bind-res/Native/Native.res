@@ -10,24 +10,26 @@ module Frame = {
     observedAttributes: Constants.frameBase,
     update: NativescriptCore.update,
     render: Js.Nullable.null,
-    pageAdded: Js.Nullable.return((. current: Types.this) => {
-      current.data
-      ->Js.Nullable.toOption
-      ->Belt.Option.forEach(data =>
-        data->Types.navigate({
-          create: _ =>
-            current.children
-            ->Belt.Array.get(current.children->Array.length - 1)
-            ->Belt.Option.flatMap(x => x.data->Js.Nullable.toOption)
-            ->Belt.Option.getWithDefault(data),
-        })
-      )
+    handlerKind: Types.Frame({
+      pageAdded: (. current: Types.htmlElement) => {
+        current.data
+        ->Js.Nullable.toOption
+        ->Belt.Option.forEach(data =>
+          data->Types.navigate({
+            create: _ =>
+              current.children
+              ->Belt.Array.get(current.children->Array.length - 1)
+              ->Belt.Option.flatMap(x => x.data->Js.Nullable.toOption)
+              ->Belt.Option.getWithDefault(data),
+          })
+        )
+      },
     }),
     dispose: NativescriptCore.dispose,
     addEventListener: NativescriptCore.addEventListener,
     removeEventListener: NativescriptCore.removeEventListener,
   }
-}
+} 
 
 module Page = {
   %%private(
@@ -40,7 +42,7 @@ module Page = {
     init: (. ()) => new(),
     observedAttributes: Constants.pageBase,
     update: NativescriptCore.update,
-    render: Js.Nullable.return((. current: Types.this, nativeObject) => {
+    render: Js.Nullable.return((. current: Types.htmlElement, nativeObject) => {
       // page should have one child which is a layout
       current.children
       ->Belt.Array.get(0)
@@ -50,11 +52,16 @@ module Page = {
       Types.requestAnimationFrame(._ => {
         current.parentElement.handler
         ->Js.Nullable.toOption
-        ->Belt.Option.flatMap(handler => handler.pageAdded->Js.Nullable.toOption)
-        ->Belt.Option.forEach(fx => fx(. current.parentElement))
+        ->Belt.Option.forEach(
+          handler =>
+            switch handler.handlerKind {
+            | Types.Frame({pageAdded}) => pageAdded(. current.parentElement)
+            | _ => ()
+            },
+        )
       })
     }),
-    pageAdded: Js.Nullable.null,
+    handlerKind: Types.Page,
     dispose: NativescriptCore.dispose,
     addEventListener: NativescriptCore.addEventListener,
     removeEventListener: NativescriptCore.removeEventListener,

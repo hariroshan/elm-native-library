@@ -329,6 +329,11 @@ column =
     attribute "column"
 
 
+columns : String -> Attribute msg
+columns =
+    attribute "columns"
+
+
 columnSpan : String -> Attribute msg
 columnSpan =
     attribute "column-span"
@@ -632,6 +637,16 @@ rotateY =
 row : String -> Attribute msg
 row =
     attribute "row"
+
+
+busy : String -> Attribute msg
+busy =
+    attribute "busy"
+
+
+rows : String -> Attribute msg
+rows =
+    attribute "rows"
 
 
 rowSpan : String -> Attribute msg

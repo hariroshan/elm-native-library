@@ -1,4 +1,4 @@
-let render = Js.Nullable.return((. current: Types.this, _) => {
+let render = Js.Nullable.return((. current: Types.htmlElement, _) => {
   let hasInsertChild =
     current.parentElement.data
     ->Js.Nullable.toOption
@@ -10,6 +10,20 @@ let render = Js.Nullable.return((. current: Types.this, _) => {
   }
 })
 
+let buildHandler: (unit => Types.nativeObject, array<string>) => Types.handler = (
+  new,
+  observedAttributes,
+) => {
+  init: (. ()) => new(),
+  observedAttributes,
+  render,
+  handlerKind: Types.Layout,
+  update: NativescriptCore.update,
+  dispose: NativescriptCore.dispose,
+  addEventListener: NativescriptCore.addEventListener,
+  removeEventListener: NativescriptCore.removeEventListener,
+}
+
 module AbsoluteLayout = {
   %%private(
     @module("@nativescript/core") @new
@@ -17,16 +31,7 @@ module AbsoluteLayout = {
   )
 
   let tagName = "ns-absolute-layout"
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.layoutBase,
-    render,
-    pageAdded: Js.Nullable.null,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  let handler: Types.handler = buildHandler(new, Constants.layoutBase)
 }
 
 module DockLayout = {
@@ -36,16 +41,7 @@ module DockLayout = {
   )
 
   let tagName = "ns-dock-layout"
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.dockLayout,
-    render,
-    pageAdded: Js.Nullable.null,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  let handler: Types.handler = buildHandler(new, Constants.dockLayout)
 }
 
 module GridLayout = {
@@ -55,16 +51,7 @@ module GridLayout = {
   )
 
   let tagName = "ns-grid-layout"
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.layoutBase,
-    render,
-    pageAdded: Js.Nullable.null,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  let handler: Types.handler = buildHandler(new, Constants.gridLayout)
 }
 
 module StackLayout = {
@@ -74,16 +61,7 @@ module StackLayout = {
   )
 
   let tagName = "ns-stack-layout"
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.stackLayout,
-    render,
-    pageAdded: Js.Nullable.null,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  let handler: Types.handler = buildHandler(new, Constants.stackLayout)
 }
 
 module RootLayout = {
@@ -93,16 +71,7 @@ module RootLayout = {
   )
 
   let tagName = "ns-root-layout"
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.layoutBase,
-    render,
-    pageAdded: Js.Nullable.null,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  let handler: Types.handler = buildHandler(new, Constants.layoutBase)
 }
 
 module WrapLayout = {
@@ -112,16 +81,7 @@ module WrapLayout = {
   )
 
   let tagName = "ns-wrap-layout"
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.wrapLayout,
-    render,
-    pageAdded: Js.Nullable.null,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  let handler: Types.handler = buildHandler(new, Constants.wrapLayout)
 }
 
 module FlexboxLayout = {
@@ -131,16 +91,7 @@ module FlexboxLayout = {
   )
 
   let tagName = "ns-flexbox-layout"
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.flexboxLayout,
-    render,
-    pageAdded: Js.Nullable.null,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  let handler: Types.handler = buildHandler(new, Constants.flexboxLayout)
 }
 
 let all: array<Types.customElement> = [

@@ -4,7 +4,7 @@ import Browser
 import Html exposing (Html)
 import Json.Decode as D
 import Native
-import Native.Attributes
+import Native.Attributes as NA
 import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout exposing (rootLayout)
@@ -79,16 +79,16 @@ update msg model =
 helloWorld : Int -> Html msg
 helloWorld count =
     Native.label
-        [ Native.Attributes.text (String.fromInt count)
-        , Native.Attributes.color "red"
-        , Native.Attributes.fontSize "32"
+        [ NA.text (String.fromInt count)
+        , NA.color "red"
+        , NA.fontSize "32"
         ]
         []
 
 
 
 --     helloWorld model.count
--- , Native.button [ Native.Attributes.text "Tap", Event.on "tap" (D.succeed Inc) ] []
+-- , Native.button [ NA.text "Tap", Event.on "tap" (D.succeed Inc) ] []
 
 
 detailsPage : Model -> Page.Page Msg
@@ -97,28 +97,33 @@ detailsPage model =
         (Layout.stackLayout []
             [ -- Event.on "navigatedTo" (D.succeed Destory)
               Native.label
-                [ Native.Attributes.text "Elm Counter"
-                , Native.Attributes.textAlignment "center"
-                , Native.Attributes.color "#610fc8"
-                , Native.Attributes.fontSize "40"
+                [ NA.text "Elm Counter"
+                , NA.textAlignment "center"
+                , NA.color "#610fc8"
+                , NA.fontSize "40"
+                ]
+                []
+            , Native.activityIndicator
+                [ NA.busy "true"
+                , NA.color "#610fc8"
                 ]
                 []
             , Layout.asElement <|
                 Layout.flexboxLayout
-                    [ Native.Attributes.justifyContent "space-between"
-                    , Native.Attributes.height "70%"
+                    [ NA.justifyContent "space-between"
+                    , NA.height "70%"
                     ]
                     [ Native.button
-                        [ Native.Attributes.text "Increment"
+                        [ NA.text "Increment"
                         , Event.on "tap" (D.succeed Inc)
-                        , Native.Attributes.fontSize "24"
+                        , NA.fontSize "24"
                         ]
                         []
                     , helloWorld model.count
                     , Native.button
-                        [ Native.Attributes.text "Decrement"
+                        [ NA.text "Decrement"
                         , Event.on "tap" (D.succeed Dec)
-                        , Native.Attributes.fontSize "24"
+                        , NA.fontSize "24"
                         ]
                         []
                     ]

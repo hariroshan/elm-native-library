@@ -1,4 +1,4 @@
-module Native exposing (button, label)
+module Native exposing (button, label, activityIndicator)
 
 import Html exposing (Attribute, Html)
 
@@ -20,3 +20,7 @@ label =
 button : List (Attribute msg) -> List (Html msg) -> Html msg
 button =
     buildElement "ns-button"
+
+activityIndicator : List (Attribute msg) -> List (Html msg) -> Html msg
+activityIndicator =
+    buildElement "ns-activity-indicator"

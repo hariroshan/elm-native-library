@@ -159,6 +159,9 @@ let textBase: array<string> =
 let dockLayout: array<string> =
   [layoutBase, ["stretchLastChild"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
+let gridLayout: array<string> =
+  [layoutBase, ["columns", "rows"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
 let stackLayout: array<string> =
   [layoutBase, ["orientation"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
@@ -199,6 +202,8 @@ let pageBase =
       "statusBarStyle",
     ]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
+
+let activityIndicator = [viewBase, ["busy"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
 // Js.log("****************************")
 // [

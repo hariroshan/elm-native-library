@@ -26,23 +26,27 @@ type rec handler = {
   init: (. unit) => nativeObject,
   observedAttributes: array<string>,
   update: (. nativeObject, string, string) => unit,
-  render: Js.Nullable.t<(. this, nativeObject) => unit>,
-  pageAdded: Js.Nullable.t<(. this) => unit>,
+  render: Js.Nullable.t<(. htmlElement, nativeObject) => unit>,
+  handlerKind: handlerKind,
   dispose: (. nativeObject) => unit,
   addEventListener: (. nativeObject, event, event => unit) => unit,
   removeEventListener: (. nativeObject, event, event => unit) => unit,
 }
-and this = {
+and htmlElement = {
   getAttribute: string => Js.Nullable.t<string>,
   style: string,
   constructor: constructor,
-  parentElement: this,
+  parentElement: htmlElement,
   handler: Js.Nullable.t<handler>,
   data: Js.Nullable.t<nativeObject>,
-  children: array<this>,
-  navigate: this => unit,
+  children: array<htmlElement>,
 }
-@val external this: this = "this"
+and frameMethods = {pageAdded: (. htmlElement) => unit}
+and handlerKind =
+  | Frame(frameMethods)
+  | Page
+  | Layout
+  | Element
 
 type customElement = {
   tagName: string,
