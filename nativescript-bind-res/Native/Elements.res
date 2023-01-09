@@ -167,6 +167,15 @@ module SegmentedBarItem = {
 
   let handler: Types.handler = buildHandler(new, Constants.segmentedBarItem, Helper.addItems)
 }
+module Slider = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "Slider"
+  )
+  let tagName = "ns-slider"
+
+  let handler: Types.handler = buildHandler(new, Constants.slider, Helper.addView)
+}
 
 let all: array<Types.customElement> = [
   {
@@ -224,5 +233,9 @@ let all: array<Types.customElement> = [
   {
     tagName: SegmentedBarItem.tagName,
     handler: SegmentedBarItem.handler,
+  },
+  {
+    tagName: Slider.tagName,
+    handler: Slider.handler,
   },
 ]

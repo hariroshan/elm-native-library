@@ -278,6 +278,9 @@ let segmentedBar =
     ["selectedBackgroundColor", "selectedIndex"]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
+let slider =
+  [view, ["value", "minValue", "maxValue"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
 // Js.log("****************************")
 // ["hint", "text", "textFieldBackgroundColor", "textFieldHintColor"]
 // ->Belt.Array.map(dashed)

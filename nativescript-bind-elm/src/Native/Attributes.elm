@@ -865,6 +865,11 @@ value =
     attribute "value"
 
 
+minValue : String -> Attribute msg
+minValue =
+    attribute "min-value"
+
+
 horizontalOffset : String -> Attribute msg
 horizontalOffset =
     attribute "horizontal-offset"
@@ -918,5 +923,3 @@ title =
 selectedBackgroundColor : String -> Attribute msg
 selectedBackgroundColor =
     attribute "selected-background-color"
-
-

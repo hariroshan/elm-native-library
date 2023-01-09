@@ -223,12 +223,10 @@ detailsPage model =
     Page.page []
         -- Event.on "navigatedTo" (D.succeed Destory)
         (Layout.stackLayout []
-            [ counter model
-            , Native.listPicker
-                [ E.list E.string model.options |> NA.items
-                , NA.selectedIndex "1"
-                ]
-                []
+            [ Native.slider [
+                NA.value "5", NA.minValue "1",
+                NA.maxValue "10"
+            ] []
             ]
         )
 
