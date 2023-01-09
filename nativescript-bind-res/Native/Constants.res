@@ -230,8 +230,31 @@ let datePicker =
 
 let htmlView = [view, ["html"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
+let image =
+  [
+    view,
+    [
+      "decodeHeight",
+      "decodeWidth",
+      "imageSource",
+      "isLoading",
+      "loadMode",
+      "src",
+      "stretch",
+      "tintColor",
+    ]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
+
 // Js.log("****************************")
-// ["date", "day", "iosPreferredDatePickerStyle", "maxDate", "minDate", "month", "year"]
+// [
+//   "decodeHeight",
+//   "decodeWidth",
+//   "isLoading",
+//   "loadMode",
+//   "src",
+//   "stretch",
+//   "tintColor",
+// ]
 // ->Belt.Array.map(dashed)
 // ->Belt.Array.forEach(prop =>
 //   Js.log(

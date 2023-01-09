@@ -161,6 +161,12 @@ detailsPage model =
                         """
                         ]
                         []
+                    , Native.image
+                        [ NA.src "https://art.nativescript.org/logo/export/NativeScript_Logo_Blue_White.png"
+                        , NA.stretch "aspectFill"
+                        , NA.height "40%"
+                        ]
+                        []
                     ]
             ]
         )

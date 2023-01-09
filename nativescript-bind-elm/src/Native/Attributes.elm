@@ -807,3 +807,38 @@ year =
 html : String -> Attribute msg
 html =
     attribute "html"
+
+
+decodeHeight : String -> Attribute msg
+decodeHeight =
+    attribute "decode-height"
+
+
+decodeWidth : String -> Attribute msg
+decodeWidth =
+    attribute "decode-width"
+
+
+isLoading : String -> Attribute msg
+isLoading =
+    attribute "is-loading"
+
+
+loadMode : String -> Attribute msg
+loadMode =
+    attribute "load-mode"
+
+
+src : String -> Attribute msg
+src =
+    attribute "src"
+
+
+stretch : String -> Attribute msg
+stretch =
+    attribute "stretch"
+
+
+tintColor : String -> Attribute msg
+tintColor =
+    attribute "tint-color"

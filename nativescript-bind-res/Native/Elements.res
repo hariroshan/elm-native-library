@@ -83,6 +83,15 @@ module HtmlView = {
 
   let handler: Types.handler = buildHandler(new, Constants.htmlView, Helper.addView)
 }
+module Image = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "Image"
+  )
+  let tagName = "ns-image"
+
+  let handler: Types.handler = buildHandler(new, Constants.image, Helper.addView)
+}
 
 let all: array<Types.customElement> = [
   {
@@ -112,5 +121,9 @@ let all: array<Types.customElement> = [
   {
     tagName: HtmlView.tagName,
     handler: HtmlView.handler,
+  },
+  {
+    tagName: Image.tagName,
+    handler: Image.handler,
   },
 ]
