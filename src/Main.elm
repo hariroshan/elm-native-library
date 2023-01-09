@@ -222,11 +222,29 @@ detailsPage : Model -> Page.Page Msg
 detailsPage model =
     Page.page []
         -- Event.on "navigatedTo" (D.succeed Destory)
-        (Layout.stackLayout []
-            [ Native.slider [
-                NA.value "5", NA.minValue "1",
-                NA.maxValue "10"
-            ] []
+        (Layout.tabView
+            [ NA.selectedIndex "1" ]
+            [ Native.tabViewItem [ NA.title "Profile" ]
+                [ Layout.asElement <|
+                    Layout.stackLayout []
+                        [ Native.label [ NA.text "0", NA.textWrap "true" ] []
+                        , Native.button [ NA.text "Change Tab" ] []
+                        ]
+                ]
+            , Native.tabViewItem [ NA.title "Stats" ]
+                [ Layout.asElement <|
+                    Layout.stackLayout []
+                        [ Native.label [ NA.text "1", NA.textWrap "true" ] []
+                        , Native.button [ NA.text "Change Tab" ] []
+                        ]
+                ]
+            , Native.tabViewItem [ NA.title "Settings" ]
+                [ Layout.asElement <|
+                    Layout.stackLayout []
+                        [ Native.label [ NA.text "2", NA.textWrap "true" ] []
+                        , Native.button [ NA.text "Change Tab" ] []
+                        ]
+                ]
             ]
         )
 

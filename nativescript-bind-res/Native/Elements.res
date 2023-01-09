@@ -167,6 +167,7 @@ module SegmentedBarItem = {
 
   let handler: Types.handler = buildHandler(new, Constants.segmentedBarItem, Helper.addItems)
 }
+
 module Slider = {
   %%private(
     @module("@nativescript/core") @new
@@ -175,6 +176,53 @@ module Slider = {
   let tagName = "ns-slider"
 
   let handler: Types.handler = buildHandler(new, Constants.slider, Helper.addView)
+}
+
+module Switch = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "Switch"
+  )
+  let tagName = "ns-switch"
+
+  let handler: Types.handler = buildHandler(new, Constants.switchComponent, Helper.addView)
+}
+
+module TabView = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "TabView"
+  )
+  let tagName = "ns-tab-view"
+
+  let handler: Types.handler = buildHandler(new, Constants.tabView, Helper.addView)
+}
+module TabViewItem = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "TabViewItem"
+  )
+  let tagName = "ns-tab-view-item"
+  let handler: Types.handler = {
+    init: (. ()) => new(),
+    observedAttributes: Constants.tabViewItem,
+    render: Js.Nullable.return((. current: Types.htmlElement, _) => {
+      current.children
+      ->Belt.Array.get(0)
+      ->Belt.Option.forEach(ch => {
+        current.data
+        ->Js.Nullable.toOption
+        ->Belt.Option.forEach(data => data->Types.setView(ch.data))
+      })
+
+      Helper.addItems(. current.parentElement, current)
+    }),
+    handlerKind: Types.Element,
+    update: NativescriptCore.update,
+    dispose: NativescriptCore.dispose,
+    addEventListener: NativescriptCore.addEventListener,
+    removeEventListener: NativescriptCore.removeEventListener,
+  }
 }
 
 let all: array<Types.customElement> = [
@@ -237,5 +285,17 @@ let all: array<Types.customElement> = [
   {
     tagName: Slider.tagName,
     handler: Slider.handler,
+  },
+  {
+    tagName: Switch.tagName,
+    handler: Switch.handler,
+  },
+  {
+    tagName: TabView.tagName,
+    handler: TabView.handler,
+  },
+  {
+    tagName: TabViewItem.tagName,
+    handler: TabViewItem.handler,
   },
 ]

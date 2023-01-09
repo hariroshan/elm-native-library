@@ -20,6 +20,9 @@ external setContent: (nativeObject, 'a) => unit = "content"
 @set
 external setItems: (nativeObject, 'a) => unit = "items"
 
+@set
+external setView: (nativeObject, 'a) => unit = "view"
+
 type navigationConfig = {create: unit => nativeObject}
 
 @send

@@ -44,6 +44,9 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
             if(parentElement.data.insertChild)
               return parentElement.data.insertChild(thisElement.data, currentIdx)
 
+            if (parentElement.data.constructor.name == "TabViewItem")
+              return (parentElement.data.view = thisElement.data)
+
             return (parentElement.data.content = thisElement.data)
         })
     }
@@ -70,7 +73,6 @@ let addSpan: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
         })
     }
     `)
-
 
 let addItems: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {

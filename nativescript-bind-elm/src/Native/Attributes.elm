@@ -865,6 +865,11 @@ value =
     attribute "value"
 
 
+checked : String -> Attribute msg
+checked =
+    attribute "checked"
+
+
 minValue : String -> Attribute msg
 minValue =
     attribute "min-value"
@@ -923,3 +928,59 @@ title =
 selectedBackgroundColor : String -> Attribute msg
 selectedBackgroundColor =
     attribute "selected-background-color"
+
+
+androidOffscreenTabLimit : String -> Attribute msg
+androidOffscreenTabLimit =
+    attribute "android-offscreen-tab-limit"
+
+
+androidSelectedTabHighlightColor : String -> Attribute msg
+androidSelectedTabHighlightColor =
+    attribute "android-selected-tab-highlight-color"
+
+
+androidSwipeEnabled : String -> Attribute msg
+androidSwipeEnabled =
+    attribute "android-swipe-enabled"
+
+
+androidTabsPosition : String -> Attribute msg
+androidTabsPosition =
+    attribute "android-tabs-position"
+
+
+iosIconRenderingMode : String -> Attribute msg
+iosIconRenderingMode =
+    attribute "ios-icon-rendering-mode"
+
+
+selectedTabTextColor : String -> Attribute msg
+selectedTabTextColor =
+    attribute "selected-tab-text-color"
+
+
+tabBackgroundColor : String -> Attribute msg
+tabBackgroundColor =
+    attribute "tab-background-color"
+
+
+tabTextColor : String -> Attribute msg
+tabTextColor =
+    attribute "tab-text-color"
+
+
+tabTextFontSize : String -> Attribute msg
+tabTextFontSize =
+    attribute "tab-text-font-size"
+
+
+canBeLoaded : String -> Attribute msg
+canBeLoaded =
+    attribute "can-be-loaded"
+
+
+iconSource : String -> Attribute msg
+iconSource =
+    attribute "icon-source"
+

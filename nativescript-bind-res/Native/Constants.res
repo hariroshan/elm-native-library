@@ -281,8 +281,33 @@ let segmentedBar =
 let slider =
   [view, ["value", "minValue", "maxValue"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
+let switchComponent = [view, ["checked"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
+let tabView =
+  [
+    view,
+    [
+      "androidOffscreenTabLimit",
+      "androidSelectedTabHighlightColor",
+      "androidSwipeEnabled",
+      "androidTabsPosition",
+      "iosIconRenderingMode",
+      "selectedIndex",
+      "selectedTabTextColor",
+      "tabBackgroundColor",
+      "tabTextColor",
+      "tabTextFontSize",
+    ]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
+
+let tabViewItem =
+  [
+    view,
+    ["canBeLoaded", "iconSource", "textTransform", "title"]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
+
 // Js.log("****************************")
-// ["hint", "text", "textFieldBackgroundColor", "textFieldHintColor"]
+// ["canBeLoaded", "iconSource", "textTransform", "title"]
 // ->Belt.Array.map(dashed)
 // ->Belt.Array.forEach(prop =>
 //   Js.log(
