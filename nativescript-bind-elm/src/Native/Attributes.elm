@@ -893,3 +893,18 @@ scrollableWidth =
 verticalOffset : String -> Attribute msg
 verticalOffset =
     attribute "vertical-offset"
+
+
+hint : String -> Attribute msg
+hint =
+    attribute "hint"
+
+
+textFieldBackgroundColor : String -> Attribute msg
+textFieldBackgroundColor =
+    attribute "text-field-background-color"
+
+
+textFieldHintColor : String -> Attribute msg
+textFieldHintColor =
+    attribute "text-field-hint-color"

@@ -1,4 +1,4 @@
-module Native exposing (activityIndicator, button, datePicker, formattedString, htmlView, image, label, listPicker, progress, scrollView, span)
+module Native exposing (activityIndicator, button, datePicker, formattedString, htmlView, image, label, listPicker, progress, scrollView, span, searchBar)
 
 import Html exposing (Attribute, Html)
 
@@ -61,3 +61,8 @@ progress =
 scrollView : List (Attribute msg) -> List (Html msg) -> Html msg
 scrollView =
     buildElement "ns-scroll-view"
+
+
+searchBar : List (Attribute msg) -> List (Html msg) -> Html msg
+searchBar =
+    buildElement "ns-search-bar"

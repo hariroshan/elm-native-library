@@ -138,6 +138,17 @@ module ScrollView = {
 
   let handler: Types.handler = buildHandler(new, Constants.scrollView, Helper.addView)
 }
+
+module SearchBar = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "SearchBar"
+  )
+  let tagName = "ns-search-bar"
+
+  let handler: Types.handler = buildHandler(new, Constants.searchBar, Helper.addView)
+}
+
 let all: array<Types.customElement> = [
   {
     tagName: Label.tagName,
@@ -182,5 +193,9 @@ let all: array<Types.customElement> = [
   {
     tagName: ScrollView.tagName,
     handler: ScrollView.handler,
+  },
+  {
+    tagName: SearchBar.tagName,
+    handler: SearchBar.handler,
   },
 ]
