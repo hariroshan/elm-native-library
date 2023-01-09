@@ -180,21 +180,43 @@ counter model =
                 , NA.scaleY "2"
                 ]
                 []
--}
-
-
-detailsPage : Model -> Page.Page Msg
-detailsPage model =
-    Page.page []
-        (Layout.stackLayout []
-            [ -- Event.on "navigatedTo" (D.succeed Destory)
-              Native.label
+        Native.label
                 [ NA.text "Elm Counter"
                 , NA.textAlignment "center"
                 , NA.color "#610fc8"
                 , NA.fontSize "40"
                 ]
                 []
+
+            , Native.listPicker
+                [ E.list E.string
+                    [ "2022", "2021", "2020" ]
+                    |> NA.items
+                , NA.selectedIndex "1"
+                ]
+                []
+-}
+
+
+detailsPage : Model -> Page.Page Msg
+detailsPage model =
+    Page.page []
+        (
+            Layout.scrollView [ ]
+            [ -- Event.on "navigatedTo" (D.succeed Destory)
+              Layout.asElement <|
+                Layout.gridLayout [ NA.rows "200 200 200 200 200 200 200 200 200 200" ]
+                    [ Native.label [ NA.row "0", NA.text "row content goes here..." ] []
+                    , Native.label [ NA.row "1", NA.text "row content goes here..." ] []
+                    , Native.label [ NA.row "2", NA.text "row content goes here..." ] []
+                    , Native.label [ NA.row "3", NA.text "row content goes here..." ] []
+                    , Native.label [ NA.row "4", NA.text "row content goes here..." ] []
+                    , Native.label [ NA.row "5", NA.text "row content goes here..." ] []
+                    , Native.label [ NA.row "6", NA.text "row content goes here..." ] []
+                    , Native.label [ NA.row "7", NA.text "row content goes here..." ] []
+                    , Native.label [ NA.row "8", NA.text "row content goes here..." ] []
+                    , Native.label [ NA.row "9", NA.text "row content goes here..." ] []
+                    ]
             ]
         )
 

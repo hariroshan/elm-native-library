@@ -863,3 +863,33 @@ maxValue =
 value : String -> Attribute msg
 value =
     attribute "value"
+
+
+horizontalOffset : String -> Attribute msg
+horizontalOffset =
+    attribute "horizontal-offset"
+
+
+isScrollEnabled : String -> Attribute msg
+isScrollEnabled =
+    attribute "is-scroll-enabled"
+
+
+scrollBarIndicatorVisible : String -> Attribute msg
+scrollBarIndicatorVisible =
+    attribute "scroll-bar-indicator-visible"
+
+
+scrollableHeight : String -> Attribute msg
+scrollableHeight =
+    attribute "scrollable-height"
+
+
+scrollableWidth : String -> Attribute msg
+scrollableWidth =
+    attribute "scrollable-width"
+
+
+verticalOffset : String -> Attribute msg
+verticalOffset =
+    attribute "vertical-offset"

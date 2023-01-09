@@ -40,7 +40,11 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
             const hasActionBar = children.some(x => x.tagName.toLowerCase() === "ns-action-bar")
             const index = children.indexOf(thisElement)
             const currentIdx = hasActionBar ? index - 1 : index
-            parentElement.data.insertChild(thisElement.data, currentIdx)
+
+            if(parentElement.data.insertChild)
+              return parentElement.data.insertChild(thisElement.data, currentIdx)
+
+            return (parentElement.data.content = thisElement.data)
         })
     }
     `)

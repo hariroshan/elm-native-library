@@ -250,9 +250,30 @@ let listPicker = [view, ["selectedIndex"]->Belt.Array.map(dashed)]->Belt.Array.c
 
 let progress = [view, ["maxValue", "value"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
+let scrollView =
+  [
+    view,
+    [
+      "horizontalOffset",
+      "isScrollEnabled",
+      "orientation",
+      "scrollBarIndicatorVisible",
+      "scrollableHeight",
+      "scrollableWidth",
+      "verticalOffset",
+    ]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
 
 // Js.log("****************************")
-// ["items", "selectedIndex"]
+// [
+//   "horizontalOffset",
+//   "isScrollEnabled",
+//   "orientation",
+//   "scrollBarIndicatorVisible",
+//   "scrollableHeight",
+//   "scrollableWidth",
+//   "verticalOffset",
+// ]
 // ->Belt.Array.map(dashed)
 // ->Belt.Array.forEach(prop =>
 //   Js.log(

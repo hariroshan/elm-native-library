@@ -1,13 +1,13 @@
 let render = Js.Nullable.return((. current: Types.htmlElement, _) => {
-  let hasInsertChild =
-    current.parentElement.data
-    ->Js.Nullable.toOption
-    ->Belt.Option.flatMap(x => x.insertChild->Js.Nullable.toOption)
-    ->Belt.Option.isSome
+  // let hasInsertChild =
+  //   current.parentElement.data
+  //   ->Js.Nullable.toOption
+  //   ->Belt.Option.flatMap(x => x.insertChild->Js.Nullable.toOption)
+  //   ->Belt.Option.isSome
 
-  if hasInsertChild {
+  // if hasInsertChild {
     Types.requestAnimationFrame(._ => Helper.addView(. current.parentElement, current))
-  }
+  // }
 })
 
 let buildHandler: (unit => Types.nativeObject, array<string>) => Types.handler = (

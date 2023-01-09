@@ -29,7 +29,7 @@ module Frame = {
     addEventListener: NativescriptCore.addEventListener,
     removeEventListener: NativescriptCore.removeEventListener,
   }
-} 
+}
 
 module Page = {
   %%private(

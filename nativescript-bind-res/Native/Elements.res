@@ -109,6 +109,7 @@ module ListPicker = {
   )
   let tagName = "ns-list-picker"
 
+  /* TODO: Listen for changes in items property */
   let handler: Types.handler = {
     init: (. ()) => new(),
     observedAttributes: Constants.listPicker,
@@ -128,7 +129,15 @@ module ListPicker = {
     removeEventListener: NativescriptCore.removeEventListener,
   }
 }
+module ScrollView = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "ScrollView"
+  )
+  let tagName = "ns-scroll-view"
 
+  let handler: Types.handler = buildHandler(new, Constants.scrollView, Helper.addView)
+}
 let all: array<Types.customElement> = [
   {
     tagName: Label.tagName,
@@ -169,5 +178,9 @@ let all: array<Types.customElement> = [
   {
     tagName: Progress.tagName,
     handler: Progress.handler,
+  },
+  {
+    tagName: ScrollView.tagName,
+    handler: ScrollView.handler,
   },
 ]
