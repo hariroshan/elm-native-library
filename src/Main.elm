@@ -222,29 +222,11 @@ detailsPage : Model -> Page.Page Msg
 detailsPage model =
     Page.page []
         -- Event.on "navigatedTo" (D.succeed Destory)
-        (Layout.tabView
-            [ NA.selectedIndex "1" ]
-            [ Native.tabViewItem [ NA.title "Profile" ]
-                [ Layout.asElement <|
-                    Layout.stackLayout []
-                        [ Native.label [ NA.text "0", NA.textWrap "true" ] []
-                        , Native.button [ NA.text "Change Tab" ] []
-                        ]
-                ]
-            , Native.tabViewItem [ NA.title "Stats" ]
-                [ Layout.asElement <|
-                    Layout.stackLayout []
-                        [ Native.label [ NA.text "1", NA.textWrap "true" ] []
-                        , Native.button [ NA.text "Change Tab" ] []
-                        ]
-                ]
-            , Native.tabViewItem [ NA.title "Settings" ]
-                [ Layout.asElement <|
-                    Layout.stackLayout []
-                        [ Native.label [ NA.text "2", NA.textWrap "true" ] []
-                        , Native.button [ NA.text "Change Tab" ] []
-                        ]
-                ]
+        (Layout.stackLayout []
+            [ Native.webView [
+                NA.height "100%"
+                , NA.backgroundColor "red"
+                , NA.src "http://www.google.com/" ] []
             ]
         )
 

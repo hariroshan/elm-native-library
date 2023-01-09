@@ -306,8 +306,72 @@ let tabViewItem =
     ["canBeLoaded", "iconSource", "textTransform", "title"]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
+let commonTextBase =
+  [
+    "autocapitalizationType",
+    "autocorrect",
+    "autofillType",
+    "editable",
+    "fontSize",
+    "formattedText",
+    "hint",
+    "keyboardType",
+    "letterSpacing",
+    "lineHeight",
+    "maxLength",
+    "nativeTextViewProtected",
+    "returnKeyType",
+    "text",
+    "textAlignment",
+    "textDecoration",
+    "textShadow",
+    "textTransform",
+    "updateTextTrigger",
+    "whiteSpace",
+  ]->Belt.Array.map(dashed)
+
+let textField =
+  [
+    view,
+    paddings,
+    commonTextBase,
+    ["closeOnReturn", "secure", "secureWithoutAutofill"]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
+
+let textView =
+  [view, paddings, commonTextBase, ["maxLines"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
+let timePicker =
+  [
+    view,
+    [
+      "hour",
+      "iosPreferredDatePickerStyle",
+      "maxHour",
+      "maxMinute",
+      "minHour",
+      "minMinute",
+      "minute",
+      "minuteInterval",
+      "time",
+    ]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
+
+let webView =
+  [view, ["canGoBack", "canGoForward", "src"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
 // Js.log("****************************")
-// ["canBeLoaded", "iconSource", "textTransform", "title"]
+// [
+//   "hour",
+//   "iosPreferredDatePickerStyle",
+//   "maxHour",
+//   "maxMinute",
+//   "minHour",
+//   "minMinute",
+//   "minute",
+//   "minuteInterval",
+//   "time",
+// ]
 // ->Belt.Array.map(dashed)
 // ->Belt.Array.forEach(prop =>
 //   Js.log(

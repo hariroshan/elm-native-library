@@ -197,6 +197,7 @@ module TabView = {
 
   let handler: Types.handler = buildHandler(new, Constants.tabView, Helper.addView)
 }
+
 module TabViewItem = {
   %%private(
     @module("@nativescript/core") @new
@@ -223,6 +224,46 @@ module TabViewItem = {
     addEventListener: NativescriptCore.addEventListener,
     removeEventListener: NativescriptCore.removeEventListener,
   }
+}
+
+module TextField = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "TextField"
+  )
+  let tagName = "ns-textfield"
+
+  let handler: Types.handler = buildHandler(new, Constants.textField, Helper.addView)
+}
+
+module TextView = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "TextView"
+  )
+  let tagName = "ns-text-view"
+
+  let handler: Types.handler = buildHandler(new, Constants.textView, Helper.addView)
+}
+
+module TimePicker = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "TimePicker"
+  )
+  let tagName = "ns-time-picker"
+
+  let handler: Types.handler = buildHandler(new, Constants.timePicker, Helper.addView)
+}
+
+module WebView = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "WebView"
+  )
+  let tagName = "ns-web-view"
+
+  let handler: Types.handler = buildHandler(new, Constants.webView, Helper.addView)
 }
 
 let all: array<Types.customElement> = [
@@ -297,5 +338,21 @@ let all: array<Types.customElement> = [
   {
     tagName: TabViewItem.tagName,
     handler: TabViewItem.handler,
+  },
+  {
+    tagName: TextField.tagName,
+    handler: TextField.handler,
+  },
+  {
+    tagName: TextView.tagName,
+    handler: TextView.handler,
+  },
+  {
+    tagName: TimePicker.tagName,
+    handler: TimePicker.handler,
+  },
+  {
+    tagName: WebView.tagName,
+    handler: WebView.handler,
   },
 ]

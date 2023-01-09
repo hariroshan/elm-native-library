@@ -315,8 +315,8 @@ boxShadow =
     attribute "box-shadow"
 
 
-className : String -> Attribute msg
-className =
+class : String -> Attribute msg
+class =
     attribute "class-name"
 
 
@@ -980,7 +980,116 @@ canBeLoaded =
     attribute "can-be-loaded"
 
 
+canGoBack : String -> Attribute msg
+canGoBack =
+    attribute "can-go-back"
+
+
+canGoForward : String -> Attribute msg
+canGoForward =
+    attribute "can-go-forward"
+
+
 iconSource : String -> Attribute msg
 iconSource =
     attribute "icon-source"
 
+
+autocapitalizationType : String -> Attribute msg
+autocapitalizationType =
+    attribute "autocapitalization-type"
+
+
+autocorrect : String -> Attribute msg
+autocorrect =
+    attribute "autocorrect"
+
+
+autofillType : String -> Attribute msg
+autofillType =
+    attribute "autofill-type"
+
+
+closeOnReturn : String -> Attribute msg
+closeOnReturn =
+    attribute "close-on-return"
+
+
+editable : String -> Attribute msg
+editable =
+    attribute "editable"
+
+
+keyboardType : String -> Attribute msg
+keyboardType =
+    attribute "keyboard-type"
+
+
+maxLength : String -> Attribute msg
+maxLength =
+    attribute "max-length"
+
+
+returnKeyType : String -> Attribute msg
+returnKeyType =
+    attribute "return-key-type"
+
+
+secure : String -> Attribute msg
+secure =
+    attribute "secure"
+
+
+secureWithoutAutofill : String -> Attribute msg
+secureWithoutAutofill =
+    attribute "secure-without-autofill"
+
+
+updateTextTrigger : String -> Attribute msg
+updateTextTrigger =
+    attribute "update-text-trigger"
+
+
+maxLines : String -> Attribute msg
+maxLines =
+    attribute "max-lines"
+
+
+hour : String -> Attribute msg
+hour =
+    attribute "hour"
+
+
+maxHour : String -> Attribute msg
+maxHour =
+    attribute "max-hour"
+
+
+maxMinute : String -> Attribute msg
+maxMinute =
+    attribute "max-minute"
+
+
+minHour : String -> Attribute msg
+minHour =
+    attribute "min-hour"
+
+
+minMinute : String -> Attribute msg
+minMinute =
+    attribute "min-minute"
+
+
+minute : String -> Attribute msg
+minute =
+    attribute "minute"
+
+
+minuteInterval : String -> Attribute msg
+minuteInterval =
+    attribute "minute-interval"
+
+
+time : String -> Attribute msg
+time =
+    attribute "time"
