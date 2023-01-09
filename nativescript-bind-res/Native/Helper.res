@@ -87,6 +87,14 @@ let addItems: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
         })
     }
     `)
+
+let optionMap2 = (a, b, fx) => {
+  switch (a, b) {
+  | (Some(x), Some(y)) => Some(fx(x, y))
+  | _ => None
+  }
+}
+
 let dbg = x => {
   Js.log(x)
   x

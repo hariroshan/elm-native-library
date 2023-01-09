@@ -210,11 +210,13 @@ module TabViewItem = {
     render: Js.Nullable.return((. current: Types.htmlElement, _) => {
       current.children
       ->Belt.Array.get(0)
-      ->Belt.Option.forEach(ch => {
-        current.data
-        ->Js.Nullable.toOption
-        ->Belt.Option.forEach(data => data->Types.setView(ch.data))
+      ->Helper.optionMap2(current.data->Js.Nullable.toOption, (
+        ch: Types.htmlElement,
+        data: Types.nativeObject,
+      ) => {
+        data->Types.setView(ch.data)
       })
+      ->ignore
 
       Helper.addItems(. current.parentElement, current)
     }),
