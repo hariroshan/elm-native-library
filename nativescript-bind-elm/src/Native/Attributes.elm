@@ -1,8 +1,7 @@
 module Native.Attributes exposing (..)
 
 import Html exposing (Attribute)
-import Html.Attributes exposing (attribute)
-import Html.Attributes exposing (property)
+import Html.Attributes exposing (attribute, property)
 import Json.Encode as E
 
 
@@ -854,3 +853,13 @@ items =
 selectedIndex : String -> Attribute msg
 selectedIndex =
     attribute "selected-index"
+
+
+maxValue : String -> Attribute msg
+maxValue =
+    attribute "max-value"
+
+
+value : String -> Attribute msg
+value =
+    attribute "value"

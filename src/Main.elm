@@ -153,6 +153,24 @@ counter model =
                                    []
                                ]
                            ]
+
+        Native.activityIndicator
+                [ NA.busy "true"
+                , NA.color "#610fc8"
+                ]
+                []
+        Layout.asElement <|
+                Layout.flexboxLayout
+                    [ NA.flexDirection "column"
+                    ]
+                    [ Native.listPicker
+                        [ E.list E.string
+                            [ "2022", "2021", "2020" ]
+                            |> NA.items
+                        , NA.selectedIndex "1"
+                        ]
+                        []
+                    ]
 -}
 
 
@@ -168,23 +186,14 @@ detailsPage model =
                 , NA.fontSize "40"
                 ]
                 []
-            , Native.activityIndicator
-                [ NA.busy "true"
-                , NA.color "#610fc8"
+            , Native.progress
+                [ NA.value "50"
+                , NA.maxValue "100"
+                , NA.backgroundColor "red"
+                , NA.color "green"
+                , NA.scaleY "2"
                 ]
                 []
-            , Layout.asElement <|
-                Layout.flexboxLayout
-                    [ NA.flexDirection "column"
-                    ]
-                    [ Native.listPicker
-                        [ E.list E.string
-                            [ "2022", "2021", "2020" ]
-                            |> NA.items
-                        , NA.selectedIndex "1"
-                        ]
-                        []
-                    ]
             ]
         )
 

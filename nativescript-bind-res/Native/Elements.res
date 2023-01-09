@@ -92,6 +92,16 @@ module Image = {
 
   let handler: Types.handler = buildHandler(new, Constants.image, Helper.addView)
 }
+
+module Progress = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "Progress"
+  )
+  let tagName = "ns-progress"
+
+  let handler: Types.handler = buildHandler(new, Constants.progress, Helper.addView)
+}
 module ListPicker = {
   %%private(
     @module("@nativescript/core") @new
@@ -155,5 +165,9 @@ let all: array<Types.customElement> = [
   {
     tagName: ListPicker.tagName,
     handler: ListPicker.handler,
+  },
+  {
+    tagName: Progress.tagName,
+    handler: Progress.handler,
   },
 ]

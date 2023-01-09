@@ -246,7 +246,10 @@ let image =
     ]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
-let listPicker = [view, ["items", "selectedIndex"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+let listPicker = [view, ["selectedIndex"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
+let progress = [view, ["maxValue", "value"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+
 
 // Js.log("****************************")
 // ["items", "selectedIndex"]
