@@ -74,6 +74,15 @@ module DatePicker = {
 
   let handler: Types.handler = buildHandler(new, Constants.datePicker, Helper.addView)
 }
+module HtmlView = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "HtmlView"
+  )
+  let tagName = "ns-html-view"
+
+  let handler: Types.handler = buildHandler(new, Constants.htmlView, Helper.addView)
+}
 
 let all: array<Types.customElement> = [
   {
@@ -99,5 +108,9 @@ let all: array<Types.customElement> = [
   {
     tagName: DatePicker.tagName,
     handler: DatePicker.handler,
+  },
+  {
+    tagName: HtmlView.tagName,
+    handler: HtmlView.handler,
   },
 ]

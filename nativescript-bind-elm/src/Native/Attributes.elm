@@ -802,3 +802,8 @@ month =
 year : String -> Attribute msg
 year =
     attribute "year"
+
+
+html : String -> Attribute msg
+html =
+    attribute "html"

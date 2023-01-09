@@ -148,6 +148,19 @@ detailsPage model =
                         , NA.minDate "1980-02-01"
                         ]
                         []
+                    , Native.htmlView
+                        [ NA.html """
+                        <!DOCTYPE html>
+                        <html>
+                            <head>
+                            </head>
+                            <body>
+                                <span style="color: green">Hello World</span>
+                            </body>
+                        </html>
+                        """
+                        ]
+                        []
                     ]
             ]
         )
