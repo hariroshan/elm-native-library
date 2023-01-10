@@ -35,10 +35,6 @@ module Page = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "Page"
-    let getData = (children, idx) =>
-      children
-      ->Belt.Array.get(idx)
-      ->Belt.Option.flatMap((x: Types.htmlElement) => x.data->Js.Nullable.toOption)
   )
 
   let tagName = "ns-page"
@@ -46,7 +42,7 @@ module Page = {
     init: (. ()) => new(),
     observedAttributes: Constants.pageBase,
     update: NativescriptCore.update,
-    render: Js.Nullable.return((. current: Types.htmlElement, nativeObject) => {
+    render: Js.Nullable.return((. current: Types.htmlElement, _) => {
       Types.requestAnimationFrame(._ => {
         current.parentElement.handler
         ->Js.Nullable.toOption

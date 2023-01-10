@@ -6,7 +6,6 @@
   "scripts": {
     "res:build": "rescript",
     "res:dev": "rescript build -w",
-    "build:elm": "elm make src/Main.elm --output ./dist/elm.js",
     "run:ios": "ns run ios",
     "build:webpack": "webpack --mode development"
   },

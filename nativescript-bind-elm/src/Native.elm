@@ -9,6 +9,7 @@ module Native exposing
     , image
     , label
     , listPicker
+    , listView
     , navigationButton
     , progress
     , scrollView
@@ -151,3 +152,8 @@ actionItem =
 navigationButton : List (Attribute msg) -> List (Html msg) -> Html msg
 navigationButton =
     buildElement "ns-navigation-button"
+
+
+listView : List (Attribute msg) -> List (Html msg) -> Html msg
+listView =
+    buildElement "ns-list-view"

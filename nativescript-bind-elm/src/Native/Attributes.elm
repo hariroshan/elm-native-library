@@ -1128,3 +1128,18 @@ iosSystemIcon =
 androidSystemIcon : String -> Attribute msg
 androidSystemIcon =
     attribute "android.system-icon"
+
+
+iosEstimatedRowHeight : String -> Attribute msg
+iosEstimatedRowHeight =
+    attribute "ios-estimated-row-height"
+
+
+rowHeight : String -> Attribute msg
+rowHeight =
+    attribute "row-height"
+
+
+separatorColor : String -> Attribute msg
+separatorColor =
+    attribute "separator-color"

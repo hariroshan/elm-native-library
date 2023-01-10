@@ -140,13 +140,12 @@ module ListPicker = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "ListPicker"
-    let setItems = (current: Types.htmlElement, data) => {
-      data->Types.setItems(current.items)
-    }
   )
+  let setItems = (current: Types.htmlElement, data) => {
+    data->Types.setItems(current.items)
+  }
   let tagName = "ns-list-picker"
 
-  /* TODO: Listen for changes in items property */
   let handler: Types.handler = {
     init: (. ()) => new(),
     observedAttributes: Constants.listPicker,
@@ -301,6 +300,28 @@ module WebView = {
 
   let handler: Types.handler = buildHandler(new, Constants.webView, Helper.addView)
 }
+module ListView = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "ListView"
+  )
+  let tagName = "ns-list-view"
+
+  let handler: Types.handler = {
+    init: (. ()) => new(),
+    observedAttributes: Constants.listView,
+    render: Js.Nullable.return((. current: Types.htmlElement, _) => {
+      current.data->Js.Nullable.toOption->Belt.Option.forEach(ListPicker.setItems(current))
+      Types.definePropertyInHtml(. current, "items", {set: ListPicker.setItems(current)})
+      Helper.addView(. current.parentElement, current)
+    }),
+    handlerKind: Types.Element,
+    update: NativescriptCore.update,
+    dispose: NativescriptCore.dispose,
+    addEventListener: NativescriptCore.addEventListener,
+    removeEventListener: NativescriptCore.removeEventListener,
+  }
+}
 
 let all: array<Types.customElement> = [
   {
@@ -402,5 +423,9 @@ let all: array<Types.customElement> = [
   {
     tagName: NavigationButton.tagName,
     handler: NavigationButton.handler,
+  },
+  {
+    tagName: ListView.tagName,
+    handler: ListView.handler,
   },
 ]

@@ -223,18 +223,23 @@ detailsPage model =
     Page.pageWithActionBar []
         -- Event.on "navigatedTo" (D.succeed Destory)
         -- [ Native.actionBar []
-        [ Native.actionBar [ NA.flat "true", NA.title "Home" ]
-            []
-        , Layout.asElement <|
-            Layout.rootLayout []
-                [ Native.label
-                    [ NA.text "Elm Counter"
-                    , NA.textAlignment "center"
-                    , NA.color "#610fc8"
-                    , NA.fontSize "40"
+        [ Native.listView
+            [ E.list E.string
+                [ "2022", "2021", "2020" ]
+                |> NA.items
+            , NA.separatorColor "orange"
+            , NA.class "list-group"
+            ]
+            [ Layout.asElement <|
+                Layout.stackLayout [ NA.class "list-group-item" ]
+                    [ Native.label [ NA.text "{{ $value }}", NA.color "green" ] []
                     ]
-                    []
-                ]
+            ]
+
+        --     Native.actionBar [ NA.flat "true", NA.title "Home" ]
+        --     []
+        -- , Layout.asElement <|
+        --
         ]
 
 

@@ -13,19 +13,16 @@ let rec assignDeep: (Obj.t, array<string>, int, 'a) => unit = (object, keys, i, 
   })
 }
 
-let setAttribute: (Obj.t, string, 'a) => unit = (object, key, value) => {
-  if !(key->Js.String2.includes(".")) {
+let setAttribute: (Obj.t, string, string) => unit = (object, key, value) => {
+  if value->Js.String2.startsWith("{{") {
+    let expression = value->String.sub(2, value->String.length - 4)
+    object->Types.bindExpression({expression, targetProperty: key})
+  } else if !(key->Js.String2.includes(".")) {
     Js.Dict.set(Obj.magic(object), key, value)
   } else {
     let keys = key->Js.String2.split(".")
     assignDeep(Obj.magic(object), keys, 0, value)
   }
-}
-
-let init = (object, props) => {
-  Js.Dict.keys(Obj.magic(props))->Belt.Array.forEach(key =>
-    setAttribute(object, key, Js.Dict.unsafeGet(props, key))
-  )
 }
 
 let update = setAttribute
@@ -35,7 +32,7 @@ external typeOf: 'a => string = "typeof"
 let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        requestAnimationFrame(() => {
+        // requestAnimationFrame(() => {
             const children = Array.from(parentElement.children)
             const hasActionBar = children.some(x => x.tagName.toLowerCase() === "ns-action-bar")
             const index = children.indexOf(thisElement)
@@ -50,69 +47,80 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
             if (parentElement.data.constructor.name == "ActionBar")
               return (parentElement.data.titleView = thisElement.data)
 
+            if (parentElement.data.constructor.name == "ListView") {
+              parentElement.data.itemTemplate =
+                function() {
+                  const div = document.createElement("div")
+                  const cloned = thisElement.cloneAll()
+                  div.appendChild(cloned)
+                  cloned.manualRender()
+                  return cloned.data;
+                }
+              return
+            }
+
             return (parentElement.data.content = thisElement.data)
-        })
+        // })
     }
     `)
 
 let addFormattedText: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        requestAnimationFrame(() => {
+        // requestAnimationFrame(() => {
             const children = Array.from(parentElement.children)
             const index = children.indexOf(thisElement)
             parentElement.data.formattedText = thisElement.data
-        })
+        // })
     }
     `)
 
 let addSpan: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        requestAnimationFrame(() => {
+        // requestAnimationFrame(() => {
             const children = Array.from(parentElement.children)
             const index = children.indexOf(thisElement)
             parentElement.data.spans.push(thisElement.data)
-        })
+        // })
     }
     `)
 
 let addActionBar: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        requestAnimationFrame(() => {
+        // requestAnimationFrame(() => {
           parentElement.data.actionBar = thisElement.data
-        })
+        // })
     }
     `)
 
 let addActionItem: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        requestAnimationFrame(() => {
+        // requestAnimationFrame(() => {
           parentElement.data.actionItems.addItem(thisElement.data)
-        })
+        // })
     }
     `)
 
 let addNavigationButton: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        requestAnimationFrame(() => {
-            console.log(thisElement.data, parentElement.data.navigationButton)
+        // requestAnimationFrame(() => {
             parentElement.data.navigationButton = thisElement.data
-        })
+        // })
     }
     `)
 
 let addItems: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        requestAnimationFrame(() => {
+        // requestAnimationFrame(() => {
             if (parentElement.data.items == null)
               return (parentElement.data.items = [thisElement.data])
             parentElement.data.items.push(thisElement.data)
-        })
+        // })
     }
     `)
 

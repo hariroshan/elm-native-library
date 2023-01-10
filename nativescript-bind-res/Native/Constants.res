@@ -372,18 +372,14 @@ let actionItem =
     ),
   ]->Belt.Array.concatMany
 
+let listView =
+  [
+    view,
+    ["iosEstimatedRowHeight", "rowHeight", "separatorColor"]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
+
 // Js.log("****************************")
-// [
-//   "hour",
-//   "iosPreferredDatePickerStyle",
-//   "maxHour",
-//   "maxMinute",
-//   "minHour",
-//   "minMinute",
-//   "minute",
-//   "minuteInterval",
-//   "time",
-// ]
+// ["iosEstimatedRowHeight", "rowHeight", "separatorColor"]
 // ->Belt.Array.map(dashed)
 // ->Belt.Array.forEach(prop =>
 //   Js.log(
