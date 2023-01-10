@@ -47,6 +47,9 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
             if (parentElement.data.constructor.name == "TabViewItem")
               return (parentElement.data.view = thisElement.data)
 
+            if (parentElement.data.constructor.name == "ActionBar")
+              return (parentElement.data.titleView = thisElement.data)
+
             return (parentElement.data.content = thisElement.data)
         })
     }
@@ -74,15 +77,40 @@ let addSpan: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     }
     `)
 
+let addActionBar: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
+    function(parentElement, thisElement) {
+        if (parentElement.data == null) return
+        requestAnimationFrame(() => {
+          parentElement.data.actionBar = thisElement.data
+        })
+    }
+    `)
+
+let addActionItem: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
+    function(parentElement, thisElement) {
+        if (parentElement.data == null) return
+        requestAnimationFrame(() => {
+          parentElement.data.actionItems.addItem(thisElement.data)
+        })
+    }
+    `)
+
+let addNavigationButton: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
+    function(parentElement, thisElement) {
+        if (parentElement.data == null) return
+        requestAnimationFrame(() => {
+            console.log(thisElement.data, parentElement.data.navigationButton)
+            parentElement.data.navigationButton = thisElement.data
+        })
+    }
+    `)
+
 let addItems: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
         requestAnimationFrame(() => {
-            const children = Array.from(parentElement.children)
-            const index = children.indexOf(thisElement)
             if (parentElement.data.items == null)
               return (parentElement.data.items = [thisElement.data])
-
             parentElement.data.items.push(thisElement.data)
         })
     }

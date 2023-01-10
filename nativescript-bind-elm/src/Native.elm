@@ -1,4 +1,29 @@
-module Native exposing (activityIndicator, button, datePicker, formattedString, htmlView, image, label, listPicker, progress, scrollView, searchBar, segmentedBar, segmentedBarItem, slider, span, switch, tabViewItem, textField, textView, timePicker, webView)
+module Native exposing
+    ( actionBar
+    , actionItem
+    , activityIndicator
+    , button
+    , datePicker
+    , formattedString
+    , htmlView
+    , image
+    , label
+    , listPicker
+    , navigationButton
+    , progress
+    , scrollView
+    , searchBar
+    , segmentedBar
+    , segmentedBarItem
+    , slider
+    , span
+    , switch
+    , tabViewItem
+    , textField
+    , textView
+    , timePicker
+    , webView
+    )
 
 import Html exposing (Attribute, Html)
 
@@ -111,3 +136,18 @@ timePicker =
 webView : List (Attribute msg) -> List (Html msg) -> Html msg
 webView =
     buildElement "ns-web-view"
+
+
+actionBar : List (Attribute msg) -> List (Html msg) -> Html msg
+actionBar =
+    buildElement "ns-action-bar"
+
+
+actionItem : List (Attribute msg) -> List (Html msg) -> Html msg
+actionItem =
+    buildElement "ns-action-item"
+
+
+navigationButton : List (Attribute msg) -> List (Html msg) -> Html msg
+navigationButton =
+    buildElement "ns-navigation-button"

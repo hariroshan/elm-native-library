@@ -11,6 +11,7 @@ type rec context = {
   initPorts: Js.Nullable.t<Obj.t => unit>,
   withCustomElements: (. Obj.t, Types.handler) => Obj.t,
   elements: array<Types.customElement>,
+  run: unit => unit,
 }
 
 %%private(
@@ -29,10 +30,6 @@ type rec context = {
     params.elements->Belt.Array.forEach(element => {
       let newClass = params.withCustomElements(. htmlElement, element.handler)
       customElements.define(. element.tagName, newClass)
-    })
-
-    NativescriptCore.Application.run({
-      create: getRootLayout,
     })
   }
 )
@@ -60,6 +57,10 @@ let start: config => unit = config => {
     elm: config.elmModule,
     elements: Native.allElements,
     withCustomElements: CustomElement.withCustomElements,
+    run: () =>
+      NativescriptCore.Application.run({
+        create: getRootLayout,
+      }),
   }
 
   let defineCustomElements = `initElements({window, withCustomElements, elements})`
@@ -80,4 +81,5 @@ let start: config => unit = config => {
 
   Mock.runInContext(defineCustomElements, context)
   Mock.runInContext(elmInitScript, context)
+  Mock.runInContext(`run()`, context)
 }

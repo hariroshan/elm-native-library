@@ -1,10 +1,12 @@
 type event
+type constructorRec = {name: string}
 
 type rec nativeObject = {
   on: (. event, event => unit) => unit,
   off: (. event, event => unit) => unit,
   destroyNode: (. unit) => unit,
   insertChild: Js.Nullable.t<(. nativeObject, int) => unit>,
+  constructor: constructorRec,
 }
 
 type constructor = {

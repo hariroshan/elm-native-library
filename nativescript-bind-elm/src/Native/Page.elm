@@ -1,4 +1,4 @@
-module Native.Page exposing (Page, page, unwrap)
+module Native.Page exposing (Page, page, unwrap, pageWithActionBar)
 
 import Html exposing (Attribute, Html)
 import Native.Layout as Layout exposing (Layout)
@@ -14,6 +14,15 @@ page attrs layout =
         (Html.node "ns-page"
             attrs
             [ Layout.asElement layout ]
+        )
+
+
+pageWithActionBar : List (Attribute msg) -> List (Html msg) -> Page msg
+pageWithActionBar attrs layout =
+    Page
+        (Html.node "ns-page"
+            attrs
+            layout
         )
 
 

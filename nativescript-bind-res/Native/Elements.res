@@ -38,6 +38,40 @@ module Button = {
   let handler: Types.handler = buildHandler(new, Constants.button, Helper.addView)
 }
 
+module ActionBar = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "ActionBar"
+  )
+  let tagName = "ns-action-bar"
+
+  let handler: Types.handler = buildHandler(new, Constants.actionBar, Helper.addActionBar)
+}
+
+module ActionItem = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "ActionItem"
+  )
+  let tagName = "ns-action-item"
+
+  let handler: Types.handler = buildHandler(new, Constants.actionItem, Helper.addActionItem)
+}
+
+module NavigationButton = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "NavigationButton"
+  )
+  let tagName = "ns-navigation-button"
+
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.navigationButton,
+    Helper.addNavigationButton,
+  )
+}
+
 module ActivityIndicator = {
   %%private(
     @module("@nativescript/core") @new
@@ -356,5 +390,17 @@ let all: array<Types.customElement> = [
   {
     tagName: WebView.tagName,
     handler: WebView.handler,
+  },
+  {
+    tagName: ActionBar.tagName,
+    handler: ActionBar.handler,
+  },
+  {
+    tagName: ActionItem.tagName,
+    handler: ActionItem.handler,
+  },
+  {
+    tagName: NavigationButton.tagName,
+    handler: NavigationButton.handler,
   },
 ]

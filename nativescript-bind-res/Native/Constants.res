@@ -360,6 +360,18 @@ let timePicker =
 let webView =
   [view, ["canGoBack", "canGoForward", "src"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
+let actionBar = ["title", "flat"]->Belt.Array.map(dashed)
+
+let navigationButton = ["text", "icon"]
+
+let actionItem =
+  [
+    navigationButton,
+    ["ios.position", "android.position", "ios.systemIcon", "android.systemIcon"]->Belt.Array.map(
+      dashed,
+    ),
+  ]->Belt.Array.concatMany
+
 // Js.log("****************************")
 // [
 //   "hour",

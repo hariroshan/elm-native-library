@@ -35,6 +35,10 @@ module Page = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "Page"
+    let getData = (children, idx) =>
+      children
+      ->Belt.Array.get(idx)
+      ->Belt.Option.flatMap((x: Types.htmlElement) => x.data->Js.Nullable.toOption)
   )
 
   let tagName = "ns-page"
@@ -43,12 +47,6 @@ module Page = {
     observedAttributes: Constants.pageBase,
     update: NativescriptCore.update,
     render: Js.Nullable.return((. current: Types.htmlElement, nativeObject) => {
-      // page should have one child which is a layout
-      current.children
-      ->Belt.Array.get(0)
-      ->Belt.Option.flatMap(x => x.data->Js.Nullable.toOption)
-      ->Belt.Option.forEach(data => nativeObject->Types.setContent(data))
-
       Types.requestAnimationFrame(._ => {
         current.parentElement.handler
         ->Js.Nullable.toOption

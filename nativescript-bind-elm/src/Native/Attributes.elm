@@ -40,6 +40,11 @@ text =
     attribute "text"
 
 
+icon : String -> Attribute msg
+icon =
+    attribute "icon"
+
+
 style : String -> Attribute msg
 style =
     attribute "style"
@@ -925,6 +930,16 @@ title =
     attribute "title"
 
 
+flat : String -> Attribute msg
+flat =
+    attribute "flat"
+
+
+titleView : String -> Attribute msg
+titleView =
+    attribute "title-view"
+
+
 selectedBackgroundColor : String -> Attribute msg
 selectedBackgroundColor =
     attribute "selected-background-color"
@@ -1093,3 +1108,23 @@ minuteInterval =
 time : String -> Attribute msg
 time =
     attribute "time"
+
+
+iosPosition : String -> Attribute msg
+iosPosition =
+    attribute "ios.position"
+
+
+androidPosition : String -> Attribute msg
+androidPosition =
+    attribute "android.position"
+
+
+iosSystemIcon : String -> Attribute msg
+iosSystemIcon =
+    attribute "ios.system-icon"
+
+
+androidSystemIcon : String -> Attribute msg
+androidSystemIcon =
+    attribute "android.system-icon"

@@ -220,29 +220,31 @@ counter model =
 
 detailsPage : Model -> Page.Page Msg
 detailsPage model =
-    Page.page []
+    Page.pageWithActionBar []
         -- Event.on "navigatedTo" (D.succeed Destory)
-        (Layout.stackLayout []
-            [ Native.webView [
-                NA.height "100%"
-                , NA.backgroundColor "red"
-                , NA.src "http://www.google.com/" ] []
-            ]
-        )
+        -- [ Native.actionBar []
+        [ Native.actionBar [ NA.flat "true", NA.title "Home" ]
+            []
+        , Layout.asElement <|
+            Layout.rootLayout []
+                [ Native.label
+                    [ NA.text "Elm Counter"
+                    , NA.textAlignment "center"
+                    , NA.color "#610fc8"
+                    , NA.fontSize "40"
+                    ]
+                    []
+                ]
+        ]
 
 
 view : Model -> Html Msg
 view model =
-    detailsPage model
-        |> Page.unwrap
-
-
-
--- Frame.frame model
---     [ ( Details, detailsPage )
---     ]
---     []
---     |> Frame.root
+    Frame.frame model
+        [ ( Details, detailsPage )
+        ]
+        []
+        |> Frame.root
 
 
 subscriptions : Model -> Sub Msg
