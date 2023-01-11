@@ -11,6 +11,7 @@ module Native exposing
     , listPicker
     , listView
     , navigationButton
+    , placeholderView
     , progress
     , scrollView
     , searchBar
@@ -157,3 +158,8 @@ navigationButton =
 listView : List (Attribute msg) -> List (Html msg) -> Html msg
 listView =
     buildElement "ns-list-view"
+
+
+placeholderView : List (Attribute msg) -> List (Html msg) -> Html msg
+placeholderView =
+    buildElement "ns-placeholder"

@@ -2,7 +2,7 @@
     "type": "application",
     "source-directories": [
         "src",
-        "nativescript-bind-elm/src"
+        "elm-native/src"
     ],
     "elm-version": "0.19.1",
     "dependencies": {

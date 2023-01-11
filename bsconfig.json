@@ -2,7 +2,7 @@
   "name": "elm-native",
   "sources": [
     {
-      "dir": "nativescript-bind-res",
+      "dir": "elm-native-js",
       "subdirs": true
     }
   ],

@@ -20,6 +20,9 @@ type rec context = {
   @set
   external setGlobalDocument: (global, Dom.document) => unit = "document"
 
+  @set
+  external setGlobalWindow: (global, Dom.window) => unit = "window"
+
   let getRootLayout: unit => NativescriptCore.rootLayout = _ =>
     %raw(`document.body.children[0].data`)
 
@@ -47,6 +50,7 @@ let start: config => unit = config => {
 
   let document = mockWindow->Mock.document
   global->setGlobalDocument(document)
+  global->setGlobalWindow(mockWindow)
 
   let context = {
     window: mockWindow,

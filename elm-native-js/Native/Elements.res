@@ -38,6 +38,16 @@ module Button = {
   let handler: Types.handler = buildHandler(new, Constants.button, Helper.addView)
 }
 
+module Placeholder = {
+  %%private(
+    @module("@nativescript/core") @new
+    external new: unit => Types.nativeObject = "Placeholder"
+  )
+  let tagName = "ns-placeholder"
+
+  let handler: Types.handler = buildHandler(new, Constants.view, Helper.addView)
+}
+
 module ActionBar = {
   %%private(
     @module("@nativescript/core") @new
@@ -427,5 +437,9 @@ let all: array<Types.customElement> = [
   {
     tagName: ListView.tagName,
     handler: ListView.handler,
+  },
+  {
+    tagName: Placeholder.tagName,
+    handler: Placeholder.handler,
   },
 ]
