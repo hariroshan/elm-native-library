@@ -2,8 +2,6 @@ import Elm from "./Main.elm";
 import { start } from "../elm-native-js/App.bs"
 import { Application } from "@nativescript/core";
 
-Application.setCssFileName('style.css')
-
 start(
   {
     elmModule: Elm,

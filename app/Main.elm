@@ -215,6 +215,21 @@ counter model =
             , NA.selectedIndex "1"
             ]
             []
+
+    Native.listView
+            [ E.list E.int [ 2022, 2021, 2020, 2019, 2018, 2017 ] |> NA.items
+            , NA.itemTemplateSelector "{{ $value % 2 == 0 ? 'even' : 'odd' }}"
+            ]
+            [ Layout.asElement <|
+                Layout.stackLayout
+                    [ NA.key "even" ]
+                    [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "green" ] []
+                    ]
+            , Layout.asElement <|
+                Layout.stackLayout
+                    [ NA.key "odd" ]
+                    [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "red" ] [] ]
+            ]
 -}
 
 
@@ -226,10 +241,13 @@ detailsPage model =
         [ Native.listView
             [ E.list E.int [ 2022, 2021, 2020, 2019, 2018, 2017 ] |> NA.items
             , NA.itemTemplateSelector "{{ $value % 2 == 0 ? 'even' : 'odd' }}"
+            , NA.separatorColor "#dedede"
             ]
             [ Layout.asElement <|
                 Layout.stackLayout
-                    [ NA.key "even" ]
+                    [ NA.key "even"
+                    , NA.padding "20, 20"
+                    ]
                     [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "green" ] []
                     ]
             , Layout.asElement <|

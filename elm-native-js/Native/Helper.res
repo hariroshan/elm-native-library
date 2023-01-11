@@ -86,7 +86,7 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
               const expression =
                 getExpression(parentElement.getAttribute("item-template-selector"))
 
-              parentElement.data.itemTemplateSelector = ($value, $index, $items) => {
+              parentElement.data.itemTemplateSelector = ($value, $index, _) => {
                 return eval(expression)
               }
               parentElement.data.itemTemplates = keyedTemplates
