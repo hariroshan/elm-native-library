@@ -314,6 +314,17 @@ module ListView = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "ListView"
+
+    let itemsSetter = (current: Types.htmlElement, newItems) => {
+      current.data
+      ->Js.Nullable.toOption
+      ->Belt.Option.forEach(data => {
+        if !Belt.Array.eq(data.items, newItems, (x, y) => x == y) {
+          data->Types.setItems(newItems)
+          data->Types.refresh
+        }
+      })
+    }
   )
   let tagName = "ns-list-view"
 
@@ -322,7 +333,9 @@ module ListView = {
     observedAttributes: Constants.listView,
     render: Js.Nullable.return((. current: Types.htmlElement, _) => {
       current.data->Js.Nullable.toOption->Belt.Option.forEach(ListPicker.setItems(current))
-      Types.definePropertyInHtml(. current, "items", {set: ListPicker.setItems(current)})
+
+      Types.definePropertyInHtml(. current, "items", {set: itemsSetter(current)})
+
       Helper.addView(. current.parentElement, current)
     }),
     handlerKind: Types.Element,

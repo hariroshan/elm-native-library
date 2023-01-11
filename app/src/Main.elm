@@ -30,7 +30,8 @@ type NavPage
 
 type alias Model =
     { count : Int
-    , options : List String
+    , options : List Int
+    , email : String
     , current : NavPage
     , next : Maybe NavPage
     , history : List NavPage
@@ -40,7 +41,8 @@ type alias Model =
 init : ( Model, Cmd Msg )
 init =
     ( { count = 0
-      , options = [ "2022", "2021", "2020" ]
+      , options = [ 2022, 2021, 2020 ]
+      , email = ""
       , current = Details
       , history = [ Details ]
       , next = Just Details
@@ -53,6 +55,8 @@ type Msg
     = Inc
     | Dec
     | Replace
+    | OnTextChange String
+    | OnDateChange { day : Int, month : Int, year : Int }
 
 
 
@@ -63,11 +67,20 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        OnDateChange str ->
+            let
+                _ =
+                    Debug.log "lear" str
+            in
+            ( model, Cmd.none )
+
+        OnTextChange str ->
+            ( { model | email = str }, Cmd.none )
+
         Replace ->
             ( { model
                 | options =
                     List.range 0 model.count
-                        |> List.map String.fromInt
               }
             , Cmd.none
             )
@@ -120,13 +133,13 @@ counter model =
             ]
             [ Native.button
                 [ NA.text "Increment"
-                , Event.on "tap" (D.succeed Inc)
+                , Event.onTap Inc
                 , NA.fontSize "24"
                 ]
                 []
             , helloWorld model.count
             , Native.button
-                [ Event.on "tap" (D.succeed Dec)
+                [ Event.onTap Dec
                 , NA.fontSize "24"
                 ]
                 [ Native.formattedString []
@@ -235,31 +248,32 @@ counter model =
 
 detailsPage : Model -> Page.Page Msg
 detailsPage model =
+    let
+        _ =
+            Debug.log "Model options" model.options
+    in
     Page.pageWithActionBar []
         -- Event.on "navigatedTo" (D.succeed Destory)
         -- [ Native.actionBar []
-        [ Native.listView
-            [ E.list E.int [ 2022, 2021, 2020, 2019, 2018, 2017 ] |> NA.items
-            , NA.itemTemplateSelector "{{ $value % 2 == 0 ? 'even' : 'odd' }}"
-            , NA.separatorColor "#dedede"
-            ]
-            [ Layout.asElement <|
-                Layout.stackLayout
-                    [ NA.key "even"
-                    , NA.padding "20, 20"
+        [ Layout.asElement <|
+            Layout.stackLayout
+                []
+                [ counter model
+                , Native.listView
+                    [ E.list E.int model.options |> NA.items
+                    , NA.itemTemplateSelector "{{ $value % 2 == 0 ? 'even' : 'odd' }}"
                     ]
-                    [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "green" ] []
+                    [ Layout.asElement <|
+                        Layout.stackLayout
+                            [ NA.key "even" ]
+                            [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "green" ] []
+                            ]
+                    , Layout.asElement <|
+                        Layout.stackLayout
+                            [ NA.key "odd" ]
+                            [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "red" ] [] ]
                     ]
-            , Layout.asElement <|
-                Layout.stackLayout
-                    [ NA.key "odd" ]
-                    [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "red" ] [] ]
-            ]
-
-        --     Native.actionBar [ NA.flat "true", NA.title "Home" ]
-        --     []
-        -- , Layout.asElement <|
-        --
+                ]
         ]
 
 

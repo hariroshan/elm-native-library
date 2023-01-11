@@ -7,7 +7,8 @@ type rec nativeObject = {
   off: (. event, event => unit) => unit,
   destroyNode: (. unit) => unit,
   insertChild: Js.Nullable.t<(. nativeObject, int) => unit>,
-  constructor: constructorRec
+  items: array<string>,
+  constructor: constructorRec,
 }
 
 type constructor = {
@@ -33,6 +34,9 @@ external navigate: (nativeObject, navigationConfig) => unit = "navigate"
 
 @send
 external bindExpression: (Obj.t, bindingOptions) => unit = "bind"
+
+@send
+external refresh: nativeObject => unit = "refresh"
 
 type rec handler = {
   init: (. unit) => nativeObject,

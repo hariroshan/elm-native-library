@@ -174,4 +174,8 @@ let dbg2 = (x, lbl) => {
   x
 }
 
+let tap = (fx, x) => {
+  fx(x)->ignore
+  x
+}
 let flip: (('a, 'b) => 'c, 'b, 'a) => 'c = (fx, x, y) => fx(y, x)
