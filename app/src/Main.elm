@@ -30,7 +30,7 @@ type NavPage
 
 type alias Model =
     { count : Int
-    , options : List Int
+    , options : List { title : String }
     , email : String
     , current : NavPage
     , next : Maybe NavPage
@@ -41,7 +41,7 @@ type alias Model =
 init : ( Model, Cmd Msg )
 init =
     ( { count = 0
-      , options = [ 2022, 2021, 2020 ]
+      , options = [ { title = "Hello" }, { title = "Hola" } ]
       , email = ""
       , current = Details
       , history = [ Details ]
@@ -80,7 +80,15 @@ update msg model =
         Replace ->
             ( { model
                 | options =
-                    List.range 0 model.count
+                    model.options
+                        |> List.indexedMap
+                            (\i x ->
+                                if i == 0 then
+                                    { x | title = "world" }
+
+                                else
+                                    x
+                            )
               }
             , Cmd.none
             )
@@ -260,18 +268,18 @@ detailsPage model =
                 []
                 [ counter model
                 , Native.listView
-                    [ E.list E.int model.options |> NA.items
-                    , NA.itemTemplateSelector "{{ $value % 2 == 0 ? 'even' : 'odd' }}"
+                    [ E.list (\x -> E.string x.title ) model.options |> NA.items
+                    , NA.itemTemplateSelector "{{ $index % 2 == 0 ? 'even' : 'odd' }}"
                     ]
                     [ Layout.asElement <|
                         Layout.stackLayout
                             [ NA.key "even" ]
-                            [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "green" ] []
+                            [ Native.label [ NA.text "{{ $value }}", NA.color "green" ] []
                             ]
                     , Layout.asElement <|
                         Layout.stackLayout
                             [ NA.key "odd" ]
-                            [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "red" ] [] ]
+                            [ Native.label [ NA.text "{{ $value }}", NA.color "red" ] [] ]
                     ]
                 ]
         ]
