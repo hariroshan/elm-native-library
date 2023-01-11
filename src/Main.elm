@@ -224,16 +224,18 @@ detailsPage model =
         -- Event.on "navigatedTo" (D.succeed Destory)
         -- [ Native.actionBar []
         [ Native.listView
-            [ E.list E.string
-                [ "2022", "2021", "2020" ]
-                |> NA.items
-            , NA.separatorColor "orange"
-            , NA.class "list-group"
+            [ E.list E.int [ 2022, 2021, 2020, 2019, 2018, 2017 ] |> NA.items
+            , NA.itemTemplateSelector "{{ $value % 2 == 0 ? 'even' : 'odd' }}"
             ]
             [ Layout.asElement <|
-                Layout.stackLayout [ NA.class "list-group-item" ]
-                    [ Native.label [ NA.text "{{ $value }}", NA.color "green" ] []
+                Layout.stackLayout
+                    [ NA.key "even" ]
+                    [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "green" ] []
                     ]
+            , Layout.asElement <|
+                Layout.stackLayout
+                    [ NA.key "odd" ]
+                    [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "red" ] [] ]
             ]
 
         --     Native.actionBar [ NA.flat "true", NA.title "Home" ]

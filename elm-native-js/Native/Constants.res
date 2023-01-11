@@ -125,6 +125,7 @@ let view: array<string> =
     "viewController",
     "visibility",
     "width",
+    "key",
   ]->Belt.Array.map(dashed)
 
 let paddings: array<string> =
@@ -375,7 +376,7 @@ let actionItem =
 let listView =
   [
     view,
-    ["iosEstimatedRowHeight", "rowHeight", "separatorColor"]->Belt.Array.map(dashed),
+    ["itemTemplateSelector", "iosEstimatedRowHeight", "rowHeight", "separatorColor"]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
 // Js.log("****************************")

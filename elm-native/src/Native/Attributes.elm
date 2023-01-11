@@ -40,6 +40,11 @@ text =
     attribute "text"
 
 
+key : String -> Attribute msg
+key =
+    attribute "key"
+
+
 icon : String -> Attribute msg
 icon =
     attribute "icon"
@@ -1143,3 +1148,8 @@ rowHeight =
 separatorColor : String -> Attribute msg
 separatorColor =
     attribute "separator-color"
+
+
+itemTemplateSelector : String -> Attribute msg
+itemTemplateSelector =
+    attribute "item-template-selector"
