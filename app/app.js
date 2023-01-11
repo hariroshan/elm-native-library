@@ -1,6 +1,5 @@
-import Elm from "./Main.elm";
+import Elm from "./src/Main.elm";
 import { start } from "../elm-native-js/App.bs"
-import { Application } from "@nativescript/core";
 
 start(
   {

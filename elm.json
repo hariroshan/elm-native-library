@@ -1,7 +1,7 @@
 {
     "type": "application",
     "source-directories": [
-        "app",
+        "app/src",
         "elm-native/src"
     ],
     "elm-version": "0.19.1",
