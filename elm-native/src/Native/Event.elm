@@ -3,6 +3,7 @@ module Native.Event exposing
     , onBlur
     , onBusyChange
     , onDateChange
+    , onEventWithMethodCalls
     , onFocus
     , onItemTap
     , onLoaded
@@ -21,6 +22,21 @@ import Json.Decode as D
 on : String -> D.Decoder msg -> Attribute msg
 on eventName =
     Event.on eventName
+
+
+{-| Method values are kept under {custom: {[methodName]: value}}
+example:
+  Event.onEventWithMethodCalls "touch"
+    [ "getX", "getY" ]
+    (D.map2 Tuple.pair
+      (D.at [ "custom", "getX"] D.float)
+      (D.at [ "custom", "getY"] D.float)
+    |> D.map Msg
+    )
+-}
+onEventWithMethodCalls : String -> List String -> D.Decoder msg -> Attribute msg
+onEventWithMethodCalls eventName methods =
+    Event.on (eventName ++ ";" ++ String.join "," methods)
 
 
 onTextChange : (String -> msg) -> Attribute msg

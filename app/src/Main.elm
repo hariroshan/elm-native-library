@@ -52,7 +52,7 @@ init =
 
 
 type Msg
-    = Inc
+    = Inc (Float, Float)
     | Dec
     | Replace
     | OnTextChange String
@@ -99,7 +99,11 @@ update msg model =
                 |> Task.perform (always Replace)
             )
 
-        Inc ->
+        Inc float ->
+            let
+                _ =
+                    Debug.log "INC Float GETX" float
+            in
             ( { model | count = model.count + 1 }, Cmd.none )
 
 
@@ -141,7 +145,15 @@ counter model =
             ]
             [ Native.button
                 [ NA.text "Increment"
-                , Event.onTap Inc
+
+                -- , Event.onTap Inc
+                , Event.onEventWithMethodCalls "touch"
+                    [ "getX", "getY" ]
+                    (D.map2 Tuple.pair
+                        (D.at [ "custom", "getX"] D.float)
+                        (D.at [ "custom", "getY"] D.float)
+                        |> D.map Inc
+                    )
                 , NA.fontSize "24"
                 ]
                 []
@@ -267,20 +279,6 @@ detailsPage model =
             Layout.stackLayout
                 []
                 [ counter model
-                , Native.listView
-                    [ E.list (\x -> E.string x.title ) model.options |> NA.items
-                    , NA.itemTemplateSelector "{{ $index % 2 == 0 ? 'even' : 'odd' }}"
-                    ]
-                    [ Layout.asElement <|
-                        Layout.stackLayout
-                            [ NA.key "even" ]
-                            [ Native.label [ NA.text "{{ $value }}", NA.color "green" ] []
-                            ]
-                    , Layout.asElement <|
-                        Layout.stackLayout
-                            [ NA.key "odd" ]
-                            [ Native.label [ NA.text "{{ $value }}", NA.color "red" ] [] ]
-                    ]
                 ]
         ]
 
