@@ -363,17 +363,22 @@ let timePicker =
 let webView =
   [view, ["canGoBack", "canGoForward", "src"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
-let actionBar = ["title", "flat"]->Belt.Array.map(dashed)
-
-let navigationButton = ["text", "icon"]
+let actionBar = [view, ["title", "flat"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
 let actionItem =
   [
-    navigationButton,
-    ["ios.position", "android.position", "ios.systemIcon", "android.systemIcon"]->Belt.Array.map(
-      dashed,
-    ),
+    view,
+    [
+      "text",
+      "icon",
+      "ios.position",
+      "android.position",
+      "ios.systemIcon",
+      "android.systemIcon",
+    ]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
+
+let navigationButton = actionItem
 
 let listView =
   [

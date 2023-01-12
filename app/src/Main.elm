@@ -284,8 +284,7 @@ homePage model =
                 , NA.items model.encodedHomeFlix
                 , Event.onItemTap ToDetails
                 ]
-                [ flickTemplate
-                ]
+                [ flickTemplate ]
             ]
         )
 

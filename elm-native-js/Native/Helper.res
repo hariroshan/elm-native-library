@@ -37,124 +37,118 @@ external typeOf: 'a => string = "typeof"
 let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        // requestAnimationFrame(() => {
-            const children = Array.from(parentElement.children)
-            const hasActionBar = children.some(x => x.tagName.toLowerCase() === "ns-action-bar")
-            const index = children.indexOf(thisElement)
-            const currentIdx = hasActionBar ? index - 1 : index
 
-            if(parentElement.data.insertChild)
-              return parentElement.data.insertChild(thisElement.data, currentIdx)
+        const children = Array.from(parentElement.children)
+        const hasActionBar = children.some(x => x.tagName.toLowerCase() === "ns-action-bar")
+        const index = children.indexOf(thisElement)
+        const currentIdx = hasActionBar ? index - 1 : index
 
-            if (parentElement.data.constructor.name == "TabViewItem")
-              return (parentElement.data.view = thisElement.data)
+        if(parentElement.data.insertChild)
+          return parentElement.data.insertChild(thisElement.data, currentIdx)
 
-            if (parentElement.data.constructor.name == "ActionBar")
-              return (parentElement.data.titleView = thisElement.data)
+        if (parentElement.data.constructor.name == "TabViewItem")
+          return (parentElement.data.view = thisElement.data)
 
-            if (parentElement.data.constructor.name == "ListView") {
-              if(children.length == 1) {
-                parentElement.data.itemTemplate =
-                  function() {
-                    const div = document.createElement("div")
-                    const cloned = thisElement.cloneAll()
-                    div.appendChild(cloned)
-                    cloned.manualRender()
-                    return cloned.data;
-                  }
-                return
+        if (parentElement.data.constructor.name == "ActionBar")
+          return (parentElement.data.titleView = thisElement.data)
+
+        if (parentElement.data.constructor.name == "ListView") {
+          if(children.length == 1) {
+            parentElement.data.itemTemplate =
+              function() {
+                const div = document.createElement("div")
+                const cloned = thisElement.cloneAll()
+                div.appendChild(cloned)
+                cloned.manualRender()
+                return cloned.data;
               }
+            return
+          }
 
-              if(parentElement.data.itemTemplates != null) return
+          if(parentElement.data.itemTemplates != null) return
 
-              const keyedTemplates =
-                  children.map(
-                    child =>
-                        ({
-                          key: child.getAttribute("key"),
-                          createView:
-                            function () {
-                              const div = document.createElement("div")
-                              const cloned = child.cloneAll()
-                              div.appendChild(cloned)
-                              cloned.manualRender()
-                              return cloned.data;
-                            }
-                        })
-                  )
+          const keyedTemplates =
+              children.map(
+                child =>
+                    ({
+                      key: child.getAttribute("key"),
+                      createView:
+                        function () {
+                          const div = document.createElement("div")
+                          const cloned = child.cloneAll()
+                          div.appendChild(cloned)
+                          cloned.manualRender()
+                          return cloned.data;
+                        }
+                    })
+              )
 
-              const expression =
-                getExpression(parentElement.getAttribute("item-template-selector"))
+          const expression =
+            getExpression(parentElement.getAttribute("item-template-selector"))
 
-              parentElement.data.itemTemplateSelector = ($value, $index, _) => {
-                return eval(expression)
-              }
-              parentElement.data.itemTemplates = keyedTemplates
-              return
-            }
+          parentElement.data.itemTemplateSelector = ($value, $index, _) => {
+            return eval(expression)
+          }
+          parentElement.data.itemTemplates = keyedTemplates
+          return
+        }
 
-            return (parentElement.data.content = thisElement.data)
-        // })
+        return (parentElement.data.content = thisElement.data)
     }
     `)
 
 let addFormattedText: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        // requestAnimationFrame(() => {
-            const children = Array.from(parentElement.children)
-            const index = children.indexOf(thisElement)
-            parentElement.data.formattedText = thisElement.data
-        // })
+
+        const children = Array.from(parentElement.children)
+        const index = children.indexOf(thisElement)
+        parentElement.data.formattedText = thisElement.data
     }
     `)
 
 let addSpan: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        // requestAnimationFrame(() => {
-            const children = Array.from(parentElement.children)
-            const index = children.indexOf(thisElement)
-            parentElement.data.spans.push(thisElement.data)
-        // })
+
+        const children = Array.from(parentElement.children)
+        const index = children.indexOf(thisElement)
+        parentElement.data.spans.push(thisElement.data)
     }
     `)
 
 let addActionBar: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        // requestAnimationFrame(() => {
-          parentElement.data.actionBar = thisElement.data
-        // })
+
+        parentElement.data.actionBar = thisElement.data
     }
     `)
 
 let addActionItem: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        // requestAnimationFrame(() => {
-          parentElement.data.actionItems.addItem(thisElement.data)
-        // })
+
+        parentElement.data.actionItems.addItem(thisElement.data)
     }
     `)
 
 let addNavigationButton: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        // requestAnimationFrame(() => {
-            parentElement.data.navigationButton = thisElement.data
-        // })
+
+        parentElement.data.navigationButton = thisElement.data
     }
     `)
 
 let addItems: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
-        // requestAnimationFrame(() => {
-            if (parentElement.data.items == null)
-              return (parentElement.data.items = [thisElement.data])
-            parentElement.data.items.push(thisElement.data)
-        // })
+
+        if (parentElement.data.items == null)
+          return (parentElement.data.items = [thisElement.data])
+
+        parentElement.data.items.push(thisElement.data)
     }
     `)
 
