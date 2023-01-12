@@ -9,6 +9,11 @@ fontSize : String -> Attribute msg
 fontSize =
     attribute "font-size"
 
+fontWeight : String -> Attribute msg
+fontWeight =
+    attribute "font-weight"
+
+
 
 fontStyle : String -> Attribute msg
 fontStyle =
@@ -1153,3 +1158,5 @@ separatorColor =
 itemTemplateSelector : String -> Attribute msg
 itemTemplateSelector =
     attribute "item-template-selector"
+
+

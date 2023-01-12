@@ -1,10 +1,10 @@
-module Native.Frame exposing (Model, frame)
+module Native.Frame exposing (Model, back, frame, init, current)
 
 import Html exposing (Attribute, Html)
 
 
-type alias Model a page =
-    { a | current : page, next : Maybe page, history : List page }
+type alias Model page =
+    { current : page, history : List page }
 
 
 cons : List a -> a -> List a
@@ -12,12 +12,12 @@ cons acc x =
     x :: acc
 
 
-frame : Model a page -> List ( page, Model a page -> Html msg ) -> List (Attribute msg) -> Html msg
-frame model pages attrs =
+frame : Model page -> model -> List ( page, model -> Html msg ) -> List (Attribute msg) -> Html msg
+frame model appModel pages attrs =
     let
         children =
             pages
-                |> getPage model.current model
+                |> getPage model.current appModel
                 |> Maybe.map List.singleton
                 |> Maybe.withDefault []
 
@@ -26,24 +26,23 @@ frame model pages attrs =
                 |> List.foldl
                     (\old acc ->
                         pages
-                            |> getPage old model
+                            |> getPage old appModel
                             |> Maybe.map (cons acc)
                             |> Maybe.withDefault acc
                     )
                     children
 
-        _ =
-            Debug.log "Childenr" (List.length history)
+        -- _ =
+        --     Debug.log "Childenr" (List.length history)
     in
     (Html.node "ns-frame"
         attrs
-        (history
-         -- model.history
-         -- |> List.foldl
-         --     (\next acc ->
-         --     )
-         --     []
-        )
+        history
+     -- model.history
+     -- |> List.foldl
+     --     (\next acc ->
+     --     )
+     --     []
      -- ([ pages
      --     |> getPage model.current model
      --  , model.next
@@ -92,10 +91,33 @@ findInList target toItem acc ls =
                 findInList target toItem acc r
 
 
+init : page -> Model page
+init currentPage =
+    { current = currentPage
+    , history = []
+    }
 
--- root : Frame msg -> Html msg
--- root (Frame e) =
---     e
--- asElement : Frame msg -> Html msg
--- asElement =
---     root
+
+back : Bool -> Model page -> Model page
+back bool model =
+    if not bool then
+        model
+
+    else
+        case model.history of
+            [] ->
+                model
+
+            cur :: [] ->
+                { model | history = [], current = cur }
+
+            _ :: cur :: rest ->
+                { model | history = rest, current = cur }
+
+
+current : page -> Model page -> Model page
+current page model =
+    { model
+        | history = model.current :: model.history
+        , current = page
+    }

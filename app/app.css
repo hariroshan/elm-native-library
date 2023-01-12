@@ -1,7 +1,34 @@
 ﻿@import '@nativescript/theme/css/core.css';
 @import '@nativescript/theme/css/default.css';
 
-/* Label {
-  font-size: 23;
-  color: red;
-} */
+
+/* Place any CSS rules you want to apply on both iOS and Android here.
+This is where the vast majority of your CSS code goes. */
+
+/* applied when device is in light mode */
+.ns-light .bg-primary {
+  background-color: #fdfdfd;
+}
+.ns-light .bg-secondary {
+  background-color: #ffffff;
+}
+.ns-light.text-primary {
+  color: #444;
+}
+.ns-light.text-secondary {
+  color: #777;
+}
+
+/* applied when device is in dark mode */
+.ns-dark .bg-primary {
+  background-color: #212121;
+}
+.ns-dark .bg-secondary {
+  background-color: #383838;
+}
+.ns-dark .text-primary {
+  color: #eee;
+}
+.ns-dark .text-secondary {
+  color: #ccc;
+}

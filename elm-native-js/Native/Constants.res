@@ -144,6 +144,7 @@ let textBase: array<string> =
     paddings,
     [
       "fontSize",
+      "fontWeight",
       "formattedText",
       "letterSpacing",
       "lineHeight",
@@ -314,6 +315,7 @@ let commonTextBase =
     "autofillType",
     "editable",
     "fontSize",
+    "fontWeight",
     "formattedText",
     "hint",
     "keyboardType",
@@ -376,7 +378,12 @@ let actionItem =
 let listView =
   [
     view,
-    ["itemTemplateSelector", "iosEstimatedRowHeight", "rowHeight", "separatorColor"]->Belt.Array.map(dashed),
+    [
+      "itemTemplateSelector",
+      "iosEstimatedRowHeight",
+      "rowHeight",
+      "separatorColor",
+    ]->Belt.Array.map(dashed),
   ]->Belt.Array.concatMany
 
 // Js.log("****************************")

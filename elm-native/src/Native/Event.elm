@@ -26,13 +26,13 @@ on eventName =
 
 {-| Method values are kept under {custom: {[methodName]: value}}
 example:
-  Event.onEventWithMethodCalls "touch"
-    [ "getX", "getY" ]
-    (D.map2 Tuple.pair
-      (D.at [ "custom", "getX"] D.float)
-      (D.at [ "custom", "getY"] D.float)
-    |> D.map Msg
-    )
+Event.onEventWithMethodCalls "touch"
+[ "getX", "getY" ]
+(D.map2 Tuple.pair
+(D.at [ "custom", "getX"] D.float)
+(D.at [ "custom", "getY"] D.float)
+|> D.map Msg
+)
 -}
 onEventWithMethodCalls : String -> List String -> D.Decoder msg -> Attribute msg
 onEventWithMethodCalls eventName methods =
@@ -94,6 +94,6 @@ onSelectedIndexChange msg =
     on "selectedIndexChange" (D.field "value" D.int |> D.map msg)
 
 
-onItemTap : D.Decoder msg -> Attribute msg
-onItemTap itemDecoder =
-    on "itemTap" (D.field "item" itemDecoder)
+onItemTap : (Int -> msg) -> Attribute msg
+onItemTap msg =
+    on "itemTap" (D.field "index" D.int |> D.map msg)
