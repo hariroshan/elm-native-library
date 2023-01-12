@@ -1,31 +1,20 @@
-module Native.Page exposing (Page, page, unwrap, pageWithActionBar)
+module Native.Page exposing
+    ( page
+    , pageWithActionBar
+    )
 
 import Html exposing (Attribute, Html)
-import Native.Layout as Layout exposing (Layout)
 
 
-type Page msg
-    = Page (Html msg)
-
-
-page : List (Attribute msg) -> Layout msg -> Page msg
+page : List (Attribute msg) -> Html msg -> Html msg
 page attrs layout =
-    Page
-        (Html.node "ns-page"
-            attrs
-            [ Layout.asElement layout ]
-        )
+    Html.node "ns-page"
+        attrs
+        [ layout ]
 
 
-pageWithActionBar : List (Attribute msg) -> List (Html msg) -> Page msg
-pageWithActionBar attrs layout =
-    Page
-        (Html.node "ns-page"
-            attrs
-            layout
-        )
-
-
-unwrap : Page msg -> Html msg
-unwrap (Page e) =
-    e
+pageWithActionBar : List (Attribute msg) -> Html msg -> Html msg -> Html msg
+pageWithActionBar attrs actionBar layout =
+    Html.node "ns-page"
+        attrs
+        [ actionBar, layout ]

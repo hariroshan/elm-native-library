@@ -25,7 +25,8 @@ main =
 
 
 type NavPage
-    = Details
+    = DetailsPage
+    | CounterPage
 
 
 type alias Model =
@@ -43,18 +44,20 @@ init =
     ( { count = 0
       , options = [ { title = "Hello" }, { title = "Hola" } ]
       , email = ""
-      , current = Details
-      , history = [ Details ]
-      , next = Just Details
+      , current = CounterPage
+      , history = []
+      , next = Nothing
       }
     , Cmd.none
     )
 
 
 type Msg
-    = Inc (Float, Float)
+    = Inc
     | Dec
     | Replace
+    | ToDetails
+    | Back Bool
     | OnTextChange String
     | OnDateChange { day : Int, month : Int, year : Int }
 
@@ -67,11 +70,29 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        Back False ->
+            ( model, Cmd.none )
+
+        Back True ->
+            case model.history of
+                [] ->
+                    ( model, Cmd.none )
+
+                cur :: [] ->
+                    ( { model | history = [], current = cur }, Cmd.none )
+
+                _ :: cur :: rest ->
+                    ( { model | history = rest, current = cur }, Cmd.none )
+
+        ToDetails ->
+            ( { model
+                | history = model.current :: model.history
+                , current = DetailsPage
+              }
+            , Cmd.none
+            )
+
         OnDateChange str ->
-            let
-                _ =
-                    Debug.log "lear" str
-            in
             ( model, Cmd.none )
 
         OnTextChange str ->
@@ -99,11 +120,7 @@ update msg model =
                 |> Task.perform (always Replace)
             )
 
-        Inc float ->
-            let
-                _ =
-                    Debug.log "INC Float GETX" float
-            in
+        Inc ->
             ( { model | count = model.count + 1 }, Cmd.none )
 
 
@@ -138,22 +155,14 @@ helloWorld count =
 
 
 counter model =
-    Layout.asElement <|
-        Layout.flexboxLayout
+    Layout.stackLayout []
+        [ Layout.flexboxLayout
             [ NA.justifyContent "space-between"
             , NA.height "70%"
             ]
             [ Native.button
                 [ NA.text "Increment"
-
-                -- , Event.onTap Inc
-                , Event.onEventWithMethodCalls "touch"
-                    [ "getX", "getY" ]
-                    (D.map2 Tuple.pair
-                        (D.at [ "custom", "getX"] D.float)
-                        (D.at [ "custom", "getY"] D.float)
-                        |> D.map Inc
-                    )
+                , Event.onTap Inc
                 , NA.fontSize "24"
                 ]
                 []
@@ -172,6 +181,13 @@ counter model =
                     ]
                 ]
             ]
+        , Native.button
+            [ NA.text "Details page"
+            , Event.onTap ToDetails
+            , NA.fontSize "24"
+            ]
+            []
+        ]
 
 
 
@@ -266,30 +282,35 @@ counter model =
 -}
 
 
-detailsPage : Model -> Page.Page Msg
+counterPage : Model -> Html Msg
+counterPage model =
+    Page.page [ Event.on "navigatedTo" (D.field "isBackNavigation" D.bool |> D.map Back) ] <|
+        Layout.stackLayout
+            []
+            [ counter model
+            ]
+
+
+detailsPage : Model -> Html Msg
 detailsPage model =
     let
         _ =
             Debug.log "Model options" model.options
     in
-    Page.pageWithActionBar []
-        -- Event.on "navigatedTo" (D.succeed Destory)
-        -- [ Native.actionBar []
-        [ Layout.asElement <|
-            Layout.stackLayout
-                []
-                [ counter model
-                ]
-        ]
+    Page.page [ Event.on "navigatedTo" (D.field "isBackNavigation" D.bool |> D.map Back) ] <|
+        Layout.stackLayout
+            []
+            [ Native.label [ NA.class "h1 text-center", NA.text "Details" ] []
+            ]
 
 
 view : Model -> Html Msg
 view model =
     Frame.frame model
-        [ ( Details, detailsPage )
+        [ ( DetailsPage, detailsPage )
+        , ( CounterPage, counterPage )
         ]
         []
-        |> Frame.root
 
 
 subscriptions : Model -> Sub Msg

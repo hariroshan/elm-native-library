@@ -1,73 +1,63 @@
 module Native.Layout exposing
-    ( Layout
-    , absoluteLayout
-    , asElement
+    ( absoluteLayout
     , dockLayout
     , flexboxLayout
     , gridLayout
     , rootLayout
+    , scrollView
     , stackLayout
-    , wrapLayout, scrollView, tabView
+    , tabView
+    , wrapLayout
     )
 
 import Html exposing (Attribute, Html)
 
 
-type Layout msg
-    = Layout (Html msg)
-
-
-buildLayout : String -> List (Attribute msg) -> List (Html msg) -> Layout msg
+buildLayout : String -> List (Attribute msg) -> List (Html msg) -> Html msg
 buildLayout nodeName attrs children =
-    Layout (Html.node nodeName attrs children)
+    Html.node nodeName attrs children
 
 
-absoluteLayout : List (Attribute msg) -> List (Html msg) -> Layout msg
+absoluteLayout : List (Attribute msg) -> List (Html msg) -> Html msg
 absoluteLayout =
     buildLayout "ns-absolute-layout"
 
 
-dockLayout : List (Attribute msg) -> List (Html msg) -> Layout msg
+dockLayout : List (Attribute msg) -> List (Html msg) -> Html msg
 dockLayout =
     buildLayout "ns-dock-layout"
 
 
-gridLayout : List (Attribute msg) -> List (Html msg) -> Layout msg
+gridLayout : List (Attribute msg) -> List (Html msg) -> Html msg
 gridLayout =
     buildLayout "ns-grid-layout"
 
 
-stackLayout : List (Attribute msg) -> List (Html msg) -> Layout msg
+stackLayout : List (Attribute msg) -> List (Html msg) -> Html msg
 stackLayout =
     buildLayout "ns-stack-layout"
 
 
-rootLayout : List (Attribute msg) -> List (Html msg) -> Layout msg
+rootLayout : List (Attribute msg) -> List (Html msg) -> Html msg
 rootLayout =
     buildLayout "ns-root-layout"
 
 
-wrapLayout : List (Attribute msg) -> List (Html msg) -> Layout msg
+wrapLayout : List (Attribute msg) -> List (Html msg) -> Html msg
 wrapLayout =
     buildLayout "ns-wrap-layout"
 
 
-flexboxLayout : List (Attribute msg) -> List (Html msg) -> Layout msg
+flexboxLayout : List (Attribute msg) -> List (Html msg) -> Html msg
 flexboxLayout =
     buildLayout "ns-flexbox-layout"
 
 
-scrollView : List (Attribute msg) -> List (Html msg) -> Layout msg
+scrollView : List (Attribute msg) -> List (Html msg) -> Html msg
 scrollView =
     buildLayout "ns-scroll-view"
 
 
-tabView : List (Attribute msg) -> List (Html msg) -> Layout msg
+tabView : List (Attribute msg) -> List (Html msg) -> Html msg
 tabView =
     buildLayout "ns-tab-view"
-
-
-
-asElement : Layout msg -> Html msg
-asElement (Layout e) =
-    e

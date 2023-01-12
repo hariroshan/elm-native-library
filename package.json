@@ -7,6 +7,7 @@
     "res:build": "rescript",
     "res:dev": "rescript build -w",
     "run:ios": "ns run ios",
+    "debug:ios": "ns debug ios",
     "build:webpack": "webpack --mode development"
   },
   "dependencies": {

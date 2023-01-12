@@ -1,44 +1,73 @@
-module Native.Frame exposing (Frame, asElement, frame, root)
+module Native.Frame exposing (Model, frame)
 
 import Html exposing (Attribute, Html)
-import Native.Page as Page exposing (Page)
 
 
-type Frame msg
-    = Frame (Html msg)
+type alias Model a page =
+    { a | current : page, next : Maybe page, history : List page }
 
 
-frame : { a | current : page, next : Maybe page, history : List page } -> List ( page, { a | current : page, next : Maybe page, history : List page } -> Page msg ) -> List (Attribute msg) -> Frame msg
+cons : List a -> a -> List a
+cons acc x =
+    x :: acc
+
+
+frame : Model a page -> List ( page, Model a page -> Html msg ) -> List (Attribute msg) -> Html msg
 frame model pages attrs =
-    Frame
-        (Html.node "ns-frame"
-            attrs
-            (   -- model.history
-                -- |> List.foldl
-                --     (\next acc ->
+    let
+        children =
+            pages
+                |> getPage model.current model
+                |> Maybe.map List.singleton
+                |> Maybe.withDefault []
+
+        history =
+            model.history
+                |> List.foldl
+                    (\old acc ->
                         pages
-                            |> getPage model.current model
-                            |> Maybe.map (List.singleton)
-                            |> Maybe.withDefault []
-                --     )
-                --     []
-            )
-         -- ([ pages
-         --     |> getPage model.current model
-         --  , model.next
-         --     |> Maybe.map
-         --         (\next ->
-         --             pages
-         --                 |> getPage next model
-         --         )
-         --     |> Maybe.withDefault []
-         --  ]
-         --     |> List.concat
-         -- )
+                            |> getPage old model
+                            |> Maybe.map (cons acc)
+                            |> Maybe.withDefault acc
+                    )
+                    children
+
+        _ =
+            Debug.log "Childenr" (List.length history)
+    in
+    (Html.node "ns-frame"
+        attrs
+        (history
+         -- model.history
+         -- |> List.foldl
+         --     (\next acc ->
+         --     )
+         --     []
         )
+     -- ([ pages
+     --     |> getPage model.current model
+     --  , model.next
+     --     |> Maybe.map
+     --         (\next ->
+     --             pages
+     --                 |> getPage next model
+     --         )
+     --     |> Maybe.withDefault []
+     --  ]
+     --     |> List.concat
+     -- )
+    )
 
 
-getPage : a -> b -> List ( a, b -> Page msg ) -> Maybe (Html msg)
+
+-- frame : List (Attribute msg) -> List (Html msg) -> Html msg
+-- frame attrs nodes =
+--     Html.node "ns-frame"
+--         attrs
+--         nodes
+
+
+getPage : a -> b -> List ( a, b -> Html msg ) -> Maybe (Html msg)
 getPage target model pages =
     pages
         |> findInList target Tuple.first Nothing
@@ -46,7 +75,6 @@ getPage target model pages =
             (\( _, fx ) ->
                 model
                     |> fx
-                    |> Page.unwrap
             )
 
 
@@ -64,11 +92,10 @@ findInList target toItem acc ls =
                 findInList target toItem acc r
 
 
-root : Frame msg -> Html msg
-root (Frame e) =
-    e
 
-
-asElement : Frame msg -> Html msg
-asElement =
-    root
+-- root : Frame msg -> Html msg
+-- root (Frame e) =
+--     e
+-- asElement : Frame msg -> Html msg
+-- asElement =
+--     root
