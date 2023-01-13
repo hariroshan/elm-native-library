@@ -319,10 +319,8 @@ module ListView = {
       current.data
       ->Js.Nullable.toOption
       ->Belt.Option.forEach(data => {
-        if !Belt.Array.eq(data.items, newItems, (x, y) => x == y) {
-          data->Types.setItems(newItems)
-          data->Types.refresh
-        }
+        data->Types.setItems(newItems)
+        data->Types.refresh
       })
     }
   )

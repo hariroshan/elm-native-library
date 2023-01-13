@@ -87,7 +87,11 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
             getExpression(parentElement.getAttribute("item-template-selector"))
 
           parentElement.data.itemTemplateSelector = ($value, $index, _) => {
-            return eval(expression)
+            // Mangling the variable can affect the variables used in the expression
+            const replacedExpression = expression
+              .replaceAll("$value", Object.keys({$value})[0])
+              .replaceAll("$index", Object.keys({$index})[0])
+            return eval(replacedExpression)
           }
           parentElement.data.itemTemplates = keyedTemplates
           return

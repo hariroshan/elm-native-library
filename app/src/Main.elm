@@ -10,6 +10,8 @@ import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout exposing (rootLayout)
 import Native.Page as Page
+import Process
+import Task
 
 
 type alias Flick =
@@ -302,7 +304,7 @@ detailsPage model =
         Just flick ->
             Page.pageWithActionBar [ Event.on "navigatedTo" (D.field "isBackNavigation" D.bool |> D.map Back) ]
                 (Native.actionBar [ NA.title flick.title ]
-                    [ Native.navigationButton [NA.text "Back"] []
+                    [ Native.navigationButton [ NA.text "Back" ] []
                     ]
                 )
                 (Layout.scrollView
