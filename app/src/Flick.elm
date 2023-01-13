@@ -1,4 +1,4 @@
-module Main exposing (main)
+module Flick exposing (main)
 
 import Browser
 import Html exposing (Html)
@@ -8,10 +8,8 @@ import Native
 import Native.Attributes as NA
 import Native.Event as Event
 import Native.Frame as Frame
-import Native.Layout as Layout exposing (rootLayout)
+import Native.Layout as Layout
 import Native.Page as Page
-import Process
-import Task
 
 
 type alias Flick =
@@ -109,6 +107,9 @@ init =
     )
 
 
+
+
+
 type Msg
     = ToDetails Int
     | Back Bool
@@ -122,7 +123,18 @@ update msg model =
 
         ToDetails idx ->
             ( { model
-                | rootFrame = Frame.current DetailsPage model.rootFrame
+                | rootFrame =
+                    model.rootFrame
+                        |> Frame.current DetailsPage
+                            (Frame.defaultNavigationOptions
+                                |> Frame.setAnimated True
+                                |> Frame.setTransition
+                                    { name = Just Frame.FlipLeft
+                                    , duration = Just 200
+                                    , curve = Just Frame.Spring
+                                    }
+                                |> Just
+                            )
                 , picked =
                     model.flick
                         |> List.foldl
@@ -277,7 +289,8 @@ flickTemplate =
 
 homePage : Model -> Html Msg
 homePage model =
-    Page.pageWithActionBar [ Event.on "navigatedTo" (D.field "isBackNavigation" D.bool |> D.map Back) ]
+    Page.pageWithActionBar Back
+        []
         (Native.actionBar [ NA.title "Elm Native Flix" ] [])
         (Layout.stackLayout [ NA.height "100%" ]
             [ Native.listView
@@ -295,14 +308,16 @@ detailsPage : Model -> Html Msg
 detailsPage model =
     case model.picked of
         Nothing ->
-            Page.page []
+            Page.page Back
+                []
                 (Layout.stackLayout []
                     [ Native.label [ NA.text "Not found" ] []
                     ]
                 )
 
         Just flick ->
-            Page.pageWithActionBar [ Event.on "navigatedTo" (D.field "isBackNavigation" D.bool |> D.map Back) ]
+            Page.pageWithActionBar Back
+                [ Event.on "navigatedTo" (D.field "isBackNavigation" D.bool |> D.map Back) ]
                 (Native.actionBar [ NA.title flick.title ]
                     [ Native.navigationButton [ NA.text "Back" ] []
                     ]

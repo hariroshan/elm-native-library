@@ -1,11 +1,15 @@
 ﻿@import '@nativescript/theme/css/core.css';
 @import '@nativescript/theme/css/default.css';
 
+/* ************************************* */
+/* Flick.elm */
+/* ************************************* */
 
 /* Place any CSS rules you want to apply on both iOS and Android here.
 This is where the vast majority of your CSS code goes. */
 
 /* applied when device is in light mode */
+
 .ns-light .bg-primary {
   background-color: #fdfdfd;
 }
@@ -19,7 +23,9 @@ This is where the vast majority of your CSS code goes. */
   color: #777;
 }
 
+
 /* applied when device is in dark mode */
+
 .ns-dark .bg-primary {
   background-color: #212121;
 }
@@ -32,3 +38,5 @@ This is where the vast majority of your CSS code goes. */
 .ns-dark .text-secondary {
   color: #ccc;
 }
+
+/* ************************************* */

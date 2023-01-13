@@ -1,10 +1,10 @@
-import Elm from "./src/Main.elm";
-import { start } from "elm-native-js"
+import Elm from "./src/Details.elm";
+import { start } from "../elm-native-js"
 
 start(
   {
     elmModule: Elm,
-    elmModuleName: "Main",
+    elmModuleName: "Details",
     initPorts: _elmPorts => { }
   }
 )
