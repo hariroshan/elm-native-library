@@ -4,8 +4,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "res:build": "rescript",
-    "res:dev": "rescript build -w",
     "run:ios": "ns run ios",
     "debug:ios": "ns debug ios",
     "build:webpack": "webpack --mode development"
@@ -14,16 +12,13 @@
     "@nativescript/core": "~8.4.0",
     "@nativescript/theme": "~3.0.2",
     "elm": "^0.19.1-5",
-    "elm-native-js": "./elm-native-js",
-    "happy-dom": "^6.0.4",
-    "vm-shim": "^0.0.6"
+    "elm-native-js": "./elm-native-js"
   },
   "devDependencies": {
     "@nativescript/ios": "8.3.3",
     "@nativescript/types": "~8.4.0",
     "@nativescript/webpack": "~5.0.12",
     "elm-webpack-loader": "^8.0.0",
-    "rescript": "^10.0.1",
     "typescript": "~4.8.4"
   }
 }
