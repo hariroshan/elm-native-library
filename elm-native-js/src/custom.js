@@ -19,20 +19,19 @@ export const withCustomElements = (UIElement, handler) =>
     static get observedAttributes() {
       return handler.observedAttributes
     }
-    attributeChangedCallback(name, old, newValue) {
+    attributeChangedCallback(name, _, newValue) {
       this.handler.update(this.data, name, newValue)
-      console.log(`${this.tagName} update`)
-
+      // console.log(`${this.tagName} update`)
     }
     connectedCallback() {
       if (this.isConnected && this.handler.render) {
         this.handler.render(this, this.data)
       }
-      console.log(`${this.tagName} connected`)
+      // console.log(`${this.tagName} connected`)
     }
     disconnectedCallback() {
       this.handler.dispose(this.data)
-      console.log(`${this.tagName} disconnected`)
+      // console.log(`${this.tagName} disconnected`)
     }
     addEventListener(event, callback) {
       const indexOfSemiCol = event.indexOf(";")

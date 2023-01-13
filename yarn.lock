@@ -1183,6 +1183,13 @@ electron-to-chromium@^1.4.251:
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.284.tgz"
   integrity sha512-M8WEXFuKXMYMVr45fo8mq0wUrrJHheiKZf6BArTKk9ZBYCKJEOU5H8cdWgDT+qCVZf7Na4lVUaZsA+h6uA9+PA==
 
+elm-native-js@./elm-native-js:
+  version "0.1.0"
+  dependencies:
+    happy-dom "^6.0.4"
+    rescript "^10.0.1"
+    vm-shim "^0.0.6"
+
 elm-webpack-loader@^8.0.0:
   version "8.0.0"
   resolved "https://registry.npmjs.org/elm-webpack-loader/-/elm-webpack-loader-8.0.0.tgz"

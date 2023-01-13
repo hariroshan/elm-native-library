@@ -1,0 +1,4 @@
+# Rescript
+lib
+*.bs.js
+.bsb.lock

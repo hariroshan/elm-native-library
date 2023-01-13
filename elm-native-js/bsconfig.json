@@ -1,8 +1,8 @@
 {
-  "name": "elm-native",
+  "name": "elm-native-js",
   "sources": [
     {
-      "dir": "elm-native-js",
+      "dir": "src",
       "subdirs": true
     }
   ],

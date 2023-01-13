@@ -1,5 +1,5 @@
 import Elm from "./src/Main.elm";
-import { start } from "../elm-native-js/App.bs"
+import { start } from "elm-native-js"
 
 start(
   {

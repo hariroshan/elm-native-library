@@ -1,0 +1,17 @@
+export function always(x: any, param: any): any;
+export function assignDeep(object: any, keys: any, i: any, value: any): void;
+export function getExpression(value: any): any;
+export function setAttribute(object: any, key: any, value: any): void;
+export function update(object: any, key: any, value: any): void;
+export function addView(parentElement: any, thisElement: any): any;
+export function addFormattedText(parentElement: any, thisElement: any): void;
+export function addSpan(parentElement: any, thisElement: any): void;
+export function addActionBar(parentElement: any, thisElement: any): void;
+export function addActionItem(parentElement: any, thisElement: any): void;
+export function addNavigationButton(parentElement: any, thisElement: any): void;
+export function addItems(parentElement: any, thisElement: any): any[];
+export function optionMap2(a: any, b: any, fx: any): any;
+export function dbg(x: any): any;
+export function dbg2(x: any, lbl: any): any;
+export function tap(fx: any, x: any): any;
+export function flip(fx: any, x: any, y: any): any;
