@@ -1,4 +1,4 @@
-let render = helperAdd =>
+let makeRender = helperAdd =>
   Js.Nullable.return((. current: Types.htmlElement, _) =>
     helperAdd(. current.parentElement, current)
   )
@@ -6,11 +6,11 @@ let render = helperAdd =>
 let buildHandler: (
   unit => Types.nativeObject,
   array<string>,
-  (. Types.htmlElement, Types.htmlElement) => unit,
-) => Types.handler = (new, observedAttributes, helperAdd) => {
+  Js.Nullable.t<(. Types.htmlElement, Types.nativeObject) => unit>,
+) => Types.handler = (new, observedAttributes, render) => {
   init: (. ()) => new(),
   observedAttributes,
-  render: render(helperAdd),
+  render,
   handlerKind: Types.Element,
   update: NativescriptCore.update,
   dispose: NativescriptCore.dispose,
@@ -25,7 +25,7 @@ module Label = {
   )
   let tagName = "ns-label"
 
-  let handler: Types.handler = buildHandler(new, Constants.textBase, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.textBase, makeRender(Helper.addView))
 }
 
 module Button = {
@@ -35,7 +35,7 @@ module Button = {
   )
   let tagName = "ns-button"
 
-  let handler: Types.handler = buildHandler(new, Constants.button, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.button, makeRender(Helper.addView))
 }
 
 module Placeholder = {
@@ -45,7 +45,7 @@ module Placeholder = {
   )
   let tagName = "ns-placeholder"
 
-  let handler: Types.handler = buildHandler(new, Constants.view, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.view, makeRender(Helper.addView))
 }
 
 module ActionBar = {
@@ -55,7 +55,11 @@ module ActionBar = {
   )
   let tagName = "ns-action-bar"
 
-  let handler: Types.handler = buildHandler(new, Constants.actionBar, Helper.addActionBar)
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.actionBar,
+    makeRender(Helper.addActionBar),
+  )
 }
 
 module ActionItem = {
@@ -65,7 +69,11 @@ module ActionItem = {
   )
   let tagName = "ns-action-item"
 
-  let handler: Types.handler = buildHandler(new, Constants.actionItem, Helper.addActionItem)
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.actionItem,
+    makeRender(Helper.addActionItem),
+  )
 }
 
 module NavigationButton = {
@@ -78,7 +86,7 @@ module NavigationButton = {
   let handler: Types.handler = buildHandler(
     new,
     Constants.navigationButton,
-    Helper.addNavigationButton,
+    makeRender(Helper.addNavigationButton),
   )
 }
 
@@ -88,7 +96,11 @@ module ActivityIndicator = {
     external new: unit => Types.nativeObject = "ActivityIndicator"
   )
   let tagName = "ns-activity-indicator"
-  let handler: Types.handler = buildHandler(new, Constants.activityIndicator, Helper.addView)
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.activityIndicator,
+    makeRender(Helper.addView),
+  )
 }
 
 module FormattedString = {
@@ -98,7 +110,11 @@ module FormattedString = {
   )
   let tagName = "ns-formatted-string"
 
-  let handler: Types.handler = buildHandler(new, Constants.formattedString, Helper.addFormattedText)
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.formattedString,
+    makeRender(Helper.addFormattedText),
+  )
 }
 module Span = {
   %%private(
@@ -107,7 +123,7 @@ module Span = {
   )
   let tagName = "ns-span"
 
-  let handler: Types.handler = buildHandler(new, Constants.span, Helper.addSpan)
+  let handler: Types.handler = buildHandler(new, Constants.span, makeRender(Helper.addSpan))
 }
 module DatePicker = {
   %%private(
@@ -116,7 +132,7 @@ module DatePicker = {
   )
   let tagName = "ns-datepicker"
 
-  let handler: Types.handler = buildHandler(new, Constants.datePicker, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.datePicker, makeRender(Helper.addView))
 }
 module HtmlView = {
   %%private(
@@ -125,7 +141,7 @@ module HtmlView = {
   )
   let tagName = "ns-html-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.htmlView, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.htmlView, makeRender(Helper.addView))
 }
 module Image = {
   %%private(
@@ -134,7 +150,7 @@ module Image = {
   )
   let tagName = "ns-image"
 
-  let handler: Types.handler = buildHandler(new, Constants.image, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.image, makeRender(Helper.addView))
 }
 
 module Progress = {
@@ -144,7 +160,7 @@ module Progress = {
   )
   let tagName = "ns-progress"
 
-  let handler: Types.handler = buildHandler(new, Constants.progress, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.progress, makeRender(Helper.addView))
 }
 module ListPicker = {
   %%private(
@@ -156,20 +172,15 @@ module ListPicker = {
   }
   let tagName = "ns-list-picker"
 
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.listPicker,
-    render: Js.Nullable.return((. current: Types.htmlElement, _) => {
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.listPicker,
+    Js.Nullable.return((. current: Types.htmlElement, _) => {
       current.data->Js.Nullable.toOption->Belt.Option.forEach(setItems(current))
       Types.definePropertyInHtml(. current, "items", {set: setItems(current)})
       Helper.addView(. current.parentElement, current)
     }),
-    handlerKind: Types.Element,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  )
 }
 module ScrollView = {
   %%private(
@@ -178,7 +189,7 @@ module ScrollView = {
   )
   let tagName = "ns-scroll-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.scrollView, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.scrollView, makeRender(Helper.addView))
 }
 
 module SearchBar = {
@@ -188,7 +199,7 @@ module SearchBar = {
   )
   let tagName = "ns-search-bar"
 
-  let handler: Types.handler = buildHandler(new, Constants.searchBar, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.searchBar, makeRender(Helper.addView))
 }
 
 module SegmentedBar = {
@@ -198,7 +209,7 @@ module SegmentedBar = {
   )
   let tagName = "ns-segmented-bar"
 
-  let handler: Types.handler = buildHandler(new, Constants.segmentedBar, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.segmentedBar, makeRender(Helper.addView))
 }
 
 module SegmentedBarItem = {
@@ -208,7 +219,11 @@ module SegmentedBarItem = {
   )
   let tagName = "ns-segmented-bar-item"
 
-  let handler: Types.handler = buildHandler(new, Constants.segmentedBarItem, Helper.addItems)
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.segmentedBarItem,
+    makeRender(Helper.addItems),
+  )
 }
 
 module Slider = {
@@ -218,7 +233,7 @@ module Slider = {
   )
   let tagName = "ns-slider"
 
-  let handler: Types.handler = buildHandler(new, Constants.slider, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.slider, makeRender(Helper.addView))
 }
 
 module Switch = {
@@ -228,7 +243,11 @@ module Switch = {
   )
   let tagName = "ns-switch"
 
-  let handler: Types.handler = buildHandler(new, Constants.switchComponent, Helper.addView)
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.switchComponent,
+    makeRender(Helper.addView),
+  )
 }
 
 module TabView = {
@@ -238,7 +257,7 @@ module TabView = {
   )
   let tagName = "ns-tab-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.tabView, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.tabView, makeRender(Helper.addView))
 }
 
 module TabViewItem = {
@@ -247,10 +266,10 @@ module TabViewItem = {
     external new: unit => Types.nativeObject = "TabViewItem"
   )
   let tagName = "ns-tab-view-item"
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.tabViewItem,
-    render: Js.Nullable.return((. current: Types.htmlElement, _) => {
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.tabViewItem,
+    Js.Nullable.return((. current: Types.htmlElement, _) => {
       current.children
       ->Belt.Array.get(0)
       ->Helper.optionMap2(current.data->Js.Nullable.toOption, (
@@ -263,12 +282,7 @@ module TabViewItem = {
 
       Helper.addItems(. current.parentElement, current)
     }),
-    handlerKind: Types.Element,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  )
 }
 
 module TextField = {
@@ -278,7 +292,7 @@ module TextField = {
   )
   let tagName = "ns-textfield"
 
-  let handler: Types.handler = buildHandler(new, Constants.textField, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.textField, makeRender(Helper.addView))
 }
 
 module TextView = {
@@ -288,7 +302,7 @@ module TextView = {
   )
   let tagName = "ns-text-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.textView, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.textView, makeRender(Helper.addView))
 }
 
 module TimePicker = {
@@ -298,7 +312,7 @@ module TimePicker = {
   )
   let tagName = "ns-time-picker"
 
-  let handler: Types.handler = buildHandler(new, Constants.timePicker, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.timePicker, makeRender(Helper.addView))
 }
 
 module WebView = {
@@ -308,7 +322,7 @@ module WebView = {
   )
   let tagName = "ns-web-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.webView, Helper.addView)
+  let handler: Types.handler = buildHandler(new, Constants.webView, makeRender(Helper.addView))
 }
 module ListView = {
   %%private(
@@ -326,22 +340,17 @@ module ListView = {
   )
   let tagName = "ns-list-view"
 
-  let handler: Types.handler = {
-    init: (. ()) => new(),
-    observedAttributes: Constants.listView,
-    render: Js.Nullable.return((. current: Types.htmlElement, _) => {
+  let handler: Types.handler = buildHandler(
+    new,
+    Constants.listView,
+    Js.Nullable.return((. current: Types.htmlElement, _) => {
       current.data->Js.Nullable.toOption->Belt.Option.forEach(ListPicker.setItems(current))
 
       Types.definePropertyInHtml(. current, "items", {set: itemsSetter(current)})
 
       Helper.addView(. current.parentElement, current)
     }),
-    handlerKind: Types.Element,
-    update: NativescriptCore.update,
-    dispose: NativescriptCore.dispose,
-    addEventListener: NativescriptCore.addEventListener,
-    removeEventListener: NativescriptCore.removeEventListener,
-  }
+  )
 }
 
 let all: array<Types.customElement> = [
