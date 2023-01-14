@@ -2,10 +2,10 @@ module Native.Frame exposing
     ( Model
     , TransitionCurve(..)
     , TransitionName(..)
-    , back
-    , current
     , defaultNavigationOptions
     , frame
+    , goTo
+    , handleBack
     , init
     , setAnimated
     , setBackstackVisible
@@ -257,8 +257,8 @@ init currentPage =
     }
 
 
-back : Bool -> Model page -> Model page
-back isBackNavigation model =
+handleBack : Bool -> Model page -> Model page
+handleBack isBackNavigation model =
     if not isBackNavigation then
         model
 
@@ -267,15 +267,12 @@ back isBackNavigation model =
             [] ->
                 model
 
-            cur :: [] ->
-                { model | history = [], current = cur }
-
-            _ :: cur :: rest ->
+            cur :: rest ->
                 { model | history = rest, current = cur }
 
 
-current : page -> Maybe NavigationOptions -> Model page -> Model page
-current page maybeNavigationOptions model =
+goTo : page -> Maybe NavigationOptions -> Model page -> Model page
+goTo page maybeNavigationOptions model =
     { model
         | history = model.current :: model.history
         , current = page
