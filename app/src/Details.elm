@@ -1,6 +1,7 @@
 module Details exposing (..)
 
 import Browser
+import Http
 import Json.Decode as D
 import Json.Encode as E
 import Native exposing (..)
@@ -172,26 +173,32 @@ main =
 
 type NavPage
     = HomePage
+    | CarDetailsPage
+    | CarDetailsEditPage
 
 
 type alias Model =
     { rootFrame : Frame.Model NavPage
     , cars : List Car
     , encodedCars : E.Value
+    , pickedCar : Maybe Car
     }
 
 
 type Msg
-    = Back Bool
+    = HandleFrameBack Bool
+    | GoBack
     | NoOp
+    | ToCarDetailsPage Int
+    | ToCarDetailsEditPage
 
 
 init : ( Model, Cmd Msg )
 init =
     ( { rootFrame = Frame.init HomePage
       , cars = response
-      , encodedCars =
-            encodeCars response
+      , encodedCars = encodeCars response
+      , pickedCar = Nothing
       }
     , Cmd.none
     )
@@ -203,8 +210,357 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        Back bool ->
-            ( { model | rootFrame = Frame.back bool model.rootFrame }, Cmd.none )
+        GoBack ->
+            ( { model | rootFrame = Frame.goBack model.rootFrame }, Cmd.none )
+
+        HandleFrameBack bool ->
+            ( { model | rootFrame = Frame.handleBack bool model.rootFrame }, Cmd.none )
+
+        ToCarDetailsEditPage ->
+            ( { model
+                | rootFrame =
+                    model.rootFrame
+                        |> Frame.goTo CarDetailsEditPage
+                            (Frame.defaultNavigationOptions
+                                |> Frame.setAnimated True
+                                |> Frame.setTransition
+                                    { name = Just Frame.SlideTop
+                                    , duration = Just 200
+                                    , curve = Just Frame.Ease
+                                    }
+                                |> Just
+                            )
+              }
+            , Cmd.none
+            )
+
+        ToCarDetailsPage idx ->
+            ( { model
+                | rootFrame =
+                    model.rootFrame
+                        |> Frame.goTo CarDetailsPage
+                            (Frame.defaultNavigationOptions
+                                |> Frame.setAnimated True
+                                |> Frame.setTransition
+                                    { name = Just Frame.FlipLeft
+                                    , duration = Just 300
+                                    , curve = Just Frame.Spring
+                                    }
+                                |> Just
+                            )
+                , pickedCar =
+                    model.cars
+                        |> List.foldl
+                            (\cur (( curIdx, acc ) as result) ->
+                                if acc /= Nothing then
+                                    result
+
+                                else if curIdx == idx then
+                                    ( idx, Just cur )
+
+                                else
+                                    ( curIdx + 1, acc )
+                            )
+                            ( 0, Nothing )
+                        |> Tuple.second
+              }
+            , Cmd.none
+            )
+
+
+notFoundPage : Native Msg
+notFoundPage =
+    Page.page HandleFrameBack
+        []
+        (Layout.stackLayout []
+            [ Native.label [ N.text "Not found" ] []
+            ]
+        )
+
+
+carDetailEditView : Model -> Car -> Native Msg
+carDetailEditView model car =
+    Page.pageWithActionBar HandleFrameBack
+        []
+        (actionBar []
+            [ navigationButton [ N.visibility "collapsed" ] []
+            , label [ N.text "Edit Car Details", N.fontSize "18" ] []
+            , actionItem
+                [ N.text "Cancel"
+                , N.iosPosition "left"
+                , Event.onTap GoBack
+                ]
+                []
+            , actionItem
+                [ N.text "Done"
+                , N.iosPosition "right"
+                ]
+                []
+            ]
+        )
+        (
+            -- scrollView [ N.class "car-list" ]
+            (Layout.flexboxLayout [ N.flexDirection "column" ]
+                [ label [ N.text "CAR MAKE", N.class "car-list-odd" ] []
+                , textField
+                    [ N.text car.name
+                    , N.hint "Car make field is required"
+                    , N.class "car-list-even"
+                    , Event.onTextChange (always NoOp)
+                    ]
+                    []
+                ]
+            )
+         -- [
+         --
+         -- (
+         --     [
+         --     ,
+         --     ]
+         -- )
+         -- ]
+         -- , Layout.gridLayout
+         --     [ N.rows "*, 55, *"
+         --     , N.columns "*, auto"
+         --     , N.class "car-list-odd"
+         --     ]
+         --     [ label [ N.text "PRICE PER DAY" ] []
+         --     , label
+         --         [ N.col "1"
+         --         , N.horizontalAlignment "right"
+         --         , N.class "car-list__value"
+         --         ]
+         --         [ formattedString []
+         --             [ span [ N.text "€" ] []
+         --             , span [ N.text (String.fromInt car.price) ] []
+         --             ]
+         --         ]
+         --     , Layout.stackLayout
+         --         []
+         --         [ slider
+         --             [ N.row "1"
+         --             , N.colSpan "2"
+         --             , N.verticalAlignment "center"
+         --             , N.value (String.fromInt car.price)
+         --             ]
+         --             []
+         --         ]
+         --     , label
+         --         [ N.text "ADD OR REMOVE IMAGE"
+         --         , N.row "2"
+         --         , N.colSpan "2"
+         --         ]
+         --         []
+         --     ]
+         -- , Layout.stackLayout []
+         --     [ Layout.gridLayout
+         --         [ N.height "80"
+         --         , N.width "80"
+         --         , N.class "thumb"
+         --         , N.horizontalAlignment "left"
+         --         , N.backgroundImage car.imageUrl
+         --         , N.class "car-list-even"
+         --         -- , N.tap "onImageAddRemoveTap"
+         --         ]
+         --         [ Layout.gridLayout
+         --             [ N.class "thumb__add"
+         --             , N.visibility "collapsed"
+         --             -- , N.visibility "{{ car.imageUrl, car.imageUrl | visibilityValueConverter }}"
+         --             ]
+         --             [ label
+         --                 [ N.text (String.fromChar '\u{F030}')
+         --                 , N.class "fas"
+         --                 , N.horizontalAlignment "center"
+         --                 , N.verticalAlignment "center"
+         --                 ]
+         --                 []
+         --             ]
+         --         , Layout.gridLayout
+         --             [ N.class "thumb__remove"
+         --             , N.visibility "visible"
+         --             -- , N.visibility "{{ car.imageUrl, !car.imageUrl | visibilityValueConverter }}"
+         --             ]
+         --             [ label
+         --                 [ N.text (String.fromChar '\u{F2ED}')
+         --                 , N.class "far"
+         --                 , N.horizontalAlignment "center"
+         --                 , N.verticalAlignment "center"
+         --                 ]
+         --                 []
+         --             ]
+         --         ]
+         --     , label
+         --         [ N.visibility "collapsed"
+         --         -- N.visibility "{{ car.imageUrl, car.imageUrl | visibilityValueConverter }}"
+         --         , N.class "c-error"
+         --         , N.text "Image field is required"
+         --         ]
+         --         []
+         --     ]
+         -- , label [ N.text "CLASS", N.class "car-list-odd" ] []
+         -- , Layout.gridLayout
+         --     [ N.columns "*, auto"
+         --     -- , N.tap "onSelectorTap"
+         --     , N.class "car-list-even"
+         --     ]
+         --     [ label [ N.text car.class ] []
+         --     , label
+         --         [ N.text (String.fromChar '\u{F054}')
+         --         , N.class "fas"
+         --         , N.col "1"
+         --         , N.horizontalAlignment "center"
+         --         , N.verticalAlignment "center"
+         --         ]
+         --         []
+         --     ]
+         -- , label [ N.text "DOORS", N.class "car-list-odd" ] []
+         -- , Layout.gridLayout
+         --     [ N.columns "*, auto"
+         --     -- , N.tap "onSelectorTap"
+         --     , N.class "car-list-even"
+         --     ]
+         --     [ label [ N.text (String.fromInt car.doors) ] []
+         --     , label
+         --         [ N.text (String.fromChar '\u{F054}')
+         --         , N.class "fas"
+         --         , N.col "1"
+         --         , N.horizontalAlignment "center"
+         --         , N.verticalAlignment "center"
+         --         ]
+         --         []
+         --     ]
+         -- , label
+         --     [ N.text "SEATS"
+         --     , N.class "car-list-odd"
+         --     ]
+         --     []
+         -- , Layout.gridLayout
+         --     [ N.columns "*, auto"
+         --     -- , N.tap "onSelectorTap"
+         --     , N.class "car-list-even"
+         --     ]
+         --     [ label [ N.text car.seats ] []
+         --     , label
+         --         [ N.text (String.fromChar '\u{F054}')
+         --         , N.class "fas"
+         --         , N.col "1"
+         --         , N.horizontalAlignment "center"
+         --         , N.verticalAlignment "center"
+         --         ]
+         --         []
+         --     ]
+         -- , label
+         --     [ N.text "TRANSMISSION"
+         --     , N.class "car-list-odd"
+         --     ]
+         --     []
+         -- , Layout.gridLayout
+         --     [ N.columns "*, auto"
+         --     -- , N.tap "onSelectorTap"
+         --     , N.class "car-list-even"
+         --     ]
+         --     [ label [ N.text car.transmission ] []
+         --     , label
+         --         [ N.text (String.fromChar '\u{F054}')
+         --         , N.class "fas"
+         --         , N.col "1"
+         --         , N.horizontalAlignment "center"
+         --         , N.verticalAlignment "center"
+         --         ]
+         --         []
+         --     ]
+         -- , Layout.gridLayout
+         --     [ N.rows "*, 55"
+         --     , N.columns "*, auto"
+         --     , N.class "car-list-odd"
+         --     ]
+         --     [ label [ N.text "LUGGAGE" ] []
+         --     , label
+         --         [ N.col "1"
+         --         , N.horizontalAlignment "right"
+         --         , N.class "car-list__value"
+         --         ]
+         --         [ formattedString []
+         --             [ span [ N.text (String.fromInt car.luggage) ] []
+         --             , span [ N.text " Bag(s)" ] []
+         --             ]
+         --         ]
+         --     , slider
+         --         [ N.row "1"
+         --         , N.colSpan "2"
+         --         , N.minValue "0"
+         --         , N.maxValue "5"
+         --         , N.value (String.fromInt car.luggage)
+         --         ]
+         --         []
+         --     ]
+        )
+
+
+carDetailsEditPage : Model -> Native Msg
+carDetailsEditPage model =
+    case model.pickedCar of
+        Nothing ->
+            notFoundPage
+
+        Just car ->
+            carDetailEditView model car
+
+
+carDetailView : Model -> Car -> Native Msg
+carDetailView model car =
+    Page.pageWithActionBar HandleFrameBack
+        []
+        (actionBar []
+            [ navigationButton [ N.androidSystemIcon "ic_menu_back" ] []
+            , label [ N.text car.name, N.fontSize "18" ] []
+            , actionItem
+                [ N.text "Edit"
+                , N.iosSystemIcon "2"
+                , N.iosPosition "right"
+                , N.androidPosition "right"
+                , Event.onTap ToCarDetailsEditPage
+                ]
+                []
+            ]
+        )
+        (scrollView []
+            (Layout.gridLayout [ N.rows "auto, auto, auto" ]
+                [ image [ N.src car.imageUrl, N.class "m-b-15", N.stretch "aspectFill", N.height "200" ] []
+                , Layout.stackLayout [ N.row "1", N.class "hr m-y-15" ] []
+                , Layout.gridLayout [ N.row "2", N.rows "*, *, *, *, *, *", N.columns "auto, auto" ]
+                    [ label [ N.text "Price", N.class "p-l-15 p-b-10 m-r-20" ] []
+                    , label [ N.col "1", N.class "p-b-10" ]
+                        [ formattedString []
+                            [ span [ N.text "€" ] []
+                            , span [ N.text (String.fromInt car.price) ] []
+                            , span [ N.text "/day" ] []
+                            ]
+                        ]
+                    , label [ N.text "Class", N.row "1", N.class "p-l-15 p-b-10 m-r-20" ] []
+                    , label [ N.text car.class, N.row "1", N.col "1", N.class "p-b-10" ] []
+                    , label [ N.text "Doors", N.row "2", N.class "p-l-15 p-b-10 m-r-20" ] []
+                    , label [ N.text (String.fromInt car.doors), N.row "2", N.col "1", N.class "p-b-10" ] []
+                    , label [ N.text "Seats", N.row "3", N.class "p-l-15 p-b-10 m-r-20" ] []
+                    , label [ N.text car.seats, N.row "3", N.col "1", N.class "p-b-10" ] []
+                    , label [ N.text "Transmission", N.row "4", N.class "p-l-15 p-b-10 m-r-20" ] []
+                    , label [ N.text car.transmission, N.row "4", N.col "1", N.class "p-b-10" ] []
+                    , label [ N.text "Luggage", N.row "5", N.class "p-l-15 p-b-10 m-r-20" ] []
+                    , label [ N.text (String.fromInt car.luggage), N.row "5", N.col "1", N.class "p-b-10" ] []
+                    ]
+                ]
+            )
+        )
+
+
+carDetailsPage : Model -> Native Msg
+carDetailsPage model =
+    case model.pickedCar of
+        Nothing ->
+            notFoundPage
+
+        Just car ->
+            carDetailView model car
 
 
 carTemplate : Native Msg
@@ -250,7 +606,7 @@ carTemplate =
 
 homePage : Model -> Native Msg
 homePage model =
-    Page.pageWithActionBar Back
+    Page.pageWithActionBar HandleFrameBack
         []
         (actionBar []
             [ label [ N.text "Browse", N.fontSize "18" ] []
@@ -261,14 +617,17 @@ homePage model =
                 [ N.items model.encodedCars
                 , N.separatorColor "transparent"
                 , N.class "cars-list"
+                , Event.onItemTap ToCarDetailsPage
                 , Event.onEventWith
                     "itemLoading"
-                    []
-                    [ { keys = [ "ios", "selectionStyle" ]
-                      , assignmentValue =
-                            dangerousEvalExpression " UITableViewCellSelectionStyle.None "
-                      }
-                    ]
+                    { methodCalls = []
+                    , setters =
+                        [ { keys = ( "ios", [ "selectionStyle" ] )
+                          , assignmentValue =
+                                dangerousEvalExpression " UITableViewCellSelectionStyle.None "
+                          }
+                        ]
+                    }
                     (D.succeed NoOp)
                 ]
                 [ carTemplate ]
@@ -281,6 +640,8 @@ view model =
     Frame.frame model.rootFrame
         model
         [ ( HomePage, homePage )
+        , ( CarDetailsPage, carDetailsPage )
+        , ( CarDetailsEditPage, carDetailsEditPage )
         ]
         []
 

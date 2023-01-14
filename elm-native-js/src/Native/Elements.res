@@ -269,13 +269,10 @@ module TabViewItem = {
   let handler: Types.handler = buildHandler(
     new,
     Constants.tabViewItem,
-    Js.Nullable.return((. current: Types.htmlElement, _) => {
+    Js.Nullable.return((. current: Types.htmlElement, data: Types.nativeObject) => {
       current.children
       ->Belt.Array.get(0)
-      ->Helper.optionMap2(current.data->Js.Nullable.toOption, (
-        ch: Types.htmlElement,
-        data: Types.nativeObject,
-      ) => {
+      ->Belt.Option.map((ch: Types.htmlElement) => {
         data->Types.setView(ch.data)
       })
       ->ignore
@@ -329,13 +326,9 @@ module ListView = {
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "ListView"
 
-    let itemsSetter = (current: Types.htmlElement, newItems) => {
-      current.data
-      ->Js.Nullable.toOption
-      ->Belt.Option.forEach(data => {
-        data->Types.setItems(newItems)
-        data->Types.refresh
-      })
+    let itemsSetter = (data: Types.nativeObject, newItems) => {
+      data->Types.setItems(newItems)
+      data->Types.refresh
     }
   )
   let tagName = "ns-list-view"
@@ -343,11 +336,9 @@ module ListView = {
   let handler: Types.handler = buildHandler(
     new,
     Constants.listView,
-    Js.Nullable.return((. current: Types.htmlElement, _) => {
-      current.data->Js.Nullable.toOption->Belt.Option.forEach(ListPicker.setItems(current))
-
-      Types.definePropertyInHtml(. current, "items", {set: itemsSetter(current)})
-
+    Js.Nullable.return((. current: Types.htmlElement, data: Types.nativeObject) => {
+      ListPicker.setItems(current, data)
+      Types.definePropertyInHtml(. current, "items", {set: itemsSetter(data)})
       Helper.addView(. current.parentElement, current)
     }),
   )

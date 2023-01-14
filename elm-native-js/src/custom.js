@@ -43,6 +43,9 @@ export const withCustomElements = (UIElement, handler) =>
     }
     disconnectedCallback() {
       this.handler.dispose(this.data)
+      this.data = null
+      this.handler = null
+      this.enhancedCallbackRefs = {}
       // console.log(`${this.tagName} disconnected`)
     }
     addEventListener(event, callback) {

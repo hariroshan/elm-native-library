@@ -21,7 +21,19 @@ module Frame = {
     init: (. ()) => new(),
     observedAttributes: Constants.frameBase,
     update: NativescriptCore.update,
-    render: Js.Nullable.null,
+    render: Js.Nullable.return((. current: Types.htmlElement, data: Types.nativeObject) => {
+      Types.definePropertyInHtml(.
+        current,
+        "popStack",
+        {
+          set: value => {
+            if value {
+              data->Types.goBack
+            }
+          },
+        },
+      )
+    }),
     handlerKind: Types.Frame({
       pageAdded: (. current: Types.htmlElement) => {
         current.data

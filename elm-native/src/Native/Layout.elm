@@ -4,7 +4,6 @@ module Native.Layout exposing
     , flexboxLayout
     , gridLayout
     , rootLayout
-    , scrollView
     , stackLayout
     , tabView
     , wrapLayout
@@ -51,11 +50,6 @@ wrapLayout =
 flexboxLayout : List (Attribute msg) -> List (Html msg) -> Html msg
 flexboxLayout =
     buildLayout "ns-flexbox-layout"
-
-
-scrollView : List (Attribute msg) -> List (Html msg) -> Html msg
-scrollView =
-    buildLayout "ns-scroll-view"
 
 
 tabView : List (Attribute msg) -> List (Html msg) -> Html msg

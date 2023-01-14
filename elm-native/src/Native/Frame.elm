@@ -4,6 +4,7 @@ module Native.Frame exposing
     , TransitionName(..)
     , defaultNavigationOptions
     , frame
+    , goBack
     , goTo
     , handleBack
     , init
@@ -24,6 +25,7 @@ type alias Model page =
     { current : page
     , history : List page
     , encodedNavigationOptions : E.Value
+    , popStack : Bool
     }
 
 
@@ -219,6 +221,7 @@ frame model appModel pages attrs =
     in
     Html.node "ns-frame"
         (property "navigationOptions" model.encodedNavigationOptions
+            :: property "popStack" (E.bool model.popStack)
             :: attrs
         )
         history
@@ -254,6 +257,7 @@ init currentPage =
     { current = currentPage
     , history = []
     , encodedNavigationOptions = E.null
+    , popStack = False
     }
 
 
@@ -268,13 +272,31 @@ handleBack isBackNavigation model =
                 model
 
             cur :: rest ->
-                { model | history = rest, current = cur }
+                { model
+                    | history = rest
+                    , current = cur
+                    , popStack = False
+                }
+
+
+goBack : Model page -> Model page
+goBack model =
+    { model | popStack = True }
 
 
 goTo : page -> Maybe NavigationOptions -> Model page -> Model page
 goTo page maybeNavigationOptions model =
     { model
-        | history = model.current :: model.history
+        | history =
+            if
+                maybeNavigationOptions
+                    |> Maybe.andThen .clearHistory
+                    |> Maybe.withDefault False
+            then
+                []
+
+            else
+                model.current :: model.history
         , current = page
         , encodedNavigationOptions =
             maybeNavigationOptions

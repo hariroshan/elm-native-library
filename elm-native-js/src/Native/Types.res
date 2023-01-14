@@ -74,6 +74,11 @@ external bindExpression: (Obj.t, bindingOptions) => unit = "bind"
 @send
 external refresh: nativeObject => unit = "refresh"
 
+
+@send
+external goBack: nativeObject => unit = "goBack"
+
+
 @val
 external eval: string => 'a = "eval"
 

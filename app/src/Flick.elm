@@ -116,13 +116,13 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Back bool ->
-            ( { model | rootFrame = Frame.back bool model.rootFrame }, Cmd.none )
+            ( { model | rootFrame = Frame.handleBack bool model.rootFrame }, Cmd.none )
 
         ToDetails idx ->
             ( { model
                 | rootFrame =
                     model.rootFrame
-                        |> Frame.current DetailsPage
+                        |> Frame.goTo DetailsPage
                             (Frame.defaultNavigationOptions
                                 |> Frame.setAnimated True
                                 |> Frame.setTransition
@@ -319,41 +319,43 @@ detailsPage model =
                     [ Native.navigationButton [ NA.text "Back" ] []
                     ]
                 )
-                (Layout.scrollView
+                (Native.scrollView
                     []
-                    [ Layout.stackLayout []
-                        [ Native.image
-                            [ NA.margin "0"
-                            , NA.stretch "aspectFill"
-                            , NA.src flick.image
+                    (Layout.flexboxLayout []
+                        [ Layout.stackLayout []
+                            [ Native.image
+                                [ NA.margin "0"
+                                , NA.stretch "aspectFill"
+                                , NA.src flick.image
+                                ]
+                                []
                             ]
-                            []
+                        , Layout.stackLayout [ NA.padding "10, 20" ]
+                            (flick.details
+                                |> List.map
+                                    (\detail ->
+                                        Layout.stackLayout []
+                                            [ Native.label
+                                                [ NA.marginTop "15"
+                                                , NA.fontSize "16"
+                                                , NA.fontWeight "700"
+                                                , NA.class "text-primary"
+                                                , NA.textWrap "true"
+                                                , NA.text detail.title
+                                                ]
+                                                []
+                                            , Native.label
+                                                [ NA.fontSize "14"
+                                                , NA.class "text-secondary"
+                                                , NA.textWrap "true"
+                                                , NA.text detail.body
+                                                ]
+                                                []
+                                            ]
+                                    )
+                            )
                         ]
-                    , Layout.stackLayout [ NA.padding "10, 20" ]
-                        (flick.details
-                            |> List.map
-                                (\detail ->
-                                    Layout.stackLayout []
-                                        [ Native.label
-                                            [ NA.marginTop "15"
-                                            , NA.fontSize "16"
-                                            , NA.fontWeight "700"
-                                            , NA.class "text-primary"
-                                            , NA.textWrap "true"
-                                            , NA.text detail.title
-                                            ]
-                                            []
-                                        , Native.label
-                                            [ NA.fontSize "14"
-                                            , NA.class "text-secondary"
-                                            , NA.textWrap "true"
-                                            , NA.text detail.body
-                                            ]
-                                            []
-                                        ]
-                                )
-                        )
-                    ]
+                    )
                 )
 
 

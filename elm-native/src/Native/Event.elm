@@ -85,16 +85,26 @@ on eventName =
     Event.on eventName
 
 
+{-| Setter keys require atleast one key.
+-}
 type alias Setter =
-    { keys : List String, assignmentValue : String }
+    { keys : ( String, List String )
+    , assignmentValue : String
+    }
 
 
 encodeSetter : Setter -> E.Value
 encodeSetter { keys, assignmentValue } =
-    [ ( "keys", E.list E.string keys )
+    [ ( "keys", E.list E.string (Tuple.first keys :: Tuple.second keys) )
     , ( "value", E.string assignmentValue )
     ]
         |> E.object
+
+
+type alias EventOptions =
+    { methodCalls : List String
+    , setters : List Setter
+    }
 
 
 {-| Method values are kept under {custom: {[methodName]: value}}
@@ -110,13 +120,13 @@ For example:
         )
 
 -}
-onEventWith : String -> List String -> List Setter -> D.Decoder msg -> Attribute msg
-onEventWith eventName methods setters =
+onEventWith : String -> EventOptions -> D.Decoder msg -> Attribute msg
+onEventWith eventName { methodCalls, setters } =
     let
         encodedValue : String
         encodedValue =
             [ ( "event", E.string eventName )
-            , ( "methods", E.list E.string methods )
+            , ( "methods", E.list E.string methodCalls )
             , ( "setters", E.list encodeSetter setters )
             ]
                 |> E.object

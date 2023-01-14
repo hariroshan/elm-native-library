@@ -37,7 +37,14 @@ let rec update = (. nativeObject: Types.nativeObject, attr, newValue) => {
   }
 }
 
-let dispose = (. nativeObject: Types.nativeObject) => nativeObject.destroyNode(.)
+let dispose = (. nativeObject: Types.nativeObject) => {
+  if (
+    (Types.isIOS && !(nativeObject.ios->Js.Nullable.isNullable)) ||
+      (Types.isAndroid && !(nativeObject.android->Js.Nullable.isNullable))
+  ) {
+    nativeObject.destroyNode(.)
+  }
+}
 
 let addEventListener = (. nativeObject: Types.nativeObject, event, callback) => {
   nativeObject.on(. event, callback)
