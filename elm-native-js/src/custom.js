@@ -1,11 +1,13 @@
-import { makeAssignmentValue, applyAssignmentKind } from "./Native/Types.bs";
+import { makeAssignmentValue, applyAssignmentKind, getKeyKind } from "./Native/Types.bs";
 import { assignDeep } from "./Native/Helper.bs";
 
 const enhancedCallback = (parsed, callback) => e => {
   // console.log(parsed)
   parsed.setters.forEach(setter => {
     assignDeep(e, setter.keys, 0,
-      applyAssignmentKind(makeAssignmentValue(setter.value))
+      applyAssignmentKind(
+        getKeyKind(setter.keys[0]),
+        makeAssignmentValue(setter.value))
     )
   })
 

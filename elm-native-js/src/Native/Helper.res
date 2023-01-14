@@ -35,7 +35,7 @@ let setAttribute: (Obj.t, string, Types.assignmentValue) => unit = (
   key,
   (_, valueKind) as value,
 ) => {
-  let appliedValue = Types.applyAssignmentKind(value)
+  let appliedValue = key->Types.getKeyKind->Types.applyAssignmentKind(value)
 
   switch key {
   | "key"

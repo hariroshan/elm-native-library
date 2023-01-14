@@ -146,10 +146,27 @@ let makeAssignmentValue: string => assignmentValue = value => {
   ->Belt.Option.getWithDefault((value, String))
 }
 
-let applyAssignmentKind: assignmentValue => 'a = ((value, kind)) => {
+let getKeyKind = key => {
+  if key->Js.String2.startsWith("ios") {
+    Some("ios")
+  } else if key->Js.String2.startsWith("android") {
+    Some("android")
+  } else {
+    None
+  }
+}
+
+let applyAssignmentKind: (option<string>, assignmentValue) => 'a = (keyKind, (value, kind)) => {
   switch kind {
   | String => value
-  | GlobalEvalExpression => eval(value)
+  | GlobalEvalExpression =>
+    switch keyKind {
+    | None => eval(value)
+    | Some("ios") if isIOS => eval(value)
+    | Some("android") if isAndroid => eval(value)
+    | _ => value
+    }
+
   | BindingExpression => value
   }
 }
