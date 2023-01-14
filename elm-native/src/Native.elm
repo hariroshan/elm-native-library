@@ -1,5 +1,6 @@
 module Native exposing
-    ( actionBar
+    ( Native
+    , actionBar
     , actionItem
     , activityIndicator
     , button
@@ -28,6 +29,10 @@ module Native exposing
     )
 
 import Html exposing (Attribute, Html)
+
+
+type alias Native msg =
+    Html msg
 
 
 buildElement : String -> List (Attribute msg) -> List (Html msg) -> Html msg

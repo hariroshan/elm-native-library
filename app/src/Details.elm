@@ -4,7 +4,7 @@ import Browser
 import Json.Decode as D
 import Json.Encode as E
 import Native exposing (..)
-import Native.Attributes as N
+import Native.Attributes as N exposing (bindingExpression, dangerousEvalExpression)
 import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout
@@ -183,6 +183,7 @@ type alias Model =
 
 type Msg
     = Back Bool
+    | NoOp
 
 
 init : ( Model, Cmd Msg )
@@ -199,6 +200,9 @@ init =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
         Back bool ->
             ( { model | rootFrame = Frame.back bool model.rootFrame }, Cmd.none )
 
@@ -209,46 +213,39 @@ carTemplate =
         [ N.rows "*, *, *"
         , N.columns "*, *"
         , N.class "cars-list__item-content"
-        , N.iosSelectionStyle "0"
         ]
-        [ label [ N.text "{{ $value.name }}", N.class "font-weight-bold cars-list__item-name" ] []
+        [ label [ N.text <| bindingExpression " $value.name ", N.class "font-weight-bold cars-list__item-name" ] []
         , label [ N.col "1", N.horizontalAlignment "right" ]
             [ formattedString []
                 [ span [ N.text "€" ] []
-                , span [ N.text "{{ $value.price }}" ] []
+                , span [ N.text <| bindingExpression " $value.price " ] []
                 , span [ N.text "/day" ] []
                 ]
             ]
         , Layout.stackLayout [ N.row "1", N.class "hr m-y-5", N.colSpan "2" ] []
-        , image [ N.row "2", N.src "{{ $value.imageUrl }}", N.stretch "aspectFill", N.height "120", N.class "m-r-20" ] []
+        , image [ N.row "2", N.src <| bindingExpression " $value.imageUrl ", N.stretch "aspectFill", N.height "120" ] [] -- , N.class "m-r-15"
         , Layout.stackLayout [ N.row "2", N.col "1", N.verticalAlignment "center" ]
             [ label [ N.class "p-b-10" ]
                 [ formattedString [ N.fontFamily "system" ]
-                    [ span [ N.text (String.fromChar '\u{F1B9}' ++ "    "), N.class "fas fa-car cars-list__item-icon" ] []
-                    , span [ N.text "{{ $value.class }}" ] []
+                    [ span [ N.text (String.fromChar '\u{F1B9}' ++ " "), N.class "fas fa-car cars-list__item-icon" ] []
+                    , span [ N.text <| bindingExpression " $value.class " ] []
                     ]
                 ]
             , label [ N.class "p-b-10" ]
                 [ formattedString [ N.fontFamily "system" ]
-                    [ span [ N.text (String.fromChar '\u{F085}' ++ "    "), N.class "fas fa-car cars-list__item-icon" ] []
-                    , span [ N.text "{{ $value.transmission }}" ] []
+                    [ span [ N.text (String.fromChar '\u{F085}' ++ " "), N.class "fas fa-car cars-list__item-icon" ] []
+                    , span [ N.text <| bindingExpression " $value.transmission " ] []
                     , span [ N.text " Transmission" ] []
                     ]
                 ]
             , label [ N.class "p-b-10" ]
                 [ formattedString [ N.fontFamily "system" ]
-                    [ span [ N.text (String.fromChar '\u{F2DC}' ++ "    "), N.class "fas fa-car cars-list__item-icon" ] []
-                    , span [ N.text "{{ $value.hasAC ? 'Yes' : 'No' }}" ] []
+                    [ span [ N.text (String.fromChar '\u{F2DC}' ++ " "), N.class "fas fa-car cars-list__item-icon" ] []
+                    , span [ N.text <| bindingExpression " $value.hasAC ? 'Yes' : 'No' " ] []
                     ]
                 ]
             ]
         ]
-
-
-
--- Layout.stackLayout [ N.class "cars-list__item" ]
---     [
--- ]
 
 
 homePage : Model -> Native Msg
@@ -264,6 +261,15 @@ homePage model =
                 [ N.items model.encodedCars
                 , N.separatorColor "transparent"
                 , N.class "cars-list"
+                , Event.onEventWith
+                    "itemLoading"
+                    []
+                    [ { keys = [ "ios", "selectionStyle" ]
+                      , assignmentValue =
+                            dangerousEvalExpression " UITableViewCellSelectionStyle.None "
+                      }
+                    ]
+                    (D.succeed NoOp)
                 ]
                 [ carTemplate ]
             ]

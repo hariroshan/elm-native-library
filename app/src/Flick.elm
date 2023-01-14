@@ -5,7 +5,7 @@ import Html exposing (Html)
 import Json.Decode as D
 import Json.Encode as E
 import Native
-import Native.Attributes as NA
+import Native.Attributes as NA exposing (bindingExpression)
 import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout
@@ -105,9 +105,6 @@ init =
       }
     , Cmd.none
     )
-
-
-
 
 
 type Msg
@@ -263,7 +260,7 @@ flickTemplate =
             [ NA.row "0"
             , NA.margin "0"
             , NA.stretch "aspectFill"
-            , NA.src "{{ $value.image }}"
+            , NA.src <| bindingExpression " $value.image "
             ]
             []
         , Native.label
@@ -272,7 +269,7 @@ flickTemplate =
             , NA.fontWeight "700"
             , NA.class "text-primary"
             , NA.fontSize "18"
-            , NA.title "{{ $value.title }}"
+            , NA.title <| bindingExpression " $value.title "
             ]
             []
         , Native.label
@@ -281,7 +278,7 @@ flickTemplate =
             , NA.class "text-secondary"
             , NA.fontSize "14"
             , NA.textWrap "true"
-            , NA.text "{{ $value.description }}"
+            , NA.text <| bindingExpression " $value.description "
             ]
             []
         ]

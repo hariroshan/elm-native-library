@@ -3,7 +3,11 @@ let always = (x, _) => x
 let rec assignDeep: (Obj.t, array<string>, int, 'a) => unit = (object, keys, i, value) => {
   let optionKey = keys->Belt.Array.get(i)
   optionKey
-  ->Belt.Option.flatMap(key => Js.Dict.get(Obj.magic(object), key)->Belt.Option.map(x => (key, x)))
+  ->Belt.Option.flatMap(key =>
+    Js.Dict.get(Obj.magic(object), key)
+    ->Belt.Option.flatMap(x => x->Js.Nullable.toOption)
+    ->Belt.Option.map(x => (key, x))
+  )
   ->Belt.Option.forEach(((key, v)) => {
     if keys->Array.length - 1 == i {
       Js.Dict.set(Obj.magic(object), key, value)
@@ -13,20 +17,23 @@ let rec assignDeep: (Obj.t, array<string>, int, 'a) => unit = (object, keys, i, 
   })
 }
 
-let getExpression = value =>
-  value->String.sub(2, value->String.length - 4)->Js.String2.replace("&#x27;", "'")
+let setAttribute: (Obj.t, string, Types.assignmentValue) => unit = (
+  object,
+  key,
+  (_, valueKind) as value,
+) => {
+  let appliedValue = Types.applyAssignmentKind(value)
 
-let setAttribute: (Obj.t, string, string) => unit = (object, key, value) => {
   switch key {
   | "key"
   | "itemTemplateSelector" => ()
-  | _ if value->Js.String2.startsWith("{{") =>
-    let expression = getExpression(value)
-    object->Types.bindExpression({expression, targetProperty: key})
-  | k if !(k->Js.String2.includes(".")) => Js.Dict.set(Obj.magic(object), key, value)
+  | _ if valueKind == Types.BindingExpression =>
+    object->Types.bindExpression({expression: appliedValue, targetProperty: key})
+  | k if !(k->Js.String2.includes(".")) =>
+    Js.Dict.set(Obj.magic(object), key, appliedValue)
   | _ =>
     let keys = key->Js.String2.split(".")
-    assignDeep(Obj.magic(object), keys, 0, value)
+    assignDeep(Obj.magic(object), keys, 0, appliedValue)
   }
 }
 
@@ -62,6 +69,11 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
                 cloned.manualRender()
                 return cloned.data;
               }
+
+            // parentElement.data.on('itemLoading', e => {
+            //   // cell.selectionStyle = UITableViewCellSelectionStyle.None
+            //   e.ios.selectionStyle = 0
+            // })
             return
           }
 
@@ -84,11 +96,13 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
               )
 
           const expression =
-            getExpression(parentElement.getAttribute("item-template-selector"))
+            Types.makeAssignmentValue(
+              parentElement.getAttribute("item-template-selector")
+            )
 
           parentElement.data.itemTemplateSelector = ($value, $index, _) => {
             // Mangling the variable can affect the variables used in the expression
-            const replacedExpression = expression
+            const replacedExpression = expression[0]
               .replaceAll("$value", Object.keys({$value})[0])
               .replaceAll("$index", Object.keys({$index})[0])
             return eval(replacedExpression)

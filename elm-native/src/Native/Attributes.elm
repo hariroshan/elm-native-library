@@ -9,10 +9,10 @@ fontSize : String -> Attribute msg
 fontSize =
     attribute "font-size"
 
+
 fontWeight : String -> Attribute msg
 fontWeight =
     attribute "font-weight"
-
 
 
 fontStyle : String -> Attribute msg
@@ -243,11 +243,6 @@ backgroundColor =
 backgroundImage : String -> Attribute msg
 backgroundImage =
     attribute "background-image"
-
-
-bindingContext : String -> Attribute msg
-bindingContext =
-    attribute "binding-context"
 
 
 borderBottomColor : String -> Attribute msg
@@ -1155,8 +1150,50 @@ separatorColor =
     attribute "separator-color"
 
 
+{-| This have access to $value, $index variables
+-}
 itemTemplateSelector : String -> Attribute msg
 itemTemplateSelector =
     attribute "item-template-selector"
 
 
+fontFamily : String -> Attribute msg
+fontFamily =
+    attribute "font-family"
+
+
+{-| Caution: This allows execution of JS.
+Ensure your string is generated at compile time and NOT dynamic
+
+For example:
+
+Good usage:
+
+    itemTemplateSelector <|
+        dangerousEvalExpression " $value % 2 == 0 ? 'template1' : 'template2'"
+
+    dangerousEvalExpression " isIOS ? UITableViewCellSelectionStyle.None : 0 "
+
+BAD usage:
+
+    dangerousEvalExpression (" $value % " ++ user.input ++ " == 0")
+
+-}
+dangerousEvalExpression : String -> String
+dangerousEvalExpression expression =
+    "e{" ++ expression ++ "}"
+
+
+bindingExpression : String -> String
+bindingExpression expression =
+    "b{" ++ expression ++ "}"
+
+
+ios : String -> String -> Attribute msg
+ios propertyName propertyValue =
+    attribute "ios" (propertyName ++ ";" ++ propertyValue)
+
+
+android : String -> String -> Attribute msg
+android propertyName propertyValue =
+    attribute "android" (propertyName ++ ";" ++ propertyValue)

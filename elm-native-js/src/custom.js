@@ -1,7 +1,17 @@
-const wrapCallback = (methods, callback) => e => {
+import { makeAssignmentValue, applyAssignmentKind } from "./Native/Types.bs";
+import { assignDeep } from "./Native/Helper.bs";
+
+const enhancedCallback = (parsed, callback) => e => {
+  // console.log(parsed)
+  parsed.setters.forEach(setter => {
+    assignDeep(e, setter.keys, 0,
+      applyAssignmentKind(makeAssignmentValue(setter.value))
+    )
+  })
+
   const custom = {}
-  methods.forEach(method => {
-    if(e[method] != null)
+  parsed.methods.forEach(method => {
+    if (e[method] != null)
       custom[method] = e[method]()
   })
   e.custom = custom
@@ -12,7 +22,7 @@ export const withCustomElements = (UIElement, handler) =>
   class extends UIElement {
     constructor() {
       super()
-      this.wrapCallbackRefs = {}
+      this.enhancedCallbackRefs = {}
       this.handler = handler
       this.data = this.handler.init()
     }
@@ -34,30 +44,28 @@ export const withCustomElements = (UIElement, handler) =>
       // console.log(`${this.tagName} disconnected`)
     }
     addEventListener(event, callback) {
-      const indexOfSemiCol = event.indexOf(";")
-      if (indexOfSemiCol !== -1) {
-        const extractedEvent = event.substring(0, indexOfSemiCol)
-        const wrappedCallback = wrapCallback(
-          event.substring(indexOfSemiCol + 1).split(","),
+      if (event.startsWith("{")) {
+        const parsed = JSON.parse(event)
+        const wrappedCallback = enhancedCallback(
+          parsed,
           callback
         )
-        super.addEventListener(extractedEvent, wrappedCallback);
-        this.handler.addEventListener(this.data, extractedEvent, wrappedCallback)
-        this.wrapCallbackRefs[callback] = wrappedCallback
+        super.addEventListener(parsed.event, wrappedCallback);
+        this.handler.addEventListener(this.data, parsed.event, wrappedCallback)
+        this.enhancedCallbackRefs[callback] = wrappedCallback
       } else {
         super.addEventListener(event, callback);
         this.handler.addEventListener(this.data, event, callback)
       }
     }
     removeEventListener(event, callback) {
-      const indexOfSemiCol = event.indexOf(";")
-      if (indexOfSemiCol !== -1) {
-        const extractedEvent = event.substring(0, indexOfSemiCol)
-        const wrappedCallback = this.wrapCallbackRefs[callback]
-        super.removeEventListener(extractedEvent, wrappedCallback);
-        this.handler.removeEventListener(this.data, extractedEvent, wrappedCallback)
+      if (event.startsWith("{")) {
+        const parsed = JSON.parse(event)
+        const wrappedCallback = this.enhancedCallbackRefs[callback]
+        super.removeEventListener(parsed.event, wrappedCallback);
+        this.handler.removeEventListener(this.data, parsed.event, wrappedCallback)
 
-        delete this.wrapCallbackRefs[callback]
+        delete this.enhancedCallbackRefs[callback]
       } else {
         super.removeEventListener(event, callback);
         this.handler.removeEventListener(this.data, event, callback);

@@ -3,7 +3,7 @@ module Native.Event exposing
     , onBlur
     , onBusyChange
     , onDateChange
-    , onEventWithMethodCalls
+    , onEventWith
     , onFocus
     , onItemTap
     , onLoaded
@@ -17,26 +17,7 @@ module Native.Event exposing
 import Html exposing (Attribute)
 import Html.Events as Event
 import Json.Decode as D
-
-
-on : String -> D.Decoder msg -> Attribute msg
-on eventName =
-    Event.on eventName
-
-
-{-| Method values are kept under {custom: {[methodName]: value}}
-example:
-Event.onEventWithMethodCalls "touch"
-[ "getX", "getY" ]
-(D.map2 Tuple.pair
-(D.at [ "custom", "getX"] D.float)
-(D.at [ "custom", "getY"] D.float)
-|> D.map Msg
-)
--}
-onEventWithMethodCalls : String -> List String -> D.Decoder msg -> Attribute msg
-onEventWithMethodCalls eventName methods =
-    Event.on (eventName ++ ";" ++ String.join "," methods)
+import Json.Encode as E
 
 
 onTextChange : (String -> msg) -> Attribute msg
@@ -97,3 +78,48 @@ onSelectedIndexChange msg =
 onItemTap : (Int -> msg) -> Attribute msg
 onItemTap msg =
     on "itemTap" (D.field "index" D.int |> D.map msg)
+
+
+on : String -> D.Decoder msg -> Attribute msg
+on eventName =
+    Event.on eventName
+
+
+type alias Setter =
+    { keys : List String, assignmentValue : String }
+
+
+encodeSetter : Setter -> E.Value
+encodeSetter { keys, assignmentValue } =
+    [ ( "keys", E.list E.string keys )
+    , ( "value", E.string assignmentValue )
+    ]
+        |> E.object
+
+
+{-| Method values are kept under {custom: {[methodName]: value}}
+
+For example:
+
+    Event.onEventWithMethodCalls "touch"
+        [ "getX", "getY" ]
+        (D.map2 Tuple.pair
+            (D.at [ "custom", "getX" ] D.float)
+            (D.at [ "custom", "getY" ] D.float)
+            |> D.map Msg
+        )
+
+-}
+onEventWith : String -> List String -> List Setter -> D.Decoder msg -> Attribute msg
+onEventWith eventName methods setters =
+    let
+        encodedValue : String
+        encodedValue =
+            [ ( "event", E.string eventName )
+            , ( "methods", E.list E.string methods )
+            , ( "setters", E.list encodeSetter setters )
+            ]
+                |> E.object
+                |> E.encode 0
+    in
+    Event.on encodedValue

@@ -31,7 +31,6 @@ let view: array<string> =
     "background",
     "backgroundColor",
     "backgroundImage",
-    "bindingContext",
     "borderBottomColor",
     "borderBottomLeftRadius",
     "borderBottomRightRadius",
@@ -145,6 +144,7 @@ let textBase: array<string> =
     [
       "fontSize",
       "fontWeight",
+      "fontFamily",
       "formattedText",
       "letterSpacing",
       "lineHeight",
@@ -163,7 +163,10 @@ let dockLayout: array<string> =
   [layoutBase, ["stretchLastChild"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
 
 let gridLayout: array<string> =
-  [layoutBase, ["columns", "rows"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
+  [
+    layoutBase,
+    ["columns", "rows"]->Belt.Array.map(dashed),
+  ]->Belt.Array.concatMany
 
 let stackLayout: array<string> =
   [layoutBase, ["orientation"]->Belt.Array.map(dashed)]->Belt.Array.concatMany
