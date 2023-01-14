@@ -1,20 +1,33 @@
 let always = (x, _) => x
 
+let dbg = x => {
+  Js.log(x)
+  x
+}
+let dbg2 = (x, lbl) => {
+  Js.log2(lbl, x)
+  x
+}
+
+let tap = (fx, x) => {
+  fx(x)->ignore
+  x
+}
+let flip: (('a, 'b) => 'c, 'b, 'a) => 'c = (fx, x, y) => fx(y, x)
+
 let rec assignDeep: (Obj.t, array<string>, int, 'a) => unit = (object, keys, i, value) => {
   let optionKey = keys->Belt.Array.get(i)
-  optionKey
-  ->Belt.Option.flatMap(key =>
-    Js.Dict.get(Obj.magic(object), key)
-    ->Belt.Option.flatMap(x => x->Js.Nullable.toOption)
-    ->Belt.Option.map(x => (key, x))
-  )
-  ->Belt.Option.forEach(((key, v)) => {
-    if keys->Array.length - 1 == i {
-      Js.Dict.set(Obj.magic(object), key, value)
-    } else {
+  if keys->Array.length - 1 == i {
+    optionKey->Belt.Option.forEach(key => Js.Dict.set(Obj.magic(object), key, value))
+  } else {
+    optionKey
+    ->Belt.Option.flatMap(key =>
+      Js.Dict.get(Obj.magic(object), key)->Belt.Option.flatMap(x => x->Js.Nullable.toOption)
+    )
+    ->Belt.Option.forEach(v => {
       assignDeep(v, keys, i + 1, value)
-    }
-  })
+    })
+  }
 }
 
 let setAttribute: (Obj.t, string, Types.assignmentValue) => unit = (
@@ -29,8 +42,7 @@ let setAttribute: (Obj.t, string, Types.assignmentValue) => unit = (
   | "itemTemplateSelector" => ()
   | _ if valueKind == Types.BindingExpression =>
     object->Types.bindExpression({expression: appliedValue, targetProperty: key})
-  | k if !(k->Js.String2.includes(".")) =>
-    Js.Dict.set(Obj.magic(object), key, appliedValue)
+  | k if !(k->Js.String2.includes(".")) => Js.Dict.set(Obj.magic(object), key, appliedValue)
   | _ =>
     let keys = key->Js.String2.split(".")
     assignDeep(Obj.magic(object), keys, 0, appliedValue)
@@ -59,6 +71,9 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
         if (parentElement.data.constructor.name == "ActionBar")
           return (parentElement.data.titleView = thisElement.data)
 
+        if (parentElement.data.constructor.name == "ActionItem")
+          return (parentElement.data.actionView = thisElement.data)
+
         if (parentElement.data.constructor.name == "ListView") {
           if(children.length == 1) {
             parentElement.data.itemTemplate =
@@ -69,11 +84,6 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
                 cloned.manualRender()
                 return cloned.data;
               }
-
-            // parentElement.data.on('itemLoading', e => {
-            //   // cell.selectionStyle = UITableViewCellSelectionStyle.None
-            //   e.ios.selectionStyle = 0
-            // })
             return
           }
 
@@ -176,18 +186,3 @@ let optionMap2 = (a, b, fx) => {
   | _ => None
   }
 }
-
-let dbg = x => {
-  Js.log(x)
-  x
-}
-let dbg2 = (x, lbl) => {
-  Js.log2(lbl, x)
-  x
-}
-
-let tap = (fx, x) => {
-  fx(x)->ignore
-  x
-}
-let flip: (('a, 'b) => 'c, 'b, 'a) => 'c = (fx, x, y) => fx(y, x)
