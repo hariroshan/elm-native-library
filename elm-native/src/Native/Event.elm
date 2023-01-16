@@ -1,5 +1,5 @@
 module Native.Event exposing
-    ( decodeItemId
+    ( decodeAttribute
     , on
     , onBlur
     , onBusyChange
@@ -105,13 +105,27 @@ encodeSetter { keys, assignmentValue } =
 type alias EventOptions =
     { methodCalls : List String
     , setters : List Setter
-    , getters : List (List String)
     }
 
 
-decodeItemId : D.Decoder a -> D.Decoder a
-decodeItemId decoder =
-    D.at [ "custom", "object", "itemId" ] decoder
+
+{- Usage:
+
+    listView
+    [ N.items model.encodedItems ]
+    [ button
+      [ N.itemId <| bindingExpression "$value.id"
+      , Event.on "tap" (Event.decodeAttribute "itemId" D.string |> D.map ItemTap)
+      ]
+      []
+   ]
+
+-}
+
+
+decodeAttribute : String -> D.Decoder a -> D.Decoder a
+decodeAttribute attributeName decoder =
+    D.at [ "object", attributeName ] decoder
 
 
 {-| Method values are kept under {custom: {[methodName]: value}}
@@ -131,14 +145,13 @@ For example:
 
 -}
 onEventWith : String -> EventOptions -> D.Decoder msg -> Attribute msg
-onEventWith eventName { methodCalls, setters, getters } =
+onEventWith eventName { methodCalls, setters } =
     let
         encodedValue : String
         encodedValue =
             [ ( "event", E.string eventName )
             , ( "methods", E.list E.string methodCalls )
             , ( "setters", E.list encodeSetter setters )
-            , ( "getters", E.list (E.list E.string) getters )
             ]
                 |> E.object
                 |> E.encode 0

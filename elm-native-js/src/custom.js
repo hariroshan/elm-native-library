@@ -1,6 +1,6 @@
 import { makeAssignmentValue, applyAssignmentKind, getKeyKind } from "./Native/Types.bs";
 import { assignDeep } from "./Native/Helper.bs";
-
+/*
 function deepGetter(obj, i, keys) {
   if (keys.length == i) return obj == null ? null : obj
   if (obj == null) return null
@@ -12,17 +12,7 @@ function deepSetter(obj, keys, i, value) {
   if (obj[keys[i]] == null) obj[keys[i]] = {}
   deepSetter(obj[keys[i]], keys, i + 1, value)
 }
-
-const buildCustomObject = (callback) => e => {
-  const custom = {
-    object: {
-      itemId: e.object.itemId
-    }
-  }
-  e.custom = custom
-  callback(e)
-}
-
+ */
 const enhancedCallback = (parsed, callback) => e => {
   // console.log(parsed)
   parsed.setters.forEach(setter => {
@@ -33,12 +23,12 @@ const enhancedCallback = (parsed, callback) => e => {
     )
   })
 
-  const custom = e.custom
-  parsed.getters.forEach(keys => {
-    deepSetter(custom, keys, 0,
-      deepGetter(e, 0, keys)
-    )
-  })
+  const custom = {}
+  // parsed.getters.forEach(keys => {
+  //   deepSetter(custom, keys, 0,
+  //     deepGetter(e, 0, keys)
+  //   )
+  // })
 
   parsed.methods.forEach(method => {
     if (e[method] != null)
@@ -80,34 +70,28 @@ export const withCustomElements = (UIElement, handler) =>
     addEventListener(event, callback) {
       if (event.startsWith("{")) {
         const parsed = JSON.parse(event)
-        const wrappedCallback =
-          buildCustomObject(enhancedCallback(
-            parsed,
-            callback
-          ))
+        const wrappedCallback = enhancedCallback(parsed, callback)
         super.addEventListener(parsed.event, wrappedCallback);
         this.handler.addEventListener(this.data, parsed.event, wrappedCallback)
         this.enhancedCallbackRefs[callback] = wrappedCallback
       } else {
-        const newCallback = buildCustomObject(callback)
-        super.addEventListener(event, newCallback);
-        this.handler.addEventListener(this.data, event, newCallback)
-        this.enhancedCallbackRefs[callback] = newCallback
+        super.addEventListener(event, callback);
+        this.handler.addEventListener(this.data, event, callback)
       }
       this.eventListners[event] = callback
     }
     removeEventListener(event, callback) {
-      const wrappedCallback = this.enhancedCallbackRefs[callback]
       if (event.startsWith("{")) {
+        const wrappedCallback = this.enhancedCallbackRefs[callback]
         const parsed = JSON.parse(event)
         super.removeEventListener(parsed.event, wrappedCallback);
         this.handler.removeEventListener(this.data, parsed.event, wrappedCallback)
 
+        delete this.enhancedCallbackRefs[callback]
       } else {
-        super.removeEventListener(event, wrappedCallback);
-        this.handler.removeEventListener(this.data, event, wrappedCallback);
+        super.removeEventListener(event, callback);
+        this.handler.removeEventListener(this.data, event, callback);
       }
-      delete this.enhancedCallbackRefs[callback]
       delete this.eventListners[event]
     }
     cloneAll() {
