@@ -61,6 +61,7 @@ encodeCar car =
     , ( "transmission", E.string car.transmission )
     , ( "hasAC", E.bool car.hasAC )
     , ( "price", E.int car.price )
+    , ( "id", E.string car.id )
     ]
         |> E.object
 
@@ -191,6 +192,7 @@ type Msg
     | NoOp
     | ToCarDetailsPage Int
     | ToCarDetailsEditPage
+    | ItemTap String
 
 
 init : ( Model, Cmd Msg )
@@ -207,6 +209,13 @@ init =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        ItemTap carId ->
+            let
+                _ =
+                    Debug.log "Car" carId
+            in
+            ( model, Cmd.none )
+
         NoOp ->
             ( model, Cmd.none )
 
@@ -298,9 +307,8 @@ carDetailEditView model car =
                 []
             ]
         )
-        (
-            -- scrollView [ N.class "car-list" ]
-            (Layout.flexboxLayout [ N.flexDirection "column" ]
+        (scrollView [ N.class "car-list" ] <|
+            Layout.flexboxLayout [ N.flexDirection "column" ]
                 [ label [ N.text "CAR MAKE", N.class "car-list-odd" ] []
                 , textField
                     [ N.text car.name
@@ -309,191 +317,181 @@ carDetailEditView model car =
                     , Event.onTextChange (always NoOp)
                     ]
                     []
+                , Layout.gridLayout
+                    [ N.rows "*, 55, *"
+                    , N.columns "*, auto"
+                    , N.class "car-list-odd"
+                    ]
+                    [ label [ N.text "PRICE PER DAY" ] []
+                    , label
+                        [ N.col "1"
+                        , N.horizontalAlignment "right"
+                        , N.class "car-list__value"
+                        ]
+                        [ formattedString []
+                            [ span [ N.text "€" ] []
+                            , span [ N.text (String.fromInt car.price) ] []
+                            ]
+                        ]
+                    , slider
+                        [ N.row "1"
+                        , N.colSpan "2"
+                        , N.verticalAlignment "center"
+                        , N.value (String.fromInt car.price)
+                        ]
+                        []
+                    , label
+                        [ N.text "ADD OR REMOVE IMAGE"
+                        , N.row "2"
+                        , N.colSpan "2"
+                        ]
+                        []
+                    ]
+                , Layout.stackLayout
+                    [ N.class "car-list-even" ]
+                    [ Layout.gridLayout
+                        [ N.height "80"
+                        , N.width "80"
+                        , N.class "thumb"
+                        , N.horizontalAlignment "left"
+                        , N.backgroundImage car.imageUrl
+
+                        -- , N.tap "onImageAddRemoveTap"
+                        ]
+                        [ Layout.gridLayout
+                            [ N.class "thumb__add"
+                            , N.visibility "collapsed"
+                            ]
+                            [ label
+                                [ N.text (String.fromChar '\u{F030}')
+                                , N.class "fas"
+                                , N.horizontalAlignment "center"
+                                , N.verticalAlignment "center"
+                                ]
+                                []
+                            ]
+                        , Layout.gridLayout
+                            [ N.class "thumb__remove"
+                            , N.visibility "visible"
+                            ]
+                            [ label
+                                [ N.text (String.fromChar '\u{F2ED}')
+                                , N.class "far"
+                                , N.horizontalAlignment "center"
+                                , N.verticalAlignment "center"
+                                ]
+                                []
+                            ]
+                        ]
+                    , label
+                        [ N.visibility "collapsed"
+                        , N.class "c-error"
+                        , N.text "Image field is required"
+                        ]
+                        []
+                    ]
+                , label [ N.text "CLASS", N.class "car-list-odd" ] []
+                , Layout.gridLayout
+                    [ N.columns "*, auto"
+                    , N.class "car-list-even"
+
+                    -- , N.tap "onSelectorTap"
+                    ]
+                    [ label [ N.text car.class ] []
+                    , label
+                        [ N.text (String.fromChar '\u{F054}')
+                        , N.class "fas"
+                        , N.col "1"
+                        , N.horizontalAlignment "center"
+                        , N.verticalAlignment "center"
+                        ]
+                        []
+                    ]
+                , label [ N.text "DOORS", N.class "car-list-odd" ] []
+                , Layout.gridLayout
+                    [ N.columns "*, auto"
+                    , N.class "car-list-even"
+
+                    -- , N.tap "onSelectorTap"
+                    ]
+                    [ label [ N.text (String.fromInt car.doors) ] []
+                    , label
+                        [ N.text (String.fromChar '\u{F054}')
+                        , N.class "fas"
+                        , N.col "1"
+                        , N.horizontalAlignment "center"
+                        , N.verticalAlignment "center"
+                        ]
+                        []
+                    ]
+                , label
+                    [ N.text "SEATS"
+                    , N.class "car-list-odd"
+                    ]
+                    []
+                , Layout.gridLayout
+                    [ N.columns "*, auto"
+                    , N.class "car-list-even"
+
+                    -- , N.tap "onSelectorTap"
+                    ]
+                    [ label [ N.text car.seats ] []
+                    , label
+                        [ N.text (String.fromChar '\u{F054}')
+                        , N.class "fas"
+                        , N.col "1"
+                        , N.horizontalAlignment "center"
+                        , N.verticalAlignment "center"
+                        ]
+                        []
+                    ]
+                , label
+                    [ N.text "TRANSMISSION"
+                    , N.class "car-list-odd"
+                    ]
+                    []
+                , Layout.gridLayout
+                    [ N.columns "*, auto"
+                    , N.class "car-list-even"
+
+                    -- , N.tap "onSelectorTap"
+                    ]
+                    [ label [ N.text car.transmission ] []
+                    , label
+                        [ N.text (String.fromChar '\u{F054}')
+                        , N.class "fas"
+                        , N.col "1"
+                        , N.horizontalAlignment "center"
+                        , N.verticalAlignment "center"
+                        ]
+                        []
+                    ]
+                , Layout.gridLayout
+                    [ N.rows "*, 55"
+                    , N.columns "*, auto"
+                    , N.class "car-list-odd"
+                    ]
+                    [ label [ N.text "LUGGAGE" ] []
+                    , label
+                        [ N.col "1"
+                        , N.horizontalAlignment "right"
+                        , N.class "car-list__value"
+                        ]
+                        [ formattedString []
+                            [ span [ N.text (String.fromInt car.luggage) ] []
+                            , span [ N.text " Bag(s)" ] []
+                            ]
+                        ]
+                    , slider
+                        [ N.row "1"
+                        , N.colSpan "2"
+                        , N.minValue "0"
+                        , N.maxValue "5"
+                        , N.value (String.fromInt car.luggage)
+                        ]
+                        []
+                    ]
                 ]
-            )
-         -- [
-         --
-         -- (
-         --     [
-         --     ,
-         --     ]
-         -- )
-         -- ]
-         -- , Layout.gridLayout
-         --     [ N.rows "*, 55, *"
-         --     , N.columns "*, auto"
-         --     , N.class "car-list-odd"
-         --     ]
-         --     [ label [ N.text "PRICE PER DAY" ] []
-         --     , label
-         --         [ N.col "1"
-         --         , N.horizontalAlignment "right"
-         --         , N.class "car-list__value"
-         --         ]
-         --         [ formattedString []
-         --             [ span [ N.text "€" ] []
-         --             , span [ N.text (String.fromInt car.price) ] []
-         --             ]
-         --         ]
-         --     , Layout.stackLayout
-         --         []
-         --         [ slider
-         --             [ N.row "1"
-         --             , N.colSpan "2"
-         --             , N.verticalAlignment "center"
-         --             , N.value (String.fromInt car.price)
-         --             ]
-         --             []
-         --         ]
-         --     , label
-         --         [ N.text "ADD OR REMOVE IMAGE"
-         --         , N.row "2"
-         --         , N.colSpan "2"
-         --         ]
-         --         []
-         --     ]
-         -- , Layout.stackLayout []
-         --     [ Layout.gridLayout
-         --         [ N.height "80"
-         --         , N.width "80"
-         --         , N.class "thumb"
-         --         , N.horizontalAlignment "left"
-         --         , N.backgroundImage car.imageUrl
-         --         , N.class "car-list-even"
-         --         -- , N.tap "onImageAddRemoveTap"
-         --         ]
-         --         [ Layout.gridLayout
-         --             [ N.class "thumb__add"
-         --             , N.visibility "collapsed"
-         --             -- , N.visibility "{{ car.imageUrl, car.imageUrl | visibilityValueConverter }}"
-         --             ]
-         --             [ label
-         --                 [ N.text (String.fromChar '\u{F030}')
-         --                 , N.class "fas"
-         --                 , N.horizontalAlignment "center"
-         --                 , N.verticalAlignment "center"
-         --                 ]
-         --                 []
-         --             ]
-         --         , Layout.gridLayout
-         --             [ N.class "thumb__remove"
-         --             , N.visibility "visible"
-         --             -- , N.visibility "{{ car.imageUrl, !car.imageUrl | visibilityValueConverter }}"
-         --             ]
-         --             [ label
-         --                 [ N.text (String.fromChar '\u{F2ED}')
-         --                 , N.class "far"
-         --                 , N.horizontalAlignment "center"
-         --                 , N.verticalAlignment "center"
-         --                 ]
-         --                 []
-         --             ]
-         --         ]
-         --     , label
-         --         [ N.visibility "collapsed"
-         --         -- N.visibility "{{ car.imageUrl, car.imageUrl | visibilityValueConverter }}"
-         --         , N.class "c-error"
-         --         , N.text "Image field is required"
-         --         ]
-         --         []
-         --     ]
-         -- , label [ N.text "CLASS", N.class "car-list-odd" ] []
-         -- , Layout.gridLayout
-         --     [ N.columns "*, auto"
-         --     -- , N.tap "onSelectorTap"
-         --     , N.class "car-list-even"
-         --     ]
-         --     [ label [ N.text car.class ] []
-         --     , label
-         --         [ N.text (String.fromChar '\u{F054}')
-         --         , N.class "fas"
-         --         , N.col "1"
-         --         , N.horizontalAlignment "center"
-         --         , N.verticalAlignment "center"
-         --         ]
-         --         []
-         --     ]
-         -- , label [ N.text "DOORS", N.class "car-list-odd" ] []
-         -- , Layout.gridLayout
-         --     [ N.columns "*, auto"
-         --     -- , N.tap "onSelectorTap"
-         --     , N.class "car-list-even"
-         --     ]
-         --     [ label [ N.text (String.fromInt car.doors) ] []
-         --     , label
-         --         [ N.text (String.fromChar '\u{F054}')
-         --         , N.class "fas"
-         --         , N.col "1"
-         --         , N.horizontalAlignment "center"
-         --         , N.verticalAlignment "center"
-         --         ]
-         --         []
-         --     ]
-         -- , label
-         --     [ N.text "SEATS"
-         --     , N.class "car-list-odd"
-         --     ]
-         --     []
-         -- , Layout.gridLayout
-         --     [ N.columns "*, auto"
-         --     -- , N.tap "onSelectorTap"
-         --     , N.class "car-list-even"
-         --     ]
-         --     [ label [ N.text car.seats ] []
-         --     , label
-         --         [ N.text (String.fromChar '\u{F054}')
-         --         , N.class "fas"
-         --         , N.col "1"
-         --         , N.horizontalAlignment "center"
-         --         , N.verticalAlignment "center"
-         --         ]
-         --         []
-         --     ]
-         -- , label
-         --     [ N.text "TRANSMISSION"
-         --     , N.class "car-list-odd"
-         --     ]
-         --     []
-         -- , Layout.gridLayout
-         --     [ N.columns "*, auto"
-         --     -- , N.tap "onSelectorTap"
-         --     , N.class "car-list-even"
-         --     ]
-         --     [ label [ N.text car.transmission ] []
-         --     , label
-         --         [ N.text (String.fromChar '\u{F054}')
-         --         , N.class "fas"
-         --         , N.col "1"
-         --         , N.horizontalAlignment "center"
-         --         , N.verticalAlignment "center"
-         --         ]
-         --         []
-         --     ]
-         -- , Layout.gridLayout
-         --     [ N.rows "*, 55"
-         --     , N.columns "*, auto"
-         --     , N.class "car-list-odd"
-         --     ]
-         --     [ label [ N.text "LUGGAGE" ] []
-         --     , label
-         --         [ N.col "1"
-         --         , N.horizontalAlignment "right"
-         --         , N.class "car-list__value"
-         --         ]
-         --         [ formattedString []
-         --             [ span [ N.text (String.fromInt car.luggage) ] []
-         --             , span [ N.text " Bag(s)" ] []
-         --             ]
-         --         ]
-         --     , slider
-         --         [ N.row "1"
-         --         , N.colSpan "2"
-         --         , N.minValue "0"
-         --         , N.maxValue "5"
-         --         , N.value (String.fromInt car.luggage)
-         --         ]
-         --         []
-         --     ]
         )
 
 
@@ -579,7 +577,13 @@ carTemplate =
                 ]
             ]
         , Layout.stackLayout [ N.row "1", N.class "hr m-y-5", N.colSpan "2" ] []
-        , image [ N.row "2", N.src <| bindingExpression " $value.imageUrl ", N.stretch "aspectFill", N.height "120" ] [] -- , N.class "m-r-15"
+        , image
+            [ N.row "2"
+            , N.src <| bindingExpression " $value.imageUrl "
+            , N.stretch "aspectFill"
+            , N.height "120"
+            ]
+            []
         , Layout.stackLayout [ N.row "2", N.col "1", N.verticalAlignment "center" ]
             [ label [ N.class "p-b-10" ]
                 [ formattedString [ N.fontFamily "system" ]
