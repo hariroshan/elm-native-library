@@ -1,5 +1,6 @@
 module Native.Event exposing
-    ( on
+    ( decodeItemId
+    , on
     , onBlur
     , onBusyChange
     , onDateChange
@@ -104,7 +105,13 @@ encodeSetter { keys, assignmentValue } =
 type alias EventOptions =
     { methodCalls : List String
     , setters : List Setter
+    , getters : List (List String)
     }
+
+
+decodeItemId : D.Decoder a -> D.Decoder a
+decodeItemId decoder =
+    D.at [ "custom", "object", "itemId" ] decoder
 
 
 {-| Method values are kept under {custom: {[methodName]: value}}
@@ -112,7 +119,10 @@ type alias EventOptions =
 For example:
 
     Event.onEventWithMethodCalls "touch"
-        [ "getX", "getY" ]
+        { methodCalls = [ "getX", "getY" ]
+        , setters = []
+        , getters = []
+        }
         (D.map2 Tuple.pair
             (D.at [ "custom", "getX" ] D.float)
             (D.at [ "custom", "getY" ] D.float)
@@ -121,13 +131,14 @@ For example:
 
 -}
 onEventWith : String -> EventOptions -> D.Decoder msg -> Attribute msg
-onEventWith eventName { methodCalls, setters } =
+onEventWith eventName { methodCalls, setters, getters } =
     let
         encodedValue : String
         encodedValue =
             [ ( "event", E.string eventName )
             , ( "methods", E.list E.string methodCalls )
             , ( "setters", E.list encodeSetter setters )
+            , ( "getters", E.list (E.list E.string) getters )
             ]
                 |> E.object
                 |> E.encode 0

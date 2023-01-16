@@ -83,6 +83,7 @@ let view: array<string> =
     "height",
     "horizontalAlignment",
     "id",
+    "itemId",
     "ios",
     "iosIgnoreSafeArea",
     "iosOverflowSafeArea",

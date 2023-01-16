@@ -510,6 +510,11 @@ id =
     attribute "id"
 
 
+itemId : String -> Attribute msg
+itemId =
+    attribute "item-id"
+
+
 iosIgnoreSafeArea : String -> Attribute msg
 iosIgnoreSafeArea =
     attribute "ios-ignore-safe-area"
@@ -619,10 +624,6 @@ originY : String -> Attribute msg
 originY =
     attribute "origin-y"
 
-
-parent : String -> Attribute msg
-parent =
-    attribute "parent"
 
 
 perspective : String -> Attribute msg
