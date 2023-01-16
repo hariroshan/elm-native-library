@@ -1,16 +1,20 @@
 module Native exposing
-    ( Native
+    ( ListViewModel
+    , Native
     , actionBar
     , actionItem
     , activityIndicator
     , button
     , datePicker
     , formattedString
+    , getEncodedItems
+    , getListItems
     , htmlView
     , image
     , label
     , listPicker
     , listView
+    , mapListViewModel
     , navigationButton
     , placeholderView
     , progress
@@ -25,10 +29,11 @@ module Native exposing
     , textField
     , textView
     , timePicker
-    , webView
+    , webView, makeListViewModel
     )
 
 import Html exposing (Attribute, Html)
+import Json.Encode as E
 
 
 type alias Native msg =
@@ -168,3 +173,32 @@ listView =
 placeholderView : List (Attribute msg) -> List (Html msg) -> Html msg
 placeholderView =
     buildElement "ns-placeholder"
+
+
+type ListViewModel a
+    = ListModel { items : List a, encoded : E.Value }
+
+
+makeListViewModel : (a -> E.Value) -> List a -> ListViewModel a
+makeListViewModel encoder ls =
+    ListModel { items = ls, encoded = E.list encoder ls }
+
+
+mapListViewModel : (item2 -> E.Value) -> (item1 -> item2) -> ListViewModel item1 -> ListViewModel item2
+mapListViewModel encoder mapper (ListModel record) =
+    let
+        values =
+            record.items
+                |> List.map mapper
+    in
+    makeListViewModel encoder values
+
+
+getListItems : ListViewModel a -> List a
+getListItems (ListModel record) =
+    record.items
+
+
+getEncodedItems : ListViewModel a -> E.Value
+getEncodedItems (ListModel record) =
+    record.encoded

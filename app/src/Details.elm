@@ -10,6 +10,8 @@ import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout
 import Native.Page as Page
+import Process
+import Task
 
 
 
@@ -69,11 +71,6 @@ encodeCar car =
     , ( "id", E.string car.id )
     ]
         |> E.object
-
-
-encodeCars : List Car -> E.Value
-encodeCars =
-    E.list encodeCar
 
 
 response : List Car
@@ -177,6 +174,47 @@ main =
         }
 
 
+class : List String
+class =
+    [ "Mini", "Economy", "Compact", "Standard", "Luxury" ]
+
+
+doors : List Int
+doors =
+    [ 2, 3, 5 ]
+
+
+seats : List String
+seats =
+    [ "2", "4", "4 + 1", "6 + 1" ]
+
+
+transmission : List String
+transmission =
+    [ "Manual", "Automatic" ]
+
+
+findInList : b -> (a -> b) -> Maybe a -> List a -> Maybe a
+findInList target toItem acc ls =
+    case ls of
+        [] ->
+            acc
+
+        h :: r ->
+            if target == toItem h then
+                Just h
+
+            else
+                findInList target toItem acc r
+
+
+type ShowModalList
+    = Class
+    | Transmission
+    | Doors
+    | Seats
+
+
 type NavPage
     = HomePage
     | CarDetailsPage
@@ -186,10 +224,13 @@ type NavPage
 
 type alias Model =
     { rootFrame : Frame.Model NavPage
-    , cars : List Car
-    , encodedCars : E.Value
+    , cars : ListViewModel Car
     , pickedCar : Maybe Car
     , editCar : Maybe Car
+    , modalOptions : ShowModalList
+    , sliderLuggage : Float
+    , sliderPrice : Float
+    , isSaving : Bool
     }
 
 
@@ -199,18 +240,26 @@ type Msg
     | NoOp
     | ToCarDetailsPage Int
     | ToCarDetailsEditPage Car
-    | ShowModal
+    | ShowModal ShowModalList
     | ChangedCarName String
-    | ChangedCarPrice Int
+    | ChangedCarPrice Float
+    | ChangedLuggage Float
+    | ModalSelectedItem String
+    | Saved
+    | DoneEditing
 
 
 init : ( Model, Cmd Msg )
 init =
     ( { rootFrame = Frame.init HomePage
-      , cars = response
-      , encodedCars = encodeCars response
+      , cars =
+            makeListViewModel encodeCar response
       , pickedCar = Nothing
       , editCar = Nothing
+      , modalOptions = Class
+      , sliderLuggage = 0
+      , sliderPrice = 0
+      , isSaving = False
       }
     , Cmd.none
     )
@@ -223,10 +272,6 @@ update msg model =
             ( { model | rootFrame = Frame.handleBack bool model.rootFrame }, Cmd.none )
 
         GoBack ->
-            let
-                _ =
-                    Debug.log "GOBACK" GoBack
-            in
             ( { model | rootFrame = Frame.goBack model.rootFrame }, Cmd.none )
 
         NoOp ->
@@ -247,6 +292,8 @@ update msg model =
                                 |> Just
                             )
                 , editCar = Just car
+                , sliderLuggage = toFloat car.luggage
+                , sliderPrice = toFloat car.price
               }
             , Cmd.none
             )
@@ -267,6 +314,7 @@ update msg model =
                             )
                 , pickedCar =
                     model.cars
+                        |> getListItems
                         |> List.foldl
                             (\cur (( curIdx, acc ) as result) ->
                                 if acc /= Nothing then
@@ -284,20 +332,12 @@ update msg model =
             , Cmd.none
             )
 
-        ShowModal ->
+        ShowModal showModalList ->
             ( { model
                 | rootFrame =
                     model.rootFrame
-                        |> Frame.goTo ModalPage
-                            (Frame.defaultNavigationOptions
-                                |> Frame.setAnimated True
-                                |> Frame.setTransition
-                                    { name = Just Frame.SlideTop
-                                    , duration = Just 200
-                                    , curve = Just Frame.Spring
-                                    }
-                                |> Just
-                            )
+                        |> Frame.goTo ModalPage Nothing
+                , modalOptions = showModalList
               }
             , Cmd.none
             )
@@ -309,14 +349,147 @@ update msg model =
             , Cmd.none
             )
 
+        ChangedLuggage luggage ->
+            ( { model
+                | editCar =
+                    model.editCar
+                        |> Maybe.map (\car -> { car | luggage = truncate luggage })
+                , sliderLuggage = luggage
+              }
+            , Cmd.none
+            )
+
         ChangedCarPrice price ->
             ( { model
                 | editCar =
                     model.editCar
-                        |> Maybe.map (\car -> { car | price = price })
+                        |> Maybe.map (\car -> { car | price = truncate price })
+                , sliderPrice = price
               }
             , Cmd.none
             )
+
+        Saved ->
+            let
+                cars =
+                    model.editCar
+                        |> Maybe.map
+                            (\editedCar ->
+                                model.cars
+                                    |> mapListViewModel encodeCar
+                                        (\car ->
+                                            if car.id == editedCar.id then
+                                                editedCar
+
+                                            else
+                                                car
+                                        )
+                            )
+                        |> Maybe.withDefault model.cars
+            in
+            { model
+                | isSaving = False
+                , cars = cars
+                , pickedCar = model.editCar
+            }
+                |> update GoBack
+
+        DoneEditing ->
+            ( { model | isSaving = True }
+            , Process.sleep 3000 |> Task.perform (always Saved)
+            )
+
+        ModalSelectedItem selected ->
+            let
+                ( updatedModel, _ ) =
+                    update GoBack model
+            in
+            case updatedModel.modalOptions of
+                Class ->
+                    class
+                        |> findInList selected identity Nothing
+                        |> Maybe.map
+                            (\r ->
+                                ( { updatedModel
+                                    | editCar =
+                                        updatedModel.editCar |> Maybe.map (\car -> { car | class = r })
+                                  }
+                                , Cmd.none
+                                )
+                            )
+                        |> Maybe.withDefault ( updatedModel, Cmd.none )
+
+                Seats ->
+                    seats
+                        |> findInList selected identity Nothing
+                        |> Maybe.map
+                            (\r ->
+                                ( { updatedModel
+                                    | editCar =
+                                        updatedModel.editCar |> Maybe.map (\car -> { car | seats = r })
+                                  }
+                                , Cmd.none
+                                )
+                            )
+                        |> Maybe.withDefault ( updatedModel, Cmd.none )
+
+                Transmission ->
+                    transmission
+                        |> findInList selected identity Nothing
+                        |> Maybe.map
+                            (\r ->
+                                ( { updatedModel
+                                    | editCar =
+                                        updatedModel.editCar |> Maybe.map (\car -> { car | transmission = r })
+                                  }
+                                , Cmd.none
+                                )
+                            )
+                        |> Maybe.withDefault ( updatedModel, Cmd.none )
+
+                Doors ->
+                    doors
+                        |> findInList selected String.fromInt Nothing
+                        |> Maybe.map
+                            (\r ->
+                                ( { updatedModel
+                                    | editCar =
+                                        updatedModel.editCar
+                                            |> Maybe.map (\car -> { car | doors = r })
+                                  }
+                                , Cmd.none
+                                )
+                            )
+                        |> Maybe.withDefault ( updatedModel, Cmd.none )
+
+
+modalListItem : Maybe String -> String -> Native Msg
+modalListItem selectedItem item =
+    Layout.gridLayout
+        [ N.padding "10 5"
+        , N.rows "auto"
+        , N.columns "*, auto"
+        , N.borderBottomWidth "1"
+        , N.borderBottomColor "#d1d1d1"
+        , Event.onTap (ModalSelectedItem item)
+        ]
+        [ label [ N.fontSize "18", N.text item ] []
+        , label
+            [ N.col "1"
+            , N.fontSize "18"
+            , N.text (String.fromChar '\u{F00C}')
+            , N.color "#01a0ec"
+            , N.class "fas"
+            , N.visibility
+                (if Just item == selectedItem then
+                    "visible"
+
+                 else
+                    "collapsed"
+                )
+            ]
+            []
+        ]
 
 
 listModalPage : Model -> Native Msg
@@ -324,7 +497,45 @@ listModalPage model =
     Page.modal SyncFrame
         False
         (Layout.stackLayout []
-            [ Native.label [ N.text "Modal Text", Event.onTap GoBack ] []
+            [ label
+                [ N.class "h1 text-center"
+                , N.text
+                    ("Pick "
+                        ++ (case model.modalOptions of
+                                Class ->
+                                    "Class"
+
+                                Seats ->
+                                    "Seats"
+
+                                Transmission ->
+                                    "Transmission"
+
+                                Doors ->
+                                    "Doors"
+                           )
+                    )
+                , N.marginBottom "10"
+                ]
+                []
+            , Layout.flexboxLayout [ N.flexDirection "column", N.borderTopWidth "1", N.borderTopColor "#d1d1d1" ]
+                (case model.modalOptions of
+                    Class ->
+                        class |> List.map (modalListItem (Maybe.map .class model.editCar))
+
+                    Seats ->
+                        seats |> List.map (modalListItem (Maybe.map .seats model.editCar))
+
+                    Transmission ->
+                        transmission |> List.map (modalListItem (Maybe.map .transmission model.editCar))
+
+                    Doors ->
+                        doors
+                            |> List.map
+                                (\door ->
+                                    modalListItem (Maybe.map .doors model.editCar |> Maybe.map String.fromInt) (String.fromInt door)
+                                )
+                )
             ]
         )
 
@@ -356,196 +567,207 @@ carDetailEditView model car =
             , actionItem
                 [ N.text "Done"
                 , N.iosPosition "right"
+                , Event.onTap DoneEditing
                 ]
                 []
             ]
         )
         (scrollView [ N.class "car-list" ] <|
-            Layout.flexboxLayout [ N.flexDirection "column" ]
-                [ label [ N.text "CAR MAKE", N.class "car-list-odd" ] []
-                , textField
-                    [ N.text car.name
-                    , N.hint "Car make field is required"
-                    , N.class "car-list-even"
-                    , Event.onTextChange ChangedCarName
-                    ]
-                    []
-                , Layout.gridLayout
-                    [ N.rows "*, 55, *"
-                    , N.columns "*, auto"
-                    , N.class "car-list-odd"
-                    ]
-                    [ label [ N.text "PRICE PER DAY" ] []
-                    , label
-                        [ N.col "1"
-                        , N.horizontalAlignment "right"
-                        , N.class "car-list__value"
+            Layout.gridLayout []
+                [ Layout.flexboxLayout [ N.flexDirection "column" ]
+                    [ label [ N.text "CAR MAKE", N.class "car-list-odd" ] []
+                    , textField
+                        [ N.text car.name
+                        , N.hint "Car make field is required"
+                        , N.class "car-list-even"
+                        , Event.onTextChange ChangedCarName
                         ]
-                        [ formattedString []
-                            [ span [ N.text "€" ] []
-                            , span [ N.text (String.fromInt car.price) ] []
+                        []
+                    , Layout.gridLayout
+                        [ N.rows "*, 55, *"
+                        , N.columns "*, auto"
+                        , N.class "car-list-odd"
+                        ]
+                        [ label [ N.text "PRICE PER DAY" ] []
+                        , label
+                            [ N.col "1"
+                            , N.horizontalAlignment "right"
+                            , N.class "car-list__value"
                             ]
+                            [ formattedString []
+                                [ span [ N.text "€" ] []
+                                , span [ N.text (String.fromInt car.price) ] []
+                                ]
+                            ]
+                        , slider
+                            [ N.row "1"
+                            , N.colSpan "2"
+                            , N.verticalAlignment "center"
+                            , N.value (model.sliderPrice |> String.fromFloat)
+                            , Event.onValueChange ChangedCarPrice
+                            ]
+                            []
+                        , label
+                            [ N.text "ADD OR REMOVE IMAGE"
+                            , N.row "2"
+                            , N.colSpan "2"
+                            ]
+                            []
                         ]
-                    , slider
-                        [ N.row "1"
-                        , N.colSpan "2"
-                        , N.verticalAlignment "center"
-                        , N.value (String.fromInt car.price)
-                        , Event.onValueChange (truncate >> ChangedCarPrice)
-                        ]
-                        []
-                    , label
-                        [ N.text "ADD OR REMOVE IMAGE"
-                        , N.row "2"
-                        , N.colSpan "2"
-                        ]
-                        []
-                    ]
-                , Layout.stackLayout
-                    [ N.class "car-list-even" ]
-                    [ Layout.gridLayout
-                        [ N.height "80"
-                        , N.width "80"
-                        , N.class "thumb"
-                        , N.horizontalAlignment "left"
-                        , N.backgroundImage car.imageUrl
-
-                        -- , N.tap "onImageAddRemoveTap"
-                        ]
+                    , Layout.stackLayout
+                        [ N.class "car-list-even" ]
                         [ Layout.gridLayout
-                            [ N.class "thumb__add"
-                            , N.visibility "collapsed"
-                            ]
-                            [ label
-                                [ N.text (String.fromChar '\u{F030}')
-                                , N.class "fas"
-                                , N.horizontalAlignment "center"
-                                , N.verticalAlignment "center"
-                                ]
-                                []
-                            ]
-                        , Layout.gridLayout
-                            [ N.class "thumb__remove"
-                            , N.visibility "visible"
-                            ]
-                            [ label
-                                [ N.text (String.fromChar '\u{F2ED}')
-                                , N.class "far"
-                                , N.horizontalAlignment "center"
-                                , N.verticalAlignment "center"
-                                ]
-                                []
-                            ]
-                        ]
-                    , label
-                        [ N.visibility "collapsed"
-                        , N.class "c-error"
-                        , N.text "Image field is required"
-                        ]
-                        []
-                    ]
-                , label [ N.text "CLASS", N.class "car-list-odd" ] []
-                , Layout.gridLayout
-                    [ N.columns "*, auto"
-                    , N.class "car-list-even"
-                    , Event.onTap ShowModal
+                            [ N.height "80"
+                            , N.width "80"
+                            , N.class "thumb"
+                            , N.horizontalAlignment "left"
+                            , N.backgroundImage car.imageUrl
 
-                    -- , N.tap "onSelectorTap"
-                    ]
-                    [ label [ N.text car.class ] []
+                            -- , N.tap "onImageAddRemoveTap"
+                            ]
+                            [ Layout.gridLayout
+                                [ N.class "thumb__add"
+                                , N.visibility "collapsed"
+                                ]
+                                [ label
+                                    [ N.text (String.fromChar '\u{F030}')
+                                    , N.class "fas"
+                                    , N.horizontalAlignment "center"
+                                    , N.verticalAlignment "center"
+                                    ]
+                                    []
+                                ]
+                            , Layout.gridLayout
+                                [ N.class "thumb__remove"
+                                , N.visibility "visible"
+                                ]
+                                [ label
+                                    [ N.text (String.fromChar '\u{F2ED}')
+                                    , N.class "far"
+                                    , N.horizontalAlignment "center"
+                                    , N.verticalAlignment "center"
+                                    ]
+                                    []
+                                ]
+                            ]
+                        , label
+                            [ N.visibility "collapsed"
+                            , N.class "c-error"
+                            , N.text "Image field is required"
+                            ]
+                            []
+                        ]
+                    , label [ N.text "CLASS", N.class "car-list-odd" ] []
+                    , Layout.gridLayout
+                        [ N.columns "*, auto"
+                        , N.class "car-list-even"
+                        , Event.onTap (ShowModal Class)
+                        ]
+                        [ label [ N.text car.class ] []
+                        , label
+                            [ N.text (String.fromChar '\u{F054}')
+                            , N.class "fas"
+                            , N.col "1"
+                            , N.horizontalAlignment "center"
+                            , N.verticalAlignment "center"
+                            ]
+                            []
+                        ]
+                    , label [ N.text "DOORS", N.class "car-list-odd" ] []
+                    , Layout.gridLayout
+                        [ N.columns "*, auto"
+                        , N.class "car-list-even"
+                        , Event.onTap (ShowModal Doors)
+                        ]
+                        [ label [ N.text (String.fromInt car.doors) ] []
+                        , label
+                            [ N.text (String.fromChar '\u{F054}')
+                            , N.class "fas"
+                            , N.col "1"
+                            , N.horizontalAlignment "center"
+                            , N.verticalAlignment "center"
+                            ]
+                            []
+                        ]
                     , label
-                        [ N.text (String.fromChar '\u{F054}')
-                        , N.class "fas"
-                        , N.col "1"
-                        , N.horizontalAlignment "center"
-                        , N.verticalAlignment "center"
+                        [ N.text "SEATS"
+                        , N.class "car-list-odd"
                         ]
                         []
+                    , Layout.gridLayout
+                        [ N.columns "*, auto"
+                        , N.class "car-list-even"
+                        , Event.onTap (ShowModal Seats)
+                        ]
+                        [ label [ N.text car.seats ] []
+                        , label
+                            [ N.text (String.fromChar '\u{F054}')
+                            , N.class "fas"
+                            , N.col "1"
+                            , N.horizontalAlignment "center"
+                            , N.verticalAlignment "center"
+                            ]
+                            []
+                        ]
+                    , label
+                        [ N.text "TRANSMISSION"
+                        , N.class "car-list-odd"
+                        ]
+                        []
+                    , Layout.gridLayout
+                        [ N.columns "*, auto"
+                        , N.class "car-list-even"
+                        , Event.onTap (ShowModal Transmission)
+                        ]
+                        [ label [ N.text car.transmission ] []
+                        , label
+                            [ N.text (String.fromChar '\u{F054}')
+                            , N.class "fas"
+                            , N.col "1"
+                            , N.horizontalAlignment "center"
+                            , N.verticalAlignment "center"
+                            ]
+                            []
+                        ]
+                    , Layout.gridLayout
+                        [ N.rows "*, 55"
+                        , N.columns "*, auto"
+                        , N.class "car-list-odd"
+                        ]
+                        [ label [ N.text "LUGGAGE" ] []
+                        , label
+                            [ N.col "1"
+                            , N.horizontalAlignment "right"
+                            , N.class "car-list__value"
+                            ]
+                            [ formattedString []
+                                [ span [ N.text (String.fromInt car.luggage) ] []
+                                , span [ N.text " Bag(s)" ] []
+                                ]
+                            ]
+                        , slider
+                            [ N.row "1"
+                            , N.colSpan "2"
+                            , N.minValue "0"
+                            , N.maxValue "5"
+                            , N.value (model.sliderLuggage |> String.fromFloat)
+                            , Event.onValueChange ChangedLuggage
+                            ]
+                            []
+                        ]
                     ]
-                , label [ N.text "DOORS", N.class "car-list-odd" ] []
-                , Layout.gridLayout
-                    [ N.columns "*, auto"
-                    , N.class "car-list-even"
+                , activityIndicator
+                    [ N.busy
+                        (if model.isSaving then
+                            "true"
 
-                    -- , N.tap "onSelectorTap"
-                    ]
-                    [ label [ N.text (String.fromInt car.doors) ] []
-                    , label
-                        [ N.text (String.fromChar '\u{F054}')
-                        , N.class "fas"
-                        , N.col "1"
-                        , N.horizontalAlignment "center"
-                        , N.verticalAlignment "center"
-                        ]
-                        []
-                    ]
-                , label
-                    [ N.text "SEATS"
-                    , N.class "car-list-odd"
+                         else
+                            "false"
+                        )
+                    , N.scaleX "2"
+                    , N.scaleY "2"
                     ]
                     []
-                , Layout.gridLayout
-                    [ N.columns "*, auto"
-                    , N.class "car-list-even"
-
-                    -- , N.tap "onSelectorTap"
-                    ]
-                    [ label [ N.text car.seats ] []
-                    , label
-                        [ N.text (String.fromChar '\u{F054}')
-                        , N.class "fas"
-                        , N.col "1"
-                        , N.horizontalAlignment "center"
-                        , N.verticalAlignment "center"
-                        ]
-                        []
-                    ]
-                , label
-                    [ N.text "TRANSMISSION"
-                    , N.class "car-list-odd"
-                    ]
-                    []
-                , Layout.gridLayout
-                    [ N.columns "*, auto"
-                    , N.class "car-list-even"
-
-                    -- , N.tap "onSelectorTap"
-                    ]
-                    [ label [ N.text car.transmission ] []
-                    , label
-                        [ N.text (String.fromChar '\u{F054}')
-                        , N.class "fas"
-                        , N.col "1"
-                        , N.horizontalAlignment "center"
-                        , N.verticalAlignment "center"
-                        ]
-                        []
-                    ]
-                , Layout.gridLayout
-                    [ N.rows "*, 55"
-                    , N.columns "*, auto"
-                    , N.class "car-list-odd"
-                    ]
-                    [ label [ N.text "LUGGAGE" ] []
-                    , label
-                        [ N.col "1"
-                        , N.horizontalAlignment "right"
-                        , N.class "car-list__value"
-                        ]
-                        [ formattedString []
-                            [ span [ N.text (String.fromInt car.luggage) ] []
-                            , span [ N.text " Bag(s)" ] []
-                            ]
-                        ]
-                    , slider
-                        [ N.row "1"
-                        , N.colSpan "2"
-                        , N.minValue "0"
-                        , N.maxValue "5"
-                        , N.value (String.fromInt car.luggage)
-                        ]
-                        []
-                    ]
                 ]
         )
 
@@ -673,7 +895,7 @@ homePage model =
         )
         (Layout.gridLayout []
             [ listView
-                [ N.items model.encodedCars
+                [ N.items model.cars
                 , N.separatorColor "transparent"
                 , N.class "cars-list"
                 , Event.onItemTap ToCarDetailsPage

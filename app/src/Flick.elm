@@ -80,28 +80,27 @@ type NavPage
 
 type alias Model =
     { rootFrame : Frame.Model NavPage
-    , flick : List Flick
+    , flick : Native.ListViewModel Flick
     , picked : Maybe Flick
-    , encodedHomeFlix : E.Value
     }
+
+
+encodeFlix : Flick -> E.Value
+encodeFlix flick =
+    [ ( "image", E.string flick.image )
+    , ( "title", E.string flick.title )
+    , ( "description", E.string flick.description )
+    , ( "id", E.int flick.id )
+    ]
+        |> E.object
 
 
 init : ( Model, Cmd Msg )
 init =
     ( { rootFrame = Frame.init HomePage
       , picked = Nothing
-      , flick = response -- |> Debug.log "FLix"
-      , encodedHomeFlix =
-            E.list
-                (\flick ->
-                    [ ( "image", E.string flick.image )
-                    , ( "title", E.string flick.title )
-                    , ( "description", E.string flick.description )
-                    , ( "id", E.int flick.id )
-                    ]
-                        |> E.object
-                )
-                response
+      , flick =
+            Native.makeListViewModel encodeFlix response
       }
     , Cmd.none
     )
@@ -134,6 +133,7 @@ update msg model =
                             )
                 , picked =
                     model.flick
+                        |> Native.getListItems
                         |> List.foldl
                             (\cur (( curIdx, acc ) as result) ->
                                 if acc /= Nothing then
@@ -293,7 +293,7 @@ homePage model =
             [ Native.listView
                 [ NA.height "100%"
                 , NA.separatorColor "transparent"
-                , NA.items model.encodedHomeFlix
+                , NA.items model.flick
                 , Event.onItemTap ToDetails
                 ]
                 [ flickTemplate ]

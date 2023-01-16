@@ -3,6 +3,7 @@ module Native.Attributes exposing (..)
 import Html exposing (Attribute)
 import Html.Attributes exposing (attribute, property)
 import Json.Encode as E
+import Native exposing (ListViewModel)
 
 
 fontSize : String -> Attribute msg
@@ -850,11 +851,6 @@ tintColor =
     attribute "tint-color"
 
 
-items : E.Value -> Attribute msg
-items =
-    property "items"
-
-
 selectedIndex : String -> Attribute msg
 selectedIndex =
     attribute "selected-index"
@@ -1197,3 +1193,8 @@ android propertyName propertyValue =
 modalConfig : Bool -> Attribute msg
 modalConfig isFullScreenModal =
     property "modalPage" (E.bool isFullScreenModal)
+
+
+items : ListViewModel a -> Attribute msg
+items listViewModel =
+    property "items" (Native.getEncodedItems listViewModel)
