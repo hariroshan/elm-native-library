@@ -13,6 +13,7 @@ module Native.Event exposing
     , onTap
     , onTextChange
     , onUnloaded
+    , onValueChange
     )
 
 import Html exposing (Attribute)
@@ -74,6 +75,11 @@ onDateChange msg =
 onSelectedIndexChange : (Int -> msg) -> Attribute msg
 onSelectedIndexChange msg =
     on "selectedIndexChange" (D.field "value" D.int |> D.map msg)
+
+
+onValueChange : (Float -> msg) -> Attribute msg
+onValueChange msg =
+    on "valueChange" (D.field "value" D.float |> D.map msg)
 
 
 onItemTap : (Int -> msg) -> Attribute msg

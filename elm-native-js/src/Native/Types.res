@@ -1,12 +1,12 @@
-type event
+type event = {closeCallback: unit => unit}
 type constructorRec = {name: string}
 type bindingOptions = {expression: string, targetProperty: string}
 type iosAPI
 type androidAPI
 
 type rec nativeObject = {
-  on: (. event, event => unit) => unit,
-  off: (. event, event => unit) => unit,
+  on: (. string, event => unit) => unit,
+  off: (. string, event => unit) => unit,
   destroyNode: (. unit) => unit,
   insertChild: Js.Nullable.t<(. nativeObject, int) => unit>,
   items: array<string>,
@@ -52,6 +52,8 @@ type navigationOptions = {
   clearHistory: Js.Nullable.t<bool>,
 }
 
+type modalConfig = {fullscreen: bool, closeCallback: unit => unit}
+
 @val external requestAnimationFrame: (. unit => unit) => unit = "requestAnimationFrame"
 
 @set
@@ -69,15 +71,19 @@ type navigationConfig = {create: unit => nativeObject}
 external navigate: (nativeObject, navigationConfig) => unit = "navigate"
 
 @send
+external showModal: (nativeObject, nativeObject, modalConfig) => unit = "showModal"
+
+@send
+external closeModal: nativeObject => unit = "closeModal"
+
+@send
 external bindExpression: (Obj.t, bindingOptions) => unit = "bind"
 
 @send
 external refresh: nativeObject => unit = "refresh"
 
-
 @send
 external goBack: nativeObject => unit = "goBack"
-
 
 @val
 external eval: string => 'a = "eval"
@@ -93,8 +99,8 @@ type rec handler = {
   render: Js.Nullable.t<(. htmlElement, nativeObject) => unit>,
   handlerKind: handlerKind,
   dispose: (. nativeObject) => unit,
-  addEventListener: (. nativeObject, event, event => unit) => unit,
-  removeEventListener: (. nativeObject, event, event => unit) => unit,
+  addEventListener: (. nativeObject, string, event => unit) => unit,
+  removeEventListener: (. nativeObject, string, event => unit) => unit,
 }
 and htmlElement = {
   getAttribute: string => Js.Nullable.t<string>,
@@ -106,6 +112,7 @@ and htmlElement = {
   children: array<htmlElement>,
   items: array<string>,
   navigationOptions: Js.Nullable.t<navigationOptions>,
+  modalPage: Js.Nullable.t<bool>,
 }
 and frameMethods = {pageAdded: (. htmlElement) => unit}
 and handlerKind =

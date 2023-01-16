@@ -24,12 +24,6 @@ const enhancedCallback = (parsed, callback) => e => {
   })
 
   const custom = {}
-  // parsed.getters.forEach(keys => {
-  //   deepSetter(custom, keys, 0,
-  //     deepGetter(e, 0, keys)
-  //   )
-  // })
-
   parsed.methods.forEach(method => {
     if (e[method] != null)
       custom[method] = e[method]()

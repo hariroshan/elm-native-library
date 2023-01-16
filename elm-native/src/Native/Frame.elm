@@ -200,16 +200,16 @@ cons acc x =
 
 
 frame : Model page -> model -> List ( page, model -> Html msg ) -> List (Attribute msg) -> Html msg
-frame model appModel pages attrs =
+frame frameModel appModel pages attrs =
     let
         children =
             pages
-                |> getPage model.current appModel
+                |> getPage frameModel.current appModel
                 |> Maybe.map List.singleton
                 |> Maybe.withDefault []
 
         history =
-            model.history
+            frameModel.history
                 |> List.foldl
                     (\old acc ->
                         pages
@@ -220,8 +220,8 @@ frame model appModel pages attrs =
                     children
     in
     Html.node "ns-frame"
-        (property "navigationOptions" model.encodedNavigationOptions
-            :: property "popStack" (E.bool model.popStack)
+        (property "navigationOptions" frameModel.encodedNavigationOptions
+            :: property "popStack" (E.bool frameModel.popStack)
             :: attrs
         )
         history

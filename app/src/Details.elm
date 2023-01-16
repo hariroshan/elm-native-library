@@ -1,7 +1,7 @@
 module Details exposing (..)
 
 import Browser
-import Http
+import Html.Lazy exposing (lazy2)
 import Json.Decode as D
 import Json.Encode as E
 import Native exposing (..)
@@ -10,6 +10,11 @@ import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout
 import Native.Page as Page
+
+
+
+-- import Html.Keyed
+-- import Html.Lazy
 
 
 type alias Car =
@@ -176,6 +181,7 @@ type NavPage
     = HomePage
     | CarDetailsPage
     | CarDetailsEditPage
+    | ModalPage
 
 
 type alias Model =
@@ -183,16 +189,19 @@ type alias Model =
     , cars : List Car
     , encodedCars : E.Value
     , pickedCar : Maybe Car
+    , editCar : Maybe Car
     }
 
 
 type Msg
-    = HandleFrameBack Bool
+    = SyncFrame Bool
     | GoBack
     | NoOp
     | ToCarDetailsPage Int
-    | ToCarDetailsEditPage
-    | ItemTap String
+    | ToCarDetailsEditPage Car
+    | ShowModal
+    | ChangedCarName String
+    | ChangedCarPrice Int
 
 
 init : ( Model, Cmd Msg )
@@ -201,6 +210,7 @@ init =
       , cars = response
       , encodedCars = encodeCars response
       , pickedCar = Nothing
+      , editCar = Nothing
       }
     , Cmd.none
     )
@@ -209,23 +219,20 @@ init =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ItemTap carId ->
+        SyncFrame bool ->
+            ( { model | rootFrame = Frame.handleBack bool model.rootFrame }, Cmd.none )
+
+        GoBack ->
             let
                 _ =
-                    Debug.log "Car" carId
+                    Debug.log "GOBACK" GoBack
             in
-            ( model, Cmd.none )
+            ( { model | rootFrame = Frame.goBack model.rootFrame }, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )
 
-        GoBack ->
-            ( { model | rootFrame = Frame.goBack model.rootFrame }, Cmd.none )
-
-        HandleFrameBack bool ->
-            ( { model | rootFrame = Frame.handleBack bool model.rootFrame }, Cmd.none )
-
-        ToCarDetailsEditPage ->
+        ToCarDetailsEditPage car ->
             ( { model
                 | rootFrame =
                     model.rootFrame
@@ -239,6 +246,7 @@ update msg model =
                                     }
                                 |> Just
                             )
+                , editCar = Just car
               }
             , Cmd.none
             )
@@ -276,10 +284,54 @@ update msg model =
             , Cmd.none
             )
 
+        ShowModal ->
+            ( { model
+                | rootFrame =
+                    model.rootFrame
+                        |> Frame.goTo ModalPage
+                            (Frame.defaultNavigationOptions
+                                |> Frame.setAnimated True
+                                |> Frame.setTransition
+                                    { name = Just Frame.SlideTop
+                                    , duration = Just 200
+                                    , curve = Just Frame.Spring
+                                    }
+                                |> Just
+                            )
+              }
+            , Cmd.none
+            )
+
+        ChangedCarName name ->
+            ( { model
+                | editCar = model.editCar |> Maybe.map (\car -> { car | name = name })
+              }
+            , Cmd.none
+            )
+
+        ChangedCarPrice price ->
+            ( { model
+                | editCar =
+                    model.editCar
+                        |> Maybe.map (\car -> { car | price = price })
+              }
+            , Cmd.none
+            )
+
+
+listModalPage : Model -> Native Msg
+listModalPage model =
+    Page.modal SyncFrame
+        False
+        (Layout.stackLayout []
+            [ Native.label [ N.text "Modal Text", Event.onTap GoBack ] []
+            ]
+        )
+
 
 notFoundPage : Native Msg
 notFoundPage =
-    Page.page HandleFrameBack
+    Page.page SyncFrame
         []
         (Layout.stackLayout []
             [ Native.label [ N.text "Not found" ] []
@@ -289,9 +341,10 @@ notFoundPage =
 
 carDetailEditView : Model -> Car -> Native Msg
 carDetailEditView model car =
-    Page.pageWithActionBar HandleFrameBack
+    Page.pageWithActionBar SyncFrame
         []
-        (actionBar []
+        (lazy2 actionBar
+            []
             [ navigationButton [ N.visibility "collapsed" ] []
             , label [ N.text "Edit Car Details", N.fontSize "18" ] []
             , actionItem
@@ -314,7 +367,7 @@ carDetailEditView model car =
                     [ N.text car.name
                     , N.hint "Car make field is required"
                     , N.class "car-list-even"
-                    , Event.onTextChange (always NoOp)
+                    , Event.onTextChange ChangedCarName
                     ]
                     []
                 , Layout.gridLayout
@@ -338,6 +391,7 @@ carDetailEditView model car =
                         , N.colSpan "2"
                         , N.verticalAlignment "center"
                         , N.value (String.fromInt car.price)
+                        , Event.onValueChange (truncate >> ChangedCarPrice)
                         ]
                         []
                     , label
@@ -394,6 +448,7 @@ carDetailEditView model car =
                 , Layout.gridLayout
                     [ N.columns "*, auto"
                     , N.class "car-list-even"
+                    , Event.onTap ShowModal
 
                     -- , N.tap "onSelectorTap"
                     ]
@@ -497,7 +552,7 @@ carDetailEditView model car =
 
 carDetailsEditPage : Model -> Native Msg
 carDetailsEditPage model =
-    case model.pickedCar of
+    case model.editCar of
         Nothing ->
             notFoundPage
 
@@ -507,7 +562,7 @@ carDetailsEditPage model =
 
 carDetailView : Model -> Car -> Native Msg
 carDetailView model car =
-    Page.pageWithActionBar HandleFrameBack
+    Page.pageWithActionBar SyncFrame
         []
         (actionBar []
             [ navigationButton [ N.androidSystemIcon "ic_menu_back" ] []
@@ -517,7 +572,7 @@ carDetailView model car =
                 , N.iosSystemIcon "2"
                 , N.iosPosition "right"
                 , N.androidPosition "right"
-                , Event.onTap ToCarDetailsEditPage
+                , Event.onTap (ToCarDetailsEditPage car)
                 ]
                 []
             ]
@@ -610,7 +665,7 @@ carTemplate =
 
 homePage : Model -> Native Msg
 homePage model =
-    Page.pageWithActionBar HandleFrameBack
+    Page.pageWithActionBar SyncFrame
         []
         (actionBar []
             [ label [ N.text "Browse", N.fontSize "18" ] []
@@ -646,6 +701,7 @@ view model =
         [ ( HomePage, homePage )
         , ( CarDetailsPage, carDetailsPage )
         , ( CarDetailsEditPage, carDetailsEditPage )
+        , ( ModalPage, listModalPage )
         ]
         []
 

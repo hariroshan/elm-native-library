@@ -90,7 +90,7 @@ progress =
     buildElement "ns-progress"
 
 
-scrollView : List (Attribute msg) -> (Html msg) -> Html msg
+scrollView : List (Attribute msg) -> Html msg -> Html msg
 scrollView attrs child =
     buildElement "ns-scroll-view" attrs [ child ]
 
@@ -168,4 +168,3 @@ listView =
 placeholderView : List (Attribute msg) -> List (Html msg) -> Html msg
 placeholderView =
     buildElement "ns-placeholder"
-

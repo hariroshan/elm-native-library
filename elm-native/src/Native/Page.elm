@@ -1,10 +1,12 @@
 module Native.Page exposing
-    ( page
+    ( modal
+    , page
     , pageWithActionBar
     )
 
 import Html exposing (Attribute, Html)
 import Json.Decode as D
+import Native.Attributes as N
 import Native.Event as Event
 
 
@@ -25,3 +27,12 @@ pageWithActionBar onBackNavigation attrs actionBar layout =
 makeOnBackNavigation : (Bool -> value) -> Attribute value
 makeOnBackNavigation msg =
     Event.on "navigatedTo" (D.field "isBackNavigation" D.bool |> D.map msg)
+
+
+modal : (Bool -> msg) -> Bool -> Html msg -> Html msg
+modal syncFrame isFullScreen child =
+    page syncFrame
+        [ N.modalConfig isFullScreen
+        , Event.onUnloaded (syncFrame True)
+        ]
+        child

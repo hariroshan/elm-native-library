@@ -595,11 +595,6 @@ minWidth =
     attribute "min-width"
 
 
-modal : String -> Attribute msg
-modal =
-    attribute "modal"
-
-
 nativeViewProtected : String -> Attribute msg
 nativeViewProtected =
     attribute "native-view-protected"
@@ -623,7 +618,6 @@ originX =
 originY : String -> Attribute msg
 originY =
     attribute "origin-y"
-
 
 
 perspective : String -> Attribute msg
@@ -1198,3 +1192,8 @@ ios propertyName propertyValue =
 android : String -> String -> Attribute msg
 android propertyName propertyValue =
     attribute "android" (propertyName ++ ";" ++ propertyValue)
+
+
+modalConfig : Bool -> Attribute msg
+modalConfig isFullScreenModal =
+    property "modalPage" (E.bool isFullScreenModal)
