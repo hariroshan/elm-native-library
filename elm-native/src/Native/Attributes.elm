@@ -1141,13 +1141,6 @@ separatorColor =
     attribute "separator-color"
 
 
-{-| This have access to $value, $index variables
--}
-itemTemplateSelector : String -> Attribute msg
-itemTemplateSelector =
-    attribute "item-template-selector"
-
-
 fontFamily : String -> Attribute msg
 fontFamily =
     attribute "font-family"
@@ -1155,8 +1148,6 @@ fontFamily =
 
 {-| Caution: This allows execution of JS.
 Ensure your string is generated at compile time and NOT dynamic
-
-For example:
 
 Good usage:
 
@@ -1175,6 +1166,9 @@ dangerousEvalExpression expression =
     "e{" ++ expression ++ "}"
 
 
+{-| Binding expressions are supported only when ListView is their ancestor.
+In any other case, there won't we any value to bind to. So it will be empty
+-}
 bindingExpression : String -> String
 bindingExpression expression =
     "b{" ++ expression ++ "}"

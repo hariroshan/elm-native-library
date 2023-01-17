@@ -770,7 +770,7 @@ homePage model =
             ]
         )
         (Layout.gridLayout []
-            [ listView
+            [ listViewWithSingleTemplate
                 [ N.items model.cars
                 , N.separatorColor "transparent"
                 , N.class "cars-list"
@@ -787,7 +787,7 @@ homePage model =
                     }
                     (D.succeed NoOp)
                 ]
-                [ carTemplate ]
+                carTemplate
             ]
         )
 

@@ -13,7 +13,9 @@ module Native exposing
     , image
     , label
     , listPicker
-    , listView
+    , listViewWithMultipleTemplate
+    , listViewWithSingleTemplate
+    , makeListViewModel
     , mapListViewModel
     , navigationButton
     , placeholderView
@@ -29,10 +31,11 @@ module Native exposing
     , textField
     , textView
     , timePicker
-    , webView, makeListViewModel
+    , webView
     )
 
 import Html exposing (Attribute, Html)
+import Html.Attributes exposing (attribute)
 import Json.Encode as E
 
 
@@ -165,14 +168,54 @@ navigationButton =
     buildElement "ns-navigation-button"
 
 
-listView : List (Attribute msg) -> List (Html msg) -> Html msg
-listView =
-    buildElement "ns-list-view"
-
-
 placeholderView : List (Attribute msg) -> List (Html msg) -> Html msg
 placeholderView =
     buildElement "ns-placeholder"
+
+
+listViewWithSingleTemplate : List (Attribute msg) -> Html msg -> Html msg
+listViewWithSingleTemplate attrs child =
+    buildElement "ns-list-view" attrs [ child ]
+
+
+{-| To build a ListView with multiple templates and choose one based on the item,
+We need to build `templateSelectorExpression`. templateSelectorExpression has access to $value and $index variables.
+In addition to that, we should set a `key` attribute for all the children which will act as template id when picking the right template.
+
+    import Native.Attributes as N
+    ...
+
+    listViewWithMultipleTemplate
+        -- Use single quotes (') to create a JS string.
+        (N.dangerousEvalExpression " ($value % 2 == 0) || ($index % 3 == 0) ? 'even' : 'odd' " )
+        [ N.items model.items -- here items is ListViewModel Int
+        ]
+        -- Since $value is Int, we can use .toString() method on number to convert a number to string
+        [ Layout.stackLayout [ N.key "odd", N.color "red" ]
+            [ label [ N.text (N.bindingExpression " $value.toString() " ) ] []
+            ]
+        , Layout.stackLayout [ N.key "even", N.color "green" ]
+            [ label [ N.text (N.bindingExpression " $value.toString() " ) ] []
+            ]
+        ]
+
+
+-}
+listViewWithMultipleTemplate : String -> List (Attribute msg) -> List (Html msg) -> Html msg
+listViewWithMultipleTemplate templateSelectorExpression attrs children =
+    buildElement "ns-list-view"
+        (itemTemplateSelector templateSelectorExpression
+            :: attrs
+        )
+        children
+
+
+{-| This attribute have access to $value and $index variables.
+Use this when you have to pick different template based on item
+-}
+itemTemplateSelector : String -> Attribute msg
+itemTemplateSelector =
+    attribute "item-template-selector"
 
 
 type ListViewModel a

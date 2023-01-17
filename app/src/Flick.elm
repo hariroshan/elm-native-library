@@ -290,13 +290,13 @@ homePage model =
         []
         (Native.actionBar [ NA.title "Elm Native Flix" ] [])
         (Layout.stackLayout [ NA.height "100%" ]
-            [ Native.listView
+            [ Native.listViewWithSingleTemplate
                 [ NA.height "100%"
                 , NA.separatorColor "transparent"
                 , NA.items model.flick
                 , Event.onItemTap ToDetails
                 ]
-                [ flickTemplate ]
+                flickTemplate
             ]
         )
 
