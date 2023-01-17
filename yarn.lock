@@ -263,6 +263,13 @@
     glob "^7.1.0"
     mkdirp "^1.0.4"
 
+"@nativescript/imagepicker@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@nativescript/imagepicker/-/imagepicker-1.0.9.tgz#a9fdaffd48ff35f593943b807fbd021146fffc85"
+  integrity sha512-VX25eu0MtxLE1o1X064cVYEKTm+lNk8fpGrYPQuOtOCFz6sTGig081Ax6Ob9yVcp/vqyYvHOzGAhwg1zwEldTw==
+  dependencies:
+    nativescript-permissions "1.3.11"
+
 "@nativescript/ios@8.3.3":
   version "8.3.3"
   resolved "https://registry.npmjs.org/@nativescript/ios/-/ios-8.3.3.tgz"
@@ -2041,6 +2048,11 @@ nanoid@^3.3.4:
   version "3.3.4"
   resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.4.tgz"
   integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
+
+nativescript-permissions@1.3.11:
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/nativescript-permissions/-/nativescript-permissions-1.3.11.tgz#29569b0c9de5bbfe6149bb983c0ebedd1504e25a"
+  integrity sha512-4ox9WpVJPLfepPauqECvPfbxVE1hVPVVBLZxOs3d9+2Yrr0mSkJO7D7BQ4OUS90hHfRdPhf70aJKWxzJoqi63g==
 
 neo-async@^2.6.2:
   version "2.6.2"

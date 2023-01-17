@@ -1,4 +1,4 @@
-module Details exposing (..)
+port module Details exposing (..)
 
 import Browser
 import Html.Lazy exposing (lazy2)
@@ -14,9 +14,10 @@ import Process
 import Task
 
 
+port pickImage : () -> Cmd msg
 
--- import Html.Keyed
--- import Html.Lazy
+
+port pickImageUrl : (String -> msg) -> Sub msg
 
 
 type alias Car =
@@ -32,180 +33,6 @@ type alias Car =
     , seats : String
     , transmission : String
     }
-
-
-decodeCar : D.Decoder Car
-decodeCar =
-    D.map8 Car
-        (D.field "class" D.string)
-        (D.field "doors" D.int)
-        (D.field "hasAC" D.bool)
-        (D.field "id" D.string)
-        (D.field "imageStoragePath" D.string)
-        (D.field "imageUrl" D.string)
-        (D.field "luggage" D.int)
-        (D.field "name" D.string)
-        |> D.andThen
-            (\fx ->
-                D.map3 fx
-                    (D.field "price" D.int)
-                    (D.field "seats" D.string)
-                    (D.field "transmission" D.string)
-            )
-
-
-decodeResponse : D.Decoder (List Car)
-decodeResponse =
-    D.field "cars" (D.keyValuePairs decodeCar)
-        |> D.map (List.map Tuple.second)
-
-
-encodeCar : Car -> E.Value
-encodeCar car =
-    [ ( "name", E.string car.name )
-    , ( "class", E.string car.class )
-    , ( "imageUrl", E.string car.imageUrl )
-    , ( "transmission", E.string car.transmission )
-    , ( "hasAC", E.bool car.hasAC )
-    , ( "price", E.int car.price )
-    , ( "id", E.string car.id )
-    ]
-        |> E.object
-
-
-response : List Car
-response =
-    """
-    {
-        "cars": {
-            "car1": {
-                "class": "Luxury",
-                "doors": 2,
-                "hasAC": true,
-                "id": "car1",
-                "imageStoragePath": "cars/BMW 5 Series.jpg",
-                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FBMW%205%20Series.jpg?alt=media&token=dec5a0bf-e3ca-45d2-8f2e-c7b8a25530b5",
-                "luggage": 3,
-                "name": "BMW 5 Series",
-                "price": 76,
-                "seats": "2",
-                "transmission": "Automatic"
-            },
-            "car2": {
-                "class": "Luxury",
-                "doors": 5,
-                "hasAC": false,
-                "id": "car2",
-                "imageStoragePath": "cars/Ford KA+.jpg",
-                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FFord%20KA%2B.jpg?alt=media&token=cf090183-ef5a-4c05-9f60-b0cbdfda7188",
-                "luggage": 3,
-                "name": "Ford KA",
-                "price": 44,
-                "seats": "4 + 1",
-                "transmission": "Automatic"
-            },
-            "car3": {
-                "class": "Mini",
-                "doors": 3,
-                "hasAC": true,
-                "id": "car3",
-                "imageStoragePath": "cars/Smart.jpg",
-                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FSmart.jpg?alt=media&token=6891aca9-4211-4545-834e-c934ed671961",
-                "luggage": 1,
-                "name": "Smart",
-                "price": 39,
-                "seats": "2",
-                "transmission": "Manual"
-            },
-            "car4": {
-                "class": "Standard",
-                "doors": 5,
-                "hasAC": true,
-                "id": "car4",
-                "imageStoragePath": "cars/Kia Sorento.jpg",
-                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FKia%20Sorento.jpg?alt=media&token=09ba5c41-5039-420f-b4fe-073dedb2ff1c",
-                "luggage": 2,
-                "name": "Kia Sorento",
-                "price": 45,
-                "seats": "4 + 1",
-                "transmission": "Manual"
-            },
-            "car5": {
-                "class": "Luxury",
-                "doors": 3,
-                "hasAC": true,
-                "id": "car5",
-                "imageStoragePath": "cars/Mazda MX-5.jpg",
-                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FMazda%20MX-5.jpg?alt=media&token=d27f2a97-2e09-431e-ad8c-d0e7723955ef",
-                "luggage": 2,
-                "name": "Mazda MX-5",
-                "price": 53,
-                "seats": "2",
-                "transmission": "Automatic"
-            },
-            "car6": {
-                "class": "Luxury",
-                "doors": 3,
-                "hasAC": false,
-                "id": "car6",
-                "imageStoragePath": "cars/Mercedes S-Class Cabriolet.jpg",
-                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FMercedes%20S-Class%20Cabriolet.jpg?alt=media&token=dc17f427-407c-45c5-b827-ed3e108e0034",
-                "luggage": 2,
-                "name": "Mercedes S-Class Cabriolet",
-                "price": 89,
-                "seats": "4",
-                "transmission": "Manual"
-            }
-        }
-    }
-    """
-        |> D.decodeString decodeResponse
-        |> Result.toMaybe
-        |> Maybe.withDefault []
-
-
-main : Program () Model Msg
-main =
-    Browser.element
-        { init = always init
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
-
-
-class : List String
-class =
-    [ "Mini", "Economy", "Compact", "Standard", "Luxury" ]
-
-
-doors : List Int
-doors =
-    [ 2, 3, 5 ]
-
-
-seats : List String
-seats =
-    [ "2", "4", "4 + 1", "6 + 1" ]
-
-
-transmission : List String
-transmission =
-    [ "Manual", "Automatic" ]
-
-
-findInList : b -> (a -> b) -> Maybe a -> List a -> Maybe a
-findInList target toItem acc ls =
-    case ls of
-        [] ->
-            acc
-
-        h :: r ->
-            if target == toItem h then
-                Just h
-
-            else
-                findInList target toItem acc r
 
 
 type ShowModalList
@@ -247,6 +74,8 @@ type Msg
     | ModalSelectedItem String
     | Saved
     | DoneEditing
+    | PickOrRemoveCarImage
+    | SwapImageUrl String
 
 
 init : ( Model, Cmd Msg )
@@ -397,6 +226,36 @@ update msg model =
         DoneEditing ->
             ( { model | isSaving = True }
             , Process.sleep 3000 |> Task.perform (always Saved)
+            )
+
+        PickOrRemoveCarImage ->
+            model.editCar
+                |> Maybe.map
+                    (\car ->
+                        if car.imageUrl /= "" then
+                            ( { model
+                                | editCar =
+                                    Just { car | imageUrl = "" }
+                              }
+                            , Cmd.none
+                            )
+
+                        else
+                            ( model, pickImage () )
+                    )
+                |> Maybe.withDefault ( model, Cmd.none )
+
+        SwapImageUrl path ->
+            ( { model
+                | editCar =
+                    model.editCar
+                        |> Maybe.map
+                            (\car ->
+                                Just { car | imageUrl = path }
+                            )
+                        |> Maybe.withDefault model.editCar
+              }
+            , Cmd.none
             )
 
         ModalSelectedItem selected ->
@@ -622,12 +481,17 @@ carDetailEditView model car =
                             , N.class "thumb"
                             , N.horizontalAlignment "left"
                             , N.backgroundImage car.imageUrl
-
-                            -- , N.tap "onImageAddRemoveTap"
+                            , Event.onTap PickOrRemoveCarImage
                             ]
                             [ Layout.gridLayout
                                 [ N.class "thumb__add"
-                                , N.visibility "collapsed"
+                                , N.visibility
+                                    (if car.imageUrl == "" then
+                                        "visible"
+
+                                     else
+                                        "collapsed"
+                                    )
                                 ]
                                 [ label
                                     [ N.text (String.fromChar '\u{F030}')
@@ -639,7 +503,13 @@ carDetailEditView model car =
                                 ]
                             , Layout.gridLayout
                                 [ N.class "thumb__remove"
-                                , N.visibility "visible"
+                                , N.visibility
+                                    (if car.imageUrl /= "" then
+                                        "visible"
+
+                                     else
+                                        "collapsed"
+                                    )
                                 ]
                                 [ label
                                     [ N.text (String.fromChar '\u{F2ED}')
@@ -651,7 +521,13 @@ carDetailEditView model car =
                                 ]
                             ]
                         , label
-                            [ N.visibility "collapsed"
+                            [ N.visibility
+                                (if car.imageUrl == "" then
+                                    "visible"
+
+                                 else
+                                    "collapsed"
+                                )
                             , N.class "c-error"
                             , N.text "Image field is required"
                             ]
@@ -928,6 +804,180 @@ view model =
         []
 
 
+decodeCar : D.Decoder Car
+decodeCar =
+    D.map8 Car
+        (D.field "class" D.string)
+        (D.field "doors" D.int)
+        (D.field "hasAC" D.bool)
+        (D.field "id" D.string)
+        (D.field "imageStoragePath" D.string)
+        (D.field "imageUrl" D.string)
+        (D.field "luggage" D.int)
+        (D.field "name" D.string)
+        |> D.andThen
+            (\fx ->
+                D.map3 fx
+                    (D.field "price" D.int)
+                    (D.field "seats" D.string)
+                    (D.field "transmission" D.string)
+            )
+
+
+decodeResponse : D.Decoder (List Car)
+decodeResponse =
+    D.field "cars" (D.keyValuePairs decodeCar)
+        |> D.map (List.map Tuple.second)
+
+
+encodeCar : Car -> E.Value
+encodeCar car =
+    [ ( "name", E.string car.name )
+    , ( "class", E.string car.class )
+    , ( "imageUrl", E.string car.imageUrl )
+    , ( "transmission", E.string car.transmission )
+    , ( "hasAC", E.bool car.hasAC )
+    , ( "price", E.int car.price )
+    , ( "id", E.string car.id )
+    ]
+        |> E.object
+
+
+response : List Car
+response =
+    """
+    {
+        "cars": {
+            "car1": {
+                "class": "Luxury",
+                "doors": 2,
+                "hasAC": true,
+                "id": "car1",
+                "imageStoragePath": "cars/BMW 5 Series.jpg",
+                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FBMW%205%20Series.jpg?alt=media&token=dec5a0bf-e3ca-45d2-8f2e-c7b8a25530b5",
+                "luggage": 3,
+                "name": "BMW 5 Series",
+                "price": 76,
+                "seats": "2",
+                "transmission": "Automatic"
+            },
+            "car2": {
+                "class": "Luxury",
+                "doors": 5,
+                "hasAC": false,
+                "id": "car2",
+                "imageStoragePath": "cars/Ford KA+.jpg",
+                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FFord%20KA%2B.jpg?alt=media&token=cf090183-ef5a-4c05-9f60-b0cbdfda7188",
+                "luggage": 3,
+                "name": "Ford KA",
+                "price": 44,
+                "seats": "4 + 1",
+                "transmission": "Automatic"
+            },
+            "car3": {
+                "class": "Mini",
+                "doors": 3,
+                "hasAC": true,
+                "id": "car3",
+                "imageStoragePath": "cars/Smart.jpg",
+                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FSmart.jpg?alt=media&token=6891aca9-4211-4545-834e-c934ed671961",
+                "luggage": 1,
+                "name": "Smart",
+                "price": 39,
+                "seats": "2",
+                "transmission": "Manual"
+            },
+            "car4": {
+                "class": "Standard",
+                "doors": 5,
+                "hasAC": true,
+                "id": "car4",
+                "imageStoragePath": "cars/Kia Sorento.jpg",
+                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FKia%20Sorento.jpg?alt=media&token=09ba5c41-5039-420f-b4fe-073dedb2ff1c",
+                "luggage": 2,
+                "name": "Kia Sorento",
+                "price": 45,
+                "seats": "4 + 1",
+                "transmission": "Manual"
+            },
+            "car5": {
+                "class": "Luxury",
+                "doors": 3,
+                "hasAC": true,
+                "id": "car5",
+                "imageStoragePath": "cars/Mazda MX-5.jpg",
+                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FMazda%20MX-5.jpg?alt=media&token=d27f2a97-2e09-431e-ad8c-d0e7723955ef",
+                "luggage": 2,
+                "name": "Mazda MX-5",
+                "price": 53,
+                "seats": "2",
+                "transmission": "Automatic"
+            },
+            "car6": {
+                "class": "Luxury",
+                "doors": 3,
+                "hasAC": false,
+                "id": "car6",
+                "imageStoragePath": "cars/Mercedes S-Class Cabriolet.jpg",
+                "imageUrl": "https://firebasestorage.googleapis.com/v0/b/car-rental-b26b7.appspot.com/o/cars_public%2FMercedes%20S-Class%20Cabriolet.jpg?alt=media&token=dc17f427-407c-45c5-b827-ed3e108e0034",
+                "luggage": 2,
+                "name": "Mercedes S-Class Cabriolet",
+                "price": 89,
+                "seats": "4",
+                "transmission": "Manual"
+            }
+        }
+    }
+    """
+        |> D.decodeString decodeResponse
+        |> Result.toMaybe
+        |> Maybe.withDefault []
+
+
+class : List String
+class =
+    [ "Mini", "Economy", "Compact", "Standard", "Luxury" ]
+
+
+doors : List Int
+doors =
+    [ 2, 3, 5 ]
+
+
+seats : List String
+seats =
+    [ "2", "4", "4 + 1", "6 + 1" ]
+
+
+transmission : List String
+transmission =
+    [ "Manual", "Automatic" ]
+
+
+findInList : b -> (a -> b) -> Maybe a -> List a -> Maybe a
+findInList target toItem acc ls =
+    case ls of
+        [] ->
+            acc
+
+        h :: r ->
+            if target == toItem h then
+                Just h
+
+            else
+                findInList target toItem acc r
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    pickImageUrl SwapImageUrl
+
+
+main : Program () Model Msg
+main =
+    Browser.element
+        { init = always init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
