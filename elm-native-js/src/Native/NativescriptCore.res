@@ -19,7 +19,15 @@ module Application = {
       | _ => (Constants.camelCased(attr), Types.makeAssignmentValue(value))
       }
     } else {
-      (Constants.camelCased(attr), Types.makeAssignmentValue(value))
+      let (_, assignmentKind) as newValue = Types.makeAssignmentValue(value)
+
+      (
+        Constants.camelCased(attr),
+        // Global Eval expression is skipped to prevent user from executing JS
+        attr == "text" && assignmentKind == Types.GlobalEvalExpression
+          ? (value, Types.String)
+          : newValue,
+      )
     }
   }
 )
