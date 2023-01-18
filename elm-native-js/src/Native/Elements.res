@@ -3,15 +3,13 @@ let makeRender = helperAdd =>
     helperAdd(. current.parentElement, current)
   )
 
-let prefixWithBind = arr => Belt.Array.concat(arr, arr->Belt.Array.map(x => `bind-${x}`))
-
 let buildHandler: (
   unit => Types.nativeObject,
   array<string>,
   Js.Nullable.t<(. Types.htmlElement, Types.nativeObject) => unit>,
 ) => Types.handler = (new, observedAttributes, render) => {
   init: (. ()) => new(),
-  observedAttributes: prefixWithBind(observedAttributes),
+  observedAttributes,
   render,
   handlerKind: Types.Element,
   update: NativescriptCore.update,

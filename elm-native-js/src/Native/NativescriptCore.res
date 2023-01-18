@@ -26,9 +26,9 @@ module Application = {
       (
         Constants.camelCased(extracted),
         // Allows expression binding only when attribute is prefixed.
-        if extracted != attr && assignmentKind == Types.BindingExpression {
-          newValue
-        // Global Eval expression is skipped to prevent user from executing JS
+        if assignmentKind == Types.BindingExpression {
+          extracted != attr ? newValue : (value, Types.String)
+          // Global Eval expression is skipped to prevent user from executing JS
         } else if attr == "text" && assignmentKind == Types.GlobalEvalExpression {
           (value, Types.String)
         } else {
