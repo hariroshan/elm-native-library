@@ -20,13 +20,20 @@ module Application = {
       }
     } else {
       let (_, assignmentKind) as newValue = Types.makeAssignmentValue(value)
+      let extracted =
+        attr->Js.String2.split("bind-")->Belt.Array.get(1)->Belt.Option.getWithDefault(attr)
 
       (
-        Constants.camelCased(attr),
+        Constants.camelCased(extracted),
+        // Allows expression binding only when attribute is prefixed.
+        if extracted != attr && assignmentKind == Types.BindingExpression {
+          newValue
         // Global Eval expression is skipped to prevent user from executing JS
-        attr == "text" && assignmentKind == Types.GlobalEvalExpression
-          ? (value, Types.String)
-          : newValue,
+        } else if attr == "text" && assignmentKind == Types.GlobalEvalExpression {
+          (value, Types.String)
+        } else {
+          newValue
+        },
       )
     }
   }

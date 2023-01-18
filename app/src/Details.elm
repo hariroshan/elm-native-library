@@ -5,7 +5,7 @@ import Html.Lazy exposing (lazy2)
 import Json.Decode as D
 import Json.Encode as E
 import Native exposing (..)
-import Native.Attributes as N exposing (bindingExpression, dangerousEvalExpression)
+import Native.Attributes as N exposing (bindAttributeWithExpression, dangerousEvalExpression)
 import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout
@@ -721,18 +721,18 @@ carTemplate =
         , N.columns "*, *"
         , N.class "cars-list__item-content"
         ]
-        [ label [ N.text <| bindingExpression " $value.name ", N.class "font-weight-bold cars-list__item-name" ] []
+        [ label [ bindAttributeWithExpression "text" " $value.name ", N.class "font-weight-bold cars-list__item-name" ] []
         , label [ N.col "1", N.horizontalAlignment "right" ]
             [ formattedString []
                 [ span [ N.text "€" ] []
-                , span [ N.text <| bindingExpression " $value.price " ] []
+                , span [ bindAttributeWithExpression "text" " $value.price " ] []
                 , span [ N.text "/day" ] []
                 ]
             ]
         , Layout.stackLayout [ N.row "1", N.class "hr m-y-5", N.colSpan "2" ] []
         , image
             [ N.row "2"
-            , N.src <| bindingExpression " $value.imageUrl "
+            , bindAttributeWithExpression "src" " $value.imageUrl "
             , N.stretch "aspectFill"
             , N.height "120"
             ]
@@ -741,20 +741,20 @@ carTemplate =
             [ label [ N.class "p-b-10" ]
                 [ formattedString [ N.fontFamily "system" ]
                     [ span [ N.text (String.fromChar '\u{F1B9}' ++ " "), N.class "fas fa-car cars-list__item-icon" ] []
-                    , span [ N.text <| bindingExpression " $value.class " ] []
+                    , span [ bindAttributeWithExpression "text" " $value.class " ] []
                     ]
                 ]
             , label [ N.class "p-b-10" ]
                 [ formattedString [ N.fontFamily "system" ]
                     [ span [ N.text (String.fromChar '\u{F085}' ++ " "), N.class "fas fa-car cars-list__item-icon" ] []
-                    , span [ N.text <| bindingExpression " $value.transmission " ] []
+                    , span [ bindAttributeWithExpression "text" " $value.transmission " ] []
                     , span [ N.text " Transmission" ] []
                     ]
                 ]
             , label [ N.class "p-b-10" ]
                 [ formattedString [ N.fontFamily "system" ]
                     [ span [ N.text (String.fromChar '\u{F2DC}' ++ " "), N.class "fas fa-car cars-list__item-icon" ] []
-                    , span [ N.text <| bindingExpression " $value.hasAC ? 'Yes' : 'No' " ] []
+                    , span [ bindAttributeWithExpression "text" " $value.hasAC ? 'Yes' : 'No' " ] []
                     ]
                 ]
             ]

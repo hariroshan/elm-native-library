@@ -5,7 +5,7 @@ import Html exposing (Html)
 import Json.Decode as D
 import Json.Encode as E
 import Native
-import Native.Attributes as NA exposing (bindingExpression)
+import Native.Attributes as NA exposing (bindAttributeWithExpression)
 import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout
@@ -260,7 +260,7 @@ flickTemplate =
             [ NA.row "0"
             , NA.margin "0"
             , NA.stretch "aspectFill"
-            , NA.src <| bindingExpression " $value.image "
+            , bindAttributeWithExpression "src" " $value.image "
             ]
             []
         , Native.label
@@ -269,7 +269,7 @@ flickTemplate =
             , NA.fontWeight "700"
             , NA.class "text-primary"
             , NA.fontSize "18"
-            , NA.title <| bindingExpression " $value.title "
+            , bindAttributeWithExpression "title" " $value.title "
             ]
             []
         , Native.label
@@ -278,7 +278,7 @@ flickTemplate =
             , NA.class "text-secondary"
             , NA.fontSize "14"
             , NA.textWrap "true"
-            , NA.text <| bindingExpression " $value.description "
+            , bindAttributeWithExpression "text" " $value.description "
             ]
             []
         ]
