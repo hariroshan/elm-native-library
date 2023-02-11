@@ -8,3 +8,4 @@ Build mobile apps with elm using NativeScript
 3. Build a starter template
 4. Extract and publish elm-native in elm and elm-native-js in npm/yarn
 5. Support animations
+6. Support cubicBezier
