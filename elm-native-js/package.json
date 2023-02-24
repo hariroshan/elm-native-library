@@ -1,5 +1,5 @@
 {
-  "name": "@hariroshan/elm-native-js",
+  "name": "elm-native-js",
   "version": "1.0.0",
   "description": "Nativescript bindings for elm using custom HTML elements",
   "main": "index.js",
