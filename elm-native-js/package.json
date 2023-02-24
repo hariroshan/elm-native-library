@@ -1,6 +1,6 @@
 {
-  "name": "elm-native-js",
-  "version": "0.1.0",
+  "name": "@hariroshan/elm-native-js",
+  "version": "1.0.0",
   "description": "Nativescript bindings for elm using custom HTML elements",
   "main": "index.js",
   "author": "Hari Roshan",
