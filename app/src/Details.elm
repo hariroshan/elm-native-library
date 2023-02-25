@@ -810,9 +810,8 @@ getPage model page =
 
 view : Model -> Native Msg
 view model =
-    Frame.frame []
-        model.rootFrame
-        (getPage model)
+    model.rootFrame
+        |> Frame.frame [] (getPage model)
 
 
 decodeCar : D.Decoder Car
@@ -853,7 +852,9 @@ encodeCar car =
     ]
         |> E.object
 
-{-| We can use elm/http too! -}
+
+{-| We can use elm/http too!
+-}
 response : List Car
 response =
     """

@@ -207,8 +207,8 @@ setClearHistory val mod =
     { mod | clearHistory = Just val }
 
 
-frame : List (Attribute msg) -> Model page -> (page -> Html msg) -> Html msg
-frame attrs frameModel getPage =
+frame : List (Attribute msg) -> (page -> Html msg) -> Model page -> Html msg
+frame attrs getPage frameModel =
     let
         children =
             [ getPage frameModel.current ]
