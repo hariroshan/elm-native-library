@@ -20,7 +20,10 @@ type constructor = {
   name: string,
 }
 
-type transition = {
+type raw
+type clean
+
+type transition<'a> = {
   /**
 	 * Can be one of the built-in transitions:
 	 * - curl (same as curlUp) (iOS only)
@@ -43,11 +46,11 @@ type transition = {
   curve: Js.Nullable.t<string>,
 }
 
-type navigationOptions = {
+type navigationOptions<'kind> = {
   animated: Js.Nullable.t<bool>,
-  transition: Js.Nullable.t<transition>,
-  transitioniOS: Js.Nullable.t<transition>,
-  transitionAndroid: Js.Nullable.t<transition>,
+  transition: Js.Nullable.t<transition<'kind>>,
+  transitioniOS: Js.Nullable.t<transition<'kind>>,
+  transitionAndroid: Js.Nullable.t<transition<'kind>>,
   backstackVisible: Js.Nullable.t<bool>,
   clearHistory: Js.Nullable.t<bool>,
 }
@@ -111,7 +114,7 @@ and htmlElement = {
   data: Js.Nullable.t<nativeObject>,
   children: array<htmlElement>,
   items: array<string>,
-  navigationOptions: Js.Nullable.t<navigationOptions>,
+  navigationOptions: Js.Nullable.t<navigationOptions<raw>>,
   modalPage: Js.Nullable.t<bool>,
 }
 and frameMethods = {pageAdded: (. htmlElement) => unit}

@@ -2,22 +2,30 @@ module Frame = {
   %%private(
     @module("@nativescript/core") @new
     external new: unit => Types.nativeObject = "Frame"
+
+    let mapTransition = transition =>
+      transition
+      ->Js.Nullable.toOption
+      ->Belt.Option.map(transition =>
+        transition->NativescriptCore.AnimationCurve.convertTransitionCurve
+      )
+      ->Js.Nullable.fromOption
+
     let setNullableProperty = (
       current: Types.htmlElement,
       config: Types.navigationConfig,
       key: string,
-      fx: Types.navigationOptions => Js.Nullable.t<'a>,
+      fx: Types.navigationOptions<Types.clean> => Js.Nullable.t<'a>,
     ) =>
       current.navigationOptions
       ->Js.Nullable.toOption
-      ->Belt.Option.map(x => {
+      ->Belt.Option.map((x: Types.navigationOptions<Types.raw>): Types.navigationOptions<
+        Types.clean,
+      > => {
         ...x,
-        transition: x.transition
-        ->Js.Nullable.toOption
-        ->Belt.Option.map(transition =>
-          transition->NativescriptCore.AnimationCurve.convertTransitionCurve->Js.Nullable.return
-        )
-        ->Belt.Option.getWithDefault(x.transition),
+        transition: x.transition->mapTransition,
+        transitioniOS: x.transitioniOS->mapTransition,
+        transitionAndroid: x.transitionAndroid->mapTransition,
       })
       ->Belt.Option.flatMap(x => fx(x)->Js.Nullable.toOption)
       ->Belt.Option.forEach(value => {
@@ -79,24 +87,24 @@ module Frame = {
             let config: Types.navigationConfig = {
               create: _ => pageData,
             }
-            current->setNullableProperty(config, "animated", (x: Types.navigationOptions) =>
-              x.animated
-            )
-            current->setNullableProperty(config, "transition", (x: Types.navigationOptions) =>
-              x.transition
-            )
-            current->setNullableProperty(config, "transitioniOS", (x: Types.navigationOptions) =>
-              x.transitioniOS
-            )
+            current->setNullableProperty(config, "animated", (
+              x: Types.navigationOptions<Types.clean>,
+            ) => x.animated)
+            current->setNullableProperty(config, "transition", (
+              x: Types.navigationOptions<Types.clean>,
+            ) => x.transition)
+            current->setNullableProperty(config, "transitioniOS", (
+              x: Types.navigationOptions<Types.clean>,
+            ) => x.transitioniOS)
             current->setNullableProperty(config, "transitionAndroid", (
-              x: Types.navigationOptions,
+              x: Types.navigationOptions<Types.clean>,
             ) => x.transitionAndroid)
-            current->setNullableProperty(config, "backstackVisible", (x: Types.navigationOptions) =>
-              x.backstackVisible
-            )
-            current->setNullableProperty(config, "clearHistory", (x: Types.navigationOptions) =>
-              x.clearHistory
-            )
+            current->setNullableProperty(config, "backstackVisible", (
+              x: Types.navigationOptions<Types.clean>,
+            ) => x.backstackVisible)
+            current->setNullableProperty(config, "clearHistory", (
+              x: Types.navigationOptions<Types.clean>,
+            ) => x.clearHistory)
             data->Types.navigate(config)
           }
         })

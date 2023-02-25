@@ -2,6 +2,7 @@ type rootLayout
 
 module AnimationCurve = {
   type animationCurve = {cubicBezier: (. float, float, float, float) => string}
+
   %%private(
     let cubicBezierParamsRE = %re(`/cubicBezier\(([0-9]+\.?[0-9]*),([0-9]+\.?[0-9]*),([0-9]+\.?[0-9]*),([0-9]+\.?[0-9]*)\)/g`)
 
@@ -29,7 +30,9 @@ module AnimationCurve = {
     external animationCurve: animationCurve = "AnimationCurve"
   )
 
-  let convertTransitionCurve = (transition: Types.transition): Types.transition => {
+  let convertTransitionCurve = (transition: Types.transition<Types.raw>): Types.transition<
+    Types.clean,
+  > => {
     {
       ...transition,
       curve: switch transition.curve->Js.Nullable.toOption {
