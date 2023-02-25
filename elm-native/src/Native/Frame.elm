@@ -8,6 +8,7 @@ module Native.Frame exposing
     , goTo
     , handleBack
     , init
+    , mapCurrentPage
     , setAnimated
     , setBackstackVisible
     , setClearHistory
@@ -206,29 +207,16 @@ setClearHistory val mod =
     { mod | clearHistory = Just val }
 
 
-cons : List a -> a -> List a
-cons acc x =
-    x :: acc
-
-
-frame : Model page -> model -> List ( page, model -> Html msg ) -> List (Attribute msg) -> Html msg
-frame frameModel appModel pages attrs =
+frame : List (Attribute msg) -> Model page -> (page -> Html msg) -> Html msg
+frame attrs frameModel getPage =
     let
         children =
-            pages
-                |> getPage frameModel.current appModel
-                |> Maybe.map List.singleton
-                |> Maybe.withDefault []
+            [ getPage frameModel.current ]
 
         history =
             frameModel.history
                 |> List.foldl
-                    (\old acc ->
-                        pages
-                            |> getPage old appModel
-                            |> Maybe.map (cons acc)
-                            |> Maybe.withDefault acc
-                    )
+                    (\old acc -> getPage old :: acc)
                     children
     in
     Html.node "ns-frame"
@@ -239,29 +227,13 @@ frame frameModel appModel pages attrs =
         history
 
 
-getPage : a -> b -> List ( a, b -> Html msg ) -> Maybe (Html msg)
-getPage target model pages =
-    pages
-        |> findInList target Tuple.first Nothing
-        |> Maybe.map
-            (\( _, fx ) ->
-                model
-                    |> fx
-            )
-
-
-findInList : b -> (a -> b) -> Maybe a -> List a -> Maybe a
-findInList target toItem acc ls =
-    case ls of
-        [] ->
-            acc
-
-        h :: r ->
-            if target == toItem h then
-                Just h
-
-            else
-                findInList target toItem acc r
+mapCurrentPage : (page -> page) -> Model page -> Model page
+mapCurrentPage mapFx frameModel =
+    { frameModel
+        | current =
+            frameModel.current
+                |> mapFx
+    }
 
 
 init : page -> Model page

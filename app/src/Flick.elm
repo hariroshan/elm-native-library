@@ -1,10 +1,9 @@
 module Flick exposing (main)
 
 import Browser
-import Html exposing (Html)
 import Json.Decode as D
 import Json.Encode as E
-import Native
+import Native exposing (Native)
 import Native.Attributes as NA exposing (bindAttributeWithExpression)
 import Native.Event as Event
 import Native.Frame as Frame
@@ -245,7 +244,7 @@ update msg model =
 -}
 
 
-flickTemplate : Html Msg
+flickTemplate : Native Msg
 flickTemplate =
     Layout.gridLayout
         [ NA.height "280"
@@ -284,7 +283,7 @@ flickTemplate =
         ]
 
 
-homePage : Model -> Html Msg
+homePage : Model -> Native Msg
 homePage model =
     Page.pageWithActionBar Back
         []
@@ -301,7 +300,7 @@ homePage model =
         )
 
 
-detailsPage : Model -> Html Msg
+detailsPage : Model -> Native Msg
 detailsPage model =
     case model.picked of
         Nothing ->
@@ -359,16 +358,24 @@ detailsPage model =
                 )
 
 
-view : Model -> Html Msg
+getPage : Model -> NavPage -> Native Msg
+getPage model page =
+    case page of
+        DetailsPage ->
+            detailsPage model
+
+        HomePage ->
+            homePage model
+
+
+view : Model -> Native Msg
 view model =
-    Frame.frame model.rootFrame
-        model
-        [ ( DetailsPage, detailsPage )
-        , ( HomePage, homePage )
-        ]
-        []
+    Frame.frame []
+        model.rootFrame
+        (getPage model)
+
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     Sub.none

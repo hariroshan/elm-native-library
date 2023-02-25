@@ -792,16 +792,27 @@ homePage model =
         )
 
 
+getPage : Model -> NavPage -> Native Msg
+getPage model page =
+    case page of
+        HomePage ->
+            homePage model
+
+        CarDetailsPage ->
+            carDetailsPage model
+
+        CarDetailsEditPage ->
+            carDetailsEditPage model
+
+        ModalPage ->
+            listModalPage model
+
+
 view : Model -> Native Msg
 view model =
-    Frame.frame model.rootFrame
-        model
-        [ ( HomePage, homePage )
-        , ( CarDetailsPage, carDetailsPage )
-        , ( CarDetailsEditPage, carDetailsEditPage )
-        , ( ModalPage, listModalPage )
-        ]
-        []
+    Frame.frame []
+        model.rootFrame
+        (getPage model)
 
 
 decodeCar : D.Decoder Car
@@ -842,7 +853,7 @@ encodeCar car =
     ]
         |> E.object
 
-
+{-| We can use elm/http too! -}
 response : List Car
 response =
     """
