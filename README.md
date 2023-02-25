@@ -11,6 +11,5 @@ Build mobile apps with elm using NativeScript
 3. Build a starter template with elm support with bindings pre-installed
 4. Extract and publish elm-native in elm and elm-native-js in npm/yarn
 5. Support animations
-6. Support cubicBezier
-7. Split project into different modules, publish library in elm and npm
-8. Use taskport to build typesafe nativescipt api calls.
+6. Split project into different modules, publish library in elm and npm
+7. Use taskport to build typesafe nativescipt api calls.
