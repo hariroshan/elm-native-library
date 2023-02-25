@@ -49,6 +49,7 @@ type TransitionCurve
     | EaseOut
     | Linear
     | Spring
+    | CubicBezier ( Float, Float ) ( Float, Float )
 
 
 type alias Transition =
@@ -80,6 +81,17 @@ encodeTransitionCurve curve =
 
             Spring ->
                 "spring"
+
+            CubicBezier ( x1, y1 ) ( x2, y2 ) ->
+                "cubicBezier("
+                    ++ String.fromFloat x1
+                    ++ ","
+                    ++ String.fromFloat y1
+                    ++ ","
+                    ++ String.fromFloat x2
+                    ++ ","
+                    ++ String.fromFloat y2
+                    ++ ")"
     )
 
 

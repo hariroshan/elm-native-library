@@ -10,6 +10,15 @@ module Frame = {
     ) =>
       current.navigationOptions
       ->Js.Nullable.toOption
+      ->Belt.Option.map(x => {
+        ...x,
+        transition: x.transition
+        ->Js.Nullable.toOption
+        ->Belt.Option.map(transition =>
+          transition->NativescriptCore.AnimationCurve.convertTransitionCurve->Js.Nullable.return
+        )
+        ->Belt.Option.getWithDefault(x.transition),
+      })
       ->Belt.Option.flatMap(x => fx(x)->Js.Nullable.toOption)
       ->Belt.Option.forEach(value => {
         config->Obj.magic->Js.Dict.set(key, value)

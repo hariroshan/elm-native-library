@@ -1,5 +1,57 @@
 type rootLayout
 
+module AnimationCurve = {
+  type animationCurve = {cubicBezier: (. float, float, float, float) => string}
+  %%private(
+    let cubicBezierParamsRE = %re(`/cubicBezier\(([0-9]+\.?[0-9]*),([0-9]+\.?[0-9]*),([0-9]+\.?[0-9]*),([0-9]+\.?[0-9]*)\)/g`)
+
+    let cubicBezierParams = value => {
+      cubicBezierParamsRE
+      ->Js.Re.exec_(value)
+      ->Belt.Option.map(Js.Re.captures)
+      ->Belt.Option.flatMap(captures => {
+        let arr = captures->Js.Array2.sliceFrom(1)
+        let (x1, y1) = (
+          Belt.Array.get(arr, 0)->Belt.Option.flatMap(Js.Nullable.toOption),
+          Belt.Array.get(arr, 1)->Belt.Option.flatMap(Js.Nullable.toOption),
+        )
+        let (x2, y2) = (
+          Belt.Array.get(arr, 2)->Belt.Option.flatMap(Js.Nullable.toOption),
+          Belt.Array.get(arr, 3)->Belt.Option.flatMap(Js.Nullable.toOption),
+        )
+        switch (x1, y1, x2, y2) {
+        | (Some(a1), Some(b1), Some(a2), Some(b2)) => Some(((a1, b1), (a2, b2)))
+        | _ => None
+        }
+      })
+    }
+    @module("@nativescript/core") @scope("CoreTypes")
+    external animationCurve: animationCurve = "AnimationCurve"
+  )
+
+  let convertTransitionCurve = (transition: Types.transition): Types.transition => {
+    {
+      ...transition,
+      curve: switch transition.curve->Js.Nullable.toOption {
+      | Some(curve) if !Js.String2.startsWith(curve, "cubicBezier") => Js.Nullable.return(curve)
+      | Some(curve) =>
+        curve
+        ->cubicBezierParams
+        ->Belt.Option.map((((x1, y1), (x2, y2))) => {
+          animationCurve.cubicBezier(.
+            Js.Float.fromString(x1),
+            Js.Float.fromString(y1),
+            Js.Float.fromString(x2),
+            Js.Float.fromString(y2),
+          )->Js.Nullable.return
+        })
+        ->Belt.Option.getWithDefault(Js.Nullable.return(curve))
+      | None => Js.Nullable.null
+      },
+    }
+  }
+}
+
 module Application = {
   type config = {create: unit => rootLayout}
 
