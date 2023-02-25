@@ -811,7 +811,7 @@ getPage model page =
 view : Model -> Native Msg
 view model =
     model.rootFrame
-        |> Frame.frame [] (getPage model)
+        |> Frame.view [] (getPage model)
 
 
 decodeCar : D.Decoder Car

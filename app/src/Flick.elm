@@ -371,7 +371,7 @@ getPage model page =
 view : Model -> Native Msg
 view model =
     model.rootFrame
-        |> Frame.frame [] (getPage model)
+        |> Frame.view [] (getPage model)
 
 
 subscriptions : Model -> Sub Msg
