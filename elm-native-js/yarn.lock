@@ -96,6 +96,11 @@ delayed-stream@~1.0.0:
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
   integrity sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==
 
+elm-taskport@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/elm-taskport/-/elm-taskport-2.0.1.tgz#abaf091db79971b8354ddc2652c6c0c7abd91b5b"
+  integrity sha512-8UgIjzmGuoU6Wt6VC0tkJnzvc5xHL5yH7GdN+/QNxaaA3ckoyveCtV0QJqNCRa42bpyR1JhOwLSApwf2Id5xZg==
+
 form-data@^2.2.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.5.1.tgz#f2cbec57b5e59e23716e128fe44d4e5dd23895f4"

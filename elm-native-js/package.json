@@ -10,6 +10,7 @@
     "postinstall": "rescript"
   },
   "dependencies": {
+    "elm-taskport": "^2.0.1",
     "happy-dom": "^6.0.4",
     "rescript": "^10.0.1",
     "vm-shim": "^0.0.6"

@@ -62,6 +62,70 @@ module Application = {
   external run: config => unit = "run"
 }
 
+module Dialogs = {
+  type alertOptions = {
+    title: string,
+    message: string,
+    okButtonText: string,
+    cancelable: bool,
+  }
+
+  type actionOptions = {
+    title: string,
+    message: string,
+    cancelButtonText: string,
+    actions: array<string>,
+    cancelable: bool,
+  }
+
+  type confirmOptions = {
+    title: string,
+    message: string,
+    okButtonText: string,
+    cancelButtonText: string,
+    neutralButtonText: string,
+  }
+
+  type loginOptions = {
+    title: string,
+    message: string,
+    okButtonText: string,
+    cancelButtonText: string,
+    neutralButtonText: string,
+    userNameHint: string,
+    passwordHint: string,
+    userName: string,
+    password: string,
+  }
+
+  type promptOptions = {
+    title: string,
+    message: string,
+    cancelButtonText: string,
+    cancelable: bool,
+    okButtonText: string,
+    neutralButtonText: string,
+    defaultText: string,
+    inputType: string,
+    capitalizationType: string,
+  }
+
+  @module("@nativescript/core") @scope("Dialogs")
+  external alert: (. alertOptions) => Js.Promise.t<unit> = "alert"
+
+  @module("@nativescript/core") @scope("Dialogs")
+  external action: (. actionOptions) => Js.Promise.t<string> = "action"
+
+  @module("@nativescript/core") @scope("Dialogs")
+  external confirm: (. confirmOptions) => Js.Promise.t<bool> = "confirm"
+
+  @module("@nativescript/core") @scope("Dialogs")
+  external login: (. loginOptions) => Js.Promise.t<bool> = "login"
+
+  @module("@nativescript/core") @scope("Dialogs")
+  external prompt: (. promptOptions) => Js.Promise.t<bool> = "prompt"
+}
+
 %%private(
   let processAttrAndValue = (attr, value) => {
     if attr == "ios" || attr == "android" {

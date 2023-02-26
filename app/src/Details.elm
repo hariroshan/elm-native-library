@@ -6,6 +6,7 @@ import Json.Decode as D
 import Json.Encode as E
 import Native exposing (..)
 import Native.Attributes as N exposing (bindAttributeWithExpression, dangerousEvalExpression)
+import Native.Dialogs as Dialogs
 import Native.Event as Event
 import Native.Frame as Frame
 import Native.Layout as Layout
@@ -91,6 +92,14 @@ init =
       , isSaving = False
       }
     , Cmd.none
+    -- Process.sleep 5000
+    --     |> Task.andThen
+    --         (\_ ->
+    --             Dialogs.defaultAlertOption "Something terrible has happened"
+    --                 |> Dialogs.setOkButtonText "Okay"
+    --                 |> Dialogs.alert
+    --         )
+    --     |> Task.attempt (Result.toMaybe >> always NoOp)
     )
 
 

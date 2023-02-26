@@ -10,6 +10,7 @@ type rec context = {
   flags: Js.Nullable.t<Obj.t>,
   isIOS: bool,
   isAndroid: bool,
+  taskportInit: unit => unit,
   initPorts: Js.Nullable.t<Obj.t => unit>,
   withCustomElements: (. Obj.t, Types.handler) => Obj.t,
   elements: array<Types.customElement>,
@@ -64,6 +65,7 @@ let start: config => unit = config => {
     isAndroid: Types.isAndroid,
     elm: config.elmModule,
     elements: Native.allElements,
+    taskportInit: Taskport.register,
     withCustomElements: CustomElement.withCustomElements,
     run: () =>
       NativescriptCore.Application.run({
@@ -75,12 +77,12 @@ let start: config => unit = config => {
   let elmRoot = "elm-root"
 
   let elmInitScript = `
+  taskportInit()
   const el = elm().${config.elmModuleName}.init({
     node: document.getElementById('${elmRoot}'),
     flags: flags
   })
-  if(initPorts !== undefined || initPorts !== null)
-    initPorts(el.ports)
+  if(initPorts != null) initPorts(el.ports)
    `
 
   let html = `<html><head><title>App</title></head><body><div id='${elmRoot}'></div></body></html>`
