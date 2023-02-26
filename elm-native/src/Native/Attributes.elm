@@ -1167,7 +1167,9 @@ dangerousEvalExpression expression =
 
 
 {-| Binding expressions are supported only when ListView is their ancestor.
-In any other case, there won't be any value to bind to. So it will be empty
+In any other case, there won't be any value to bind to. So it will be empty.
+
+Use hypens instead of camelcase like `font-family` and not `fontFamily`
 -}
 bindAttributeWithExpression : String -> String -> Attribute msg
 bindAttributeWithExpression attributeName expression =
