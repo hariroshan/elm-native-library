@@ -54,8 +54,10 @@ This project tooks months of research and days of work. If you feel like it is v
     ```
 
 2. Install dependencies using `yarn` or `npm install`
-3. Follow the instructions to setup your [development enviroment](https://docs.nativescript.org/environment-setup.html)
-4. Run project using `yarn run run:ios` or `npm run run:ios`
+3. Follow the instructions to setup your [mobile development enviroment](https://docs.nativescript.org/environment-setup.html)
+4. Run project using
+    - `yarn run run:ios` or `npm run run:ios` for iOS
+    - `yarn run run:android` or `npm run run:android` for Android
 
 ## TODO
 
