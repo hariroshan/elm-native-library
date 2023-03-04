@@ -1,8 +1,16 @@
 # Elm Native
 
-Build mobile apps with elm using NativeScript
+Build mobile apps with elm using NativeScript API. `elm/http` works with this library as well!
 
-`elm/http` works with this!
+We can build simple apps like counter
+![Counter](./doc/counter.gif)
+
+or something like a blog
+![Counter](./doc/blog.gif)
+
+or even complex app with page transitions, modals, dialog, and much more!
+![Car details](./doc/car.gif)
+
 
 ## TODO
 
