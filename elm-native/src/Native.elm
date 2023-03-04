@@ -35,6 +35,20 @@ module Native exposing
     )
 {-|
 This library should be used with [elm-native](https://github.com/hariroshan/elm-native) JS library
+
+
+We will use [CustomElements](https://guide.elm-lang.org/interop/custom_elements.html) feature to create mobile UI elements with nativescript objects and control the nativescript object from elm.
+
+Here's a simple representation of how UI elements are created
+
+`Elm` -> `Nativescript` -> `Mobile`
+
+When we listen for / receive an event,
+
+`Mobile` -> `Nativescript` -> `Elm`
+
+Consider this flow while building an application. This will help you to overcome performance issues if you encounter them.
+
 -}
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (attribute)
