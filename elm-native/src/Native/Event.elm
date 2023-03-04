@@ -1,6 +1,5 @@
 module Native.Event exposing
-    ( decodeAttribute
-    , on
+    ( on
     , onBlur
     , onBusyChange
     , onDateChange
@@ -14,7 +13,35 @@ module Native.Event exposing
     , onTextChange
     , onUnloaded
     , onValueChange
+    , decodeAttribute
     )
+
+{-| Events listeners for Nativescript UI Elements
+
+
+# Events
+
+@docs on
+@docs onBlur
+@docs onBusyChange
+@docs onDateChange
+@docs onEventWith
+@docs onFocus
+@docs onItemTap
+@docs onLoaded
+@docs onReturnPress
+@docs onSelectedIndexChange
+@docs onTap
+@docs onTextChange
+@docs onUnloaded
+@docs onValueChange
+
+
+# Decoder
+
+@docs decodeAttribute
+
+-}
 
 import Html exposing (Attribute)
 import Html.Events as Event
@@ -22,46 +49,64 @@ import Json.Decode as D
 import Json.Encode as E
 
 
+{-| Listens for textChange event
+-}
 onTextChange : (String -> msg) -> Attribute msg
 onTextChange msg =
     on "textChange" (D.field "value" D.string |> D.map msg)
 
 
+{-| Listen for tap
+-}
 onTap : msg -> Attribute msg
 onTap msg =
     on "tap" (D.succeed msg)
 
 
+{-| Listen for returnPress
+-}
 onReturnPress : msg -> Attribute msg
 onReturnPress msg =
     on "returnPress" (D.succeed msg)
 
 
+{-| Listen for focus
+-}
 onFocus : msg -> Attribute msg
 onFocus msg =
     on "focus" (D.succeed msg)
 
 
+{-| Listen for blur
+-}
 onBlur : msg -> Attribute msg
 onBlur msg =
     on "blur" (D.succeed msg)
 
 
+{-| Listen for loaded
+-}
 onLoaded : msg -> Attribute msg
 onLoaded msg =
     on "loaded" (D.succeed msg)
 
 
+{-| Listen for unloaded
+-}
 onUnloaded : msg -> Attribute msg
 onUnloaded msg =
     on "unloaded" (D.succeed msg)
 
 
+{-| Listen for busyChange
+-}
 onBusyChange : msg -> Attribute msg
 onBusyChange msg =
     on "busyChange" (D.succeed msg)
 
 
+{-| Listen for dateChange
+-}
 onDateChange : ({ day : Int, month : Int, year : Int } -> msg) -> Attribute msg
 onDateChange msg =
     on "dateChange"
@@ -72,21 +117,29 @@ onDateChange msg =
         )
 
 
+{-| Listens for selectedIndexChange
+-}
 onSelectedIndexChange : (Int -> msg) -> Attribute msg
 onSelectedIndexChange msg =
     on "selectedIndexChange" (D.field "value" D.int |> D.map msg)
 
 
+{-| Listen for valueChange
+-}
 onValueChange : (Float -> msg) -> Attribute msg
 onValueChange msg =
     on "valueChange" (D.field "value" D.float |> D.map msg)
 
 
+{-| Listen for itemTap in listView
+-}
 onItemTap : (Int -> msg) -> Attribute msg
 onItemTap msg =
     on "itemTap" (D.field "index" D.int |> D.map msg)
 
 
+{-| Allows you to build your own events and decoders
+-}
 on : String -> D.Decoder msg -> Attribute msg
 on eventName =
     Event.on eventName
@@ -114,27 +167,27 @@ type alias EventOptions =
     }
 
 
+{-| Allows you to decode attributes from nativescript object
 
-{- Usage:
+Usage:
 
-    listView
-    [ N.items model.encodedItems ]
-    [ button
-      [ N.itemId <| bindingExpression "$value.id"
-      , Event.on "tap" (Event.decodeAttribute "itemId" D.string |> D.map ItemTap)
-      ]
-      []
-   ]
+    listViewWithSingleTemplate
+        [ items listViewModel ]
+        [ button
+            [ bindAttributeWithExpression "item-id" "$value.id"
+            , on "tap" (Event.decodeAttribute "itemId" D.string |> D.map ItemTap)
+            ]
+            []
+        ]
 
 -}
-
-
 decodeAttribute : String -> D.Decoder a -> D.Decoder a
 decodeAttribute attributeName decoder =
     D.at [ "object", attributeName ] decoder
 
 
 {-| Method values are kept under {custom: {[methodName]: value}}
+We will improve this in future
 
 For example:
 

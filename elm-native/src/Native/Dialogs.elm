@@ -1,28 +1,33 @@
 module Native.Dialogs exposing
-    ( Action
-    , Alert
-    , action
-    , alert
-    , confirm
-    , defaultActionOption
-    , defaultAlertOption
-    , defaultConfirmOption
-    , defaultLoginOption
-    , login
-    , prompt
-    , setAndroidOnlyCancelable
-    , setCancelButtonText
-    , setCapitalizationType
-    , setDefaultText
-    , setInputType
-    , setNeutralButtonText
-    , setOkButtonText
-    , setPassword
-    , setPasswordHint
-    , setTitle
-    , setUserName
-    , setUserNameHint, defaultPromptOption
+    ( Action, Alert, Confirm, Login, LoginResult, Prompt, PromptResult
+    , defaultActionOption, defaultAlertOption, defaultConfirmOption, defaultLoginOption, defaultPromptOption
+    , setAndroidOnlyCancelable, setCancelButtonText, setCapitalizationType, setDefaultText, setInputType, setNeutralButtonText, setOkButtonText, setPassword, setPasswordHint, setTitle, setUserName, setUserNameHint
+    , action, alert, confirm, login, prompt
     )
+
+{-| Used to show NativeScript dialogs
+
+
+# Types
+
+@docs Action, Alert, Confirm, Login, LoginResult, Prompt, PromptResult
+
+
+# Default Options
+
+@docs defaultActionOption, defaultAlertOption, defaultConfirmOption, defaultLoginOption, defaultPromptOption
+
+
+# Setters
+
+@docs setAndroidOnlyCancelable, setCancelButtonText, setCapitalizationType, setDefaultText, setInputType, setNeutralButtonText, setOkButtonText, setPassword, setPasswordHint, setTitle, setUserName, setUserNameHint
+
+
+# Dialogs
+
+@docs action, alert, confirm, login, prompt
+
+-}
 
 import Json.Decode as D
 import Json.Encode as E
@@ -30,6 +35,8 @@ import Native.Types exposing (CapitalizationType(..), InputType(..), capitalizat
 import TaskPort exposing (FunctionName, QualifiedName, Task, callNS, inNamespace)
 
 
+{-| Alert dialog options
+-}
 type alias Alert =
     { title : Maybe String
     , message : String
@@ -38,6 +45,8 @@ type alias Alert =
     }
 
 
+{-| Action dialog options
+-}
 type alias Action =
     { title : Maybe String
     , message : String
@@ -47,6 +56,8 @@ type alias Action =
     }
 
 
+{-| Confirm dialog options
+-}
 type alias Confirm =
     { title : Maybe String
     , message : String
@@ -57,6 +68,8 @@ type alias Confirm =
     }
 
 
+{-| Login dialog options
+-}
 type alias Login =
     { title : Maybe String
     , message : String
@@ -70,6 +83,8 @@ type alias Login =
     }
 
 
+{-| Result of Login dialog
+-}
 type alias LoginResult =
     { username : String
     , password : String
@@ -77,6 +92,8 @@ type alias LoginResult =
     }
 
 
+{-| Prompt dialog options
+-}
 type alias Prompt =
     { title : Maybe String
     , message : String
@@ -89,12 +106,16 @@ type alias Prompt =
     }
 
 
+{-| Result of Prompt dialog
+-}
 type alias PromptResult =
     { text : String
     , result : Bool
     }
 
 
+{-| Default Alert Option
+-}
 defaultAlertOption : String -> Alert
 defaultAlertOption message =
     { title = Nothing
@@ -104,6 +125,8 @@ defaultAlertOption message =
     }
 
 
+{-| Default Action Option
+-}
 defaultActionOption : String -> List String -> String -> Action
 defaultActionOption message actions cancelButtonText =
     { title = Nothing
@@ -114,6 +137,8 @@ defaultActionOption message actions cancelButtonText =
     }
 
 
+{-| Default Confirm Option
+-}
 defaultConfirmOption : String -> Confirm
 defaultConfirmOption message =
     { title = Nothing
@@ -125,6 +150,8 @@ defaultConfirmOption message =
     }
 
 
+{-| Default Login Option
+-}
 defaultLoginOption : String -> Login
 defaultLoginOption message =
     { title = Nothing
@@ -139,6 +166,8 @@ defaultLoginOption message =
     }
 
 
+{-| Default Prompt Option
+-}
 defaultPromptOption : String -> Prompt
 defaultPromptOption message =
     { title = Nothing
@@ -152,61 +181,85 @@ defaultPromptOption message =
     }
 
 
+{-| Setter for title
+-}
 setTitle : String -> { a | title : Maybe String } -> { a | title : Maybe String }
 setTitle title record =
     { record | title = Just title }
 
 
+{-| Setter for okButtonText
+-}
 setOkButtonText : String -> { a | okButtonText : Maybe String } -> { a | okButtonText : Maybe String }
 setOkButtonText okButtonText record =
     { record | okButtonText = Just okButtonText }
 
 
+{-| Setter for cancelButtonText
+-}
 setCancelButtonText : String -> { a | cancelButtonText : Maybe String } -> { a | cancelButtonText : Maybe String }
 setCancelButtonText cancelButtonText record =
     { record | cancelButtonText = Just cancelButtonText }
 
 
+{-| Setter for neutralButtonText
+-}
 setNeutralButtonText : String -> { a | neutralButtonText : Maybe String } -> { a | neutralButtonText : Maybe String }
 setNeutralButtonText neutralButtonText record =
     { record | neutralButtonText = Just neutralButtonText }
 
 
+{-| Setter for defaultText
+-}
 setDefaultText : String -> { a | defaultText : Maybe String } -> { a | defaultText : Maybe String }
 setDefaultText defaultText record =
     { record | defaultText = Just defaultText }
 
 
+{-| Setter for capitalizationType
+-}
 setCapitalizationType : String -> { a | capitalizationType : Maybe String } -> { a | capitalizationType : Maybe String }
 setCapitalizationType capitalizationType record =
     { record | capitalizationType = Just capitalizationType }
 
 
+{-| Setter for inputType
+-}
 setInputType : String -> { a | inputType : Maybe String } -> { a | inputType : Maybe String }
 setInputType inputType record =
     { record | inputType = Just inputType }
 
 
+{-| Setter for userNameHint
+-}
 setUserNameHint : String -> { a | userNameHint : Maybe String } -> { a | userNameHint : Maybe String }
 setUserNameHint userNameHint record =
     { record | userNameHint = Just userNameHint }
 
 
+{-| Setter for userName
+-}
 setUserName : String -> { a | userName : Maybe String } -> { a | userName : Maybe String }
 setUserName userName record =
     { record | userName = Just userName }
 
 
+{-| Setter for passwordHint
+-}
 setPasswordHint : String -> { a | passwordHint : Maybe String } -> { a | passwordHint : Maybe String }
 setPasswordHint passwordHint record =
     { record | passwordHint = Just passwordHint }
 
 
+{-| Setter for password
+-}
 setPassword : String -> { a | password : Maybe String } -> { a | password : Maybe String }
 setPassword password record =
     { record | password = Just password }
 
 
+{-| Setter for androidOnlyCancelable
+-}
 setAndroidOnlyCancelable : Bool -> { a | androidOnlyCancelable : Maybe Bool } -> { a | androidOnlyCancelable : Maybe Bool }
 setAndroidOnlyCancelable androidOnlyCancelable record =
     { record | androidOnlyCancelable = Just androidOnlyCancelable }
@@ -354,6 +407,8 @@ taskportNamespace =
     inNamespace "hariroshan/elm-native" "v1"
 
 
+{-| Creates Alert Dialog Task
+-}
 alert : Alert -> Task ()
 alert =
     callNS
@@ -363,6 +418,8 @@ alert =
         }
 
 
+{-| Creates Action Dialog Task
+-}
 action : Action -> Task String
 action =
     callNS
@@ -372,6 +429,8 @@ action =
         }
 
 
+{-| Creates Confirm Dialog Task
+-}
 confirm : Confirm -> Task Bool
 confirm =
     callNS
@@ -381,6 +440,8 @@ confirm =
         }
 
 
+{-| Creates Login Dialog Task
+-}
 login : Login -> Task LoginResult
 login =
     callNS
@@ -390,6 +451,8 @@ login =
         }
 
 
+{-| Creates Prompt Dialog Task
+-}
 prompt : Prompt -> Task PromptResult
 prompt =
     callNS

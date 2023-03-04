@@ -3,12 +3,12 @@ module Native.Frame exposing
     , TransitionCurve(..)
     , TransitionName(..)
     , defaultNavigationOptions
-    , view
     , goBack
     , goTo
     , handleBack
     , init
     , mapCurrentPage
+    , view
     , setAnimated
     , setBackstackVisible
     , setClearHistory
@@ -17,11 +17,47 @@ module Native.Frame exposing
     , setTransitioniOS
     )
 
+{-| Frame handles all the navigations between pages, tracks history and so on.
+
+Represents the logical View unit that is responsible for navigation within an application. Nested frames are supported, enabling hierarchical navigation scenarios.
+
+
+# Types
+
+@docs Model
+@docs TransitionCurve
+@docs TransitionName
+
+
+# Functions
+
+@docs defaultNavigationOptions
+@docs goBack
+@docs goTo
+@docs handleBack
+@docs init
+@docs mapCurrentPage
+@docs view
+
+
+# Setter
+
+@docs setAnimated
+@docs setBackstackVisible
+@docs setClearHistory
+@docs setTransition
+@docs setTransitionAndroid
+@docs setTransitioniOS
+
+-}
+
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (property)
 import Json.Encode as E
 
 
+{-| Model that holds the frame related data responsible for page rendering and clearing
+-}
 type alias Model page =
     { current : page
     , history : List page
@@ -30,6 +66,8 @@ type alias Model page =
     }
 
 
+{-| Transistion animations supported by frame while navigating to/back page
+-}
 type TransitionName
     = IosOnlyCurlUp
     | IosOnlyCurlDown
@@ -43,6 +81,8 @@ type TransitionName
     | SlideBottom
 
 
+{-| Animation for transition animation
+-}
 type TransitionCurve
     = Ease
     | EaseIn
@@ -53,6 +93,8 @@ type TransitionCurve
     | CubicBezier ( Float, Float ) ( Float, Float )
 
 
+{-| Transition options
+-}
 type alias Transition =
     { name : Maybe TransitionName
     , duration : Maybe Int
@@ -143,6 +185,8 @@ encodeTransition transition =
         |> E.object
 
 
+{-| NavigationOptions is used to configure navigation while navigating to a page
+-}
 type alias NavigationOptions =
     { animated : Maybe Bool
     , transition : Maybe Transition
@@ -166,6 +210,8 @@ encodeNavigationOptions navOptions =
         |> E.object
 
 
+{-| Default navigation options
+-}
 defaultNavigationOptions : NavigationOptions
 defaultNavigationOptions =
     { animated = Nothing
@@ -177,36 +223,50 @@ defaultNavigationOptions =
     }
 
 
+{-| Setters for animated
+-}
 setAnimated : b -> { a | animated : Maybe b } -> { a | animated : Maybe b }
 setAnimated val mod =
     { mod | animated = Just val }
 
 
+{-| Setters for transition
+-}
 setTransition : b -> { a | transition : Maybe b } -> { a | transition : Maybe b }
 setTransition val mod =
     { mod | transition = Just val }
 
 
+{-| Setters for transitioniOS
+-}
 setTransitioniOS : b -> { a | transitioniOS : Maybe b } -> { a | transitioniOS : Maybe b }
 setTransitioniOS val mod =
     { mod | transitioniOS = Just val }
 
 
+{-| Setters for transitionAndroid
+-}
 setTransitionAndroid : b -> { a | transitionAndroid : Maybe b } -> { a | transitionAndroid : Maybe b }
 setTransitionAndroid val mod =
     { mod | transitionAndroid = Just val }
 
 
+{-| Setters for backstackVisible
+-}
 setBackstackVisible : b -> { a | backstackVisible : Maybe b } -> { a | backstackVisible : Maybe b }
 setBackstackVisible val mod =
     { mod | backstackVisible = Just val }
 
 
+{-| Setters for clearHistory
+-}
 setClearHistory : b -> { a | clearHistory : Maybe b } -> { a | clearHistory : Maybe b }
 setClearHistory val mod =
     { mod | clearHistory = Just val }
 
 
+{-| Renders the page on to mobile screen
+-}
 view : List (Attribute msg) -> (page -> Html msg) -> Model page -> Html msg
 view attrs getPage frameModel =
     let
@@ -227,6 +287,8 @@ view attrs getPage frameModel =
         history
 
 
+{-| Map function for mapping current page
+-}
 mapCurrentPage : (page -> page) -> Model page -> Model page
 mapCurrentPage mapFx frameModel =
     { frameModel
@@ -236,6 +298,8 @@ mapCurrentPage mapFx frameModel =
     }
 
 
+{-| init function to initalize frame model
+-}
 init : page -> Model page
 init currentPage =
     { current = currentPage
@@ -245,6 +309,8 @@ init currentPage =
     }
 
 
+{-| Used to sync pages and history when nativescript navigates to different page.
+-}
 handleBack : Bool -> Model page -> Model page
 handleBack isBackNavigation model =
     if not isBackNavigation then
@@ -263,11 +329,15 @@ handleBack isBackNavigation model =
                 }
 
 
+{-| Allows frame to go back to previous page
+-}
 goBack : Model page -> Model page
 goBack model =
     { model | popStack = True }
 
 
+{-| Allows frame to move to next page
+-}
 goTo : page -> Maybe NavigationOptions -> Model page -> Model page
 goTo page maybeNavigationOptions model =
     { model
