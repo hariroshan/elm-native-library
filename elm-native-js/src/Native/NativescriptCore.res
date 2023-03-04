@@ -1,6 +1,7 @@
 type rootLayout
 
 module AnimationCurve = {
+  /* This function returns an object, but for simplicity we will say it returns string */
   type animationCurve = {cubicBezier: (. float, float, float, float) => string}
 
   %%private(
