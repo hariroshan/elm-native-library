@@ -33,7 +33,9 @@ module Native exposing
     , timePicker
     , webView
     )
-
+{-|
+This library should be used with [elm-native](https://github.com/hariroshan/elm-native) JS library
+-}
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (attribute)
 import Json.Encode as E
