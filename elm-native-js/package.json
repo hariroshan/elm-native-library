@@ -4,7 +4,7 @@
   "description": "Nativescript bindings for elm using custom HTML elements",
   "main": "index.js",
   "author": "Hari Roshan",
-  "license": "MIT",
+  "license": "GNU AGPLv3",
   "private": true,
   "scripts": {
     "postinstall": "rescript"
