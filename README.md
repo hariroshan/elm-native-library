@@ -43,11 +43,22 @@ Use the attributes from `Native.Attributes` and NOT `Html.Attributes`
 
 More features will be added soon.
 
+This project tooks months of research and days of work. If you feel like it is valuable to the elm community, [please consider supporting this project](https://github.com/sponsors/hariroshan)
+
+## Get Started
+
+1. Clone the blank template
+
+    ```sh
+    git clone https://github.com/hariroshan/template-blank-elm
+    ```
+
+2. Install dependencies using `yarn` or `npm install`
+3. Follow the instructions to setup your [development enviroment](https://docs.nativescript.org/environment-setup.html)
+4. Run project using `yarn run run:ios` or `npm run run:ios`
+
 ## TODO
 
-- [ ] Write docs for attributes
 - [ ] Convert raw js into rescript
 - [ ] Build a starter template with elm support with bindings pre-installed
 - [ ] Support animations
-- [ ] Split project into different modules, publish library in elm and npm
-- [ ] Use taskport to build typesafe nativescipt api calls.
