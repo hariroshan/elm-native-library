@@ -43,7 +43,7 @@ Use the attributes from `Native.Attributes` and NOT `Html.Attributes`
 
 More features will be added soon.
 
-This project tooks months of research and days of work. If you feel like it is valuable to the elm community, [please consider supporting this project](https://github.com/sponsors/hariroshan)
+This project tooks months of research and days of work. If you feel like it is valuable to the elm community, **[please consider supporting this project](https://github.com/sponsors/hariroshan)**
 
 ## Get Started
 
