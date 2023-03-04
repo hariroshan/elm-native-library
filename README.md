@@ -28,6 +28,8 @@ When we listen for / receive an event,
 
 Consider this flow while building an application. This will help you to overcome performance issues if you encounter them.
 
+Use the attributes from `Native.Attributes` and NOT `Html.Attributes`
+
 ### Supported Features
 
 - Dialog

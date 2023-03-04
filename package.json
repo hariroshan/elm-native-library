@@ -3,6 +3,7 @@
   "main": "app/app.js",
   "version": "1.0.0",
   "private": true,
+  "license": "AGPL-3.0",
   "scripts": {
     "run:ios": "ns run ios",
     "debug:ios": "ns debug ios",

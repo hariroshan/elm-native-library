@@ -153,43 +153,8 @@ update msg model =
 
 
 {-
-   , Native.button [ NA.text "Tap", Event.on "tap" (D.succeed Inc) ] []
-      Native.datePicker
-          [ NA.year "1980"
-          , NA.month "4"
-          , NA.day "20"
-          , NA.minDate "1980-02-01"
-          ]
-          []
-          , Native.htmlView
-          [ NA.html """
-          <!DOCTYPE html>
-          <html>
-              <head>
-              </head>
-              <body>
-                  <span style="color: green">Hello World</span>
-              </body>
-          </html>
-          """
-          ]
-          []
 
-          Native.label [ NA.textWrap "true" ]
-                              [ Native.formattedString []
-                                  [ Native.span
-                                      [ NA.text "red"
-                                      , NA.style "color: red"
-                                      ]
-                                      []
-                                  ]
-                              ]
 
-           Native.activityIndicator
-                   [ NA.busy "true"
-                   , NA.color "#610fc8"
-                   ]
-                   []
            Layout.asElement <|
                    Layout.flexboxLayout
                        [ NA.flexDirection "column"
@@ -202,30 +167,6 @@ update msg model =
                            ]
                            []
                        ]
-
-           Native.progress
-                   [ NA.value "50"
-                   , NA.maxValue "100"
-                   , NA.backgroundColor "red"
-                   , NA.color "green"
-                   , NA.scaleY "2"
-                   ]
-                   []
-           Native.label
-                   [ NA.text "Elm Counter"
-                   , NA.textAlignment "center"
-                   , NA.color "#610fc8"
-                   , NA.fontSize "40"
-                   ]
-                   []
-
-           , Native.listPicker
-               [ E.list E.string
-                   [ "2022", "2021", "2020" ]
-                   |> NA.items
-               , NA.selectedIndex "1"
-               ]
-               []
 
        Native.listView
                [ E.list E.int [ 2022, 2021, 2020, 2019, 2018, 2017 ] |> NA.items
