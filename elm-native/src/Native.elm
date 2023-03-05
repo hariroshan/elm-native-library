@@ -33,7 +33,7 @@ module Native exposing
     , webView
     )
 
-{-| This library should be used with [elm-native](https://github.com/hariroshan/elm-native) JS library
+{-| This library should be used with [elm-native](https://github.com/hariroshan/elm-native-library) JS library
 
 We will use [CustomElements](https://guide.elm-lang.org/interop/custom_elements.html) feature to create mobile UI elements with nativescript objects and control the nativescript object from elm.
 

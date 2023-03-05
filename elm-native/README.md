@@ -1,6 +1,6 @@
 # Elm bindings for Nativescript
 
-This library should be used with [elm-native](https://github.com/hariroshan/elm-native) JS library
+This library should be used with [elm-native](https://github.com/hariroshan/elm-native-library) JS library
 
 We can build mobile apps with elm and Nativescript API now. And the best part is `elm/http` is supported.
 

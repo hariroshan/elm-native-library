@@ -1,6 +1,6 @@
 {
   "name": "elm-native-js",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Nativescript bindings for elm using custom HTML elements",
   "keywords": ["elm", "elm-native", "nativescript", "elm mobile"],
   "main": "index.js",
@@ -19,7 +19,7 @@
     "typescript": "^4.9.4"
   },
   "repository": {
-    "url": "https://github.com/hariroshan/elm-native"
+    "url": "https://github.com/hariroshan/elm-native-library"
   },
   "funding": "https://github.com/sponsors/hariroshan"
 }
