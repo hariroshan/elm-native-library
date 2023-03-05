@@ -2,6 +2,7 @@
   "name": "elm-native-js",
   "version": "1.0.0",
   "description": "Nativescript bindings for elm using custom HTML elements",
+  "keywords": ["elm", "elm-native", "nativescript", "elm mobile"],
   "main": "index.js",
   "author": "Hari Roshan",
   "license": "AGPL-3.0",
