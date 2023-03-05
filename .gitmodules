@@ -1,0 +1,3 @@
+[submodule "elm-native"]
+	path = elm-native
+	url = ./elm-native
