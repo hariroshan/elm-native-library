@@ -18,5 +18,8 @@
   "devDependencies": {
     "typescript": "^4.9.4"
   },
+  "repository": {
+    "url": "https://github.com/hariroshan/elm-native"
+  },
   "funding": "https://github.com/sponsors/hariroshan"
 }
