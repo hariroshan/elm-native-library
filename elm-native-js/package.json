@@ -1,6 +1,6 @@
 {
   "name": "elm-native-js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Nativescript bindings for elm using custom HTML elements",
   "keywords": ["elm", "elm-native", "nativescript", "elm mobile"],
   "main": "index.js",

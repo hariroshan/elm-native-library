@@ -57,71 +57,73 @@ let addView: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
 
-        const children = Array.from(parentElement.children)
-        const hasActionBar = children.some(x => x.tagName.toLowerCase() === "ns-action-bar")
-        const index = children.indexOf(thisElement)
-        const currentIdx = hasActionBar ? index - 1 : index
+        requestAnimationFrame(() => {
+            const children = Array.from(parentElement.children)
+            const hasActionBar = children.some(x => x.tagName.toLowerCase() === "ns-action-bar")
+            const index = children.indexOf(thisElement)
+            const currentIdx = hasActionBar ? index - 1 : index
 
-        if(parentElement.data.insertChild)
-          return parentElement.data.insertChild(thisElement.data, currentIdx)
+            if(parentElement.data.insertChild)
+              return parentElement.data.insertChild(thisElement.data, currentIdx)
 
-        if (parentElement.data.constructor.name == "TabViewItem")
-          return (parentElement.data.view = thisElement.data)
+            if (parentElement.data.constructor.name == "TabViewItem")
+              return (parentElement.data.view = thisElement.data)
 
-        if (parentElement.data.constructor.name == "ActionBar")
-          return (parentElement.data.titleView = thisElement.data)
+            if (parentElement.data.constructor.name == "ActionBar")
+              return (parentElement.data.titleView = thisElement.data)
 
-        if (parentElement.data.constructor.name == "ActionItem")
-          return (parentElement.data.actionView = thisElement.data)
+            if (parentElement.data.constructor.name == "ActionItem")
+              return (parentElement.data.actionView = thisElement.data)
 
-        if (parentElement.data.constructor.name == "ListView") {
-          if(children.length == 1) {
-            parentElement.data.itemTemplate =
-              function() {
-                const div = document.createElement("div")
-                const cloned = thisElement.cloneAll()
-                div.appendChild(cloned)
-                cloned.manualRender()
-                return cloned.data;
+            if (parentElement.data.constructor.name == "ListView") {
+              if(children.length == 1) {
+                parentElement.data.itemTemplate =
+                  function() {
+                    const div = document.createElement("div")
+                    const cloned = thisElement.cloneAll()
+                    div.appendChild(cloned)
+                    cloned.manualRender()
+                    return cloned.data;
+                  }
+                return
               }
-            return
-          }
 
-          if(parentElement.data.itemTemplates != null) return
+              if(parentElement.data.itemTemplates != null) return
 
-          const keyedTemplates =
-              children.map(
-                child =>
-                    ({
-                      key: child.getAttribute("key"),
-                      createView:
-                        function () {
-                          const div = document.createElement("div")
-                          const cloned = child.cloneAll()
-                          div.appendChild(cloned)
-                          cloned.manualRender()
-                          return cloned.data;
-                        }
-                    })
-              )
+              const keyedTemplates =
+                  children.map(
+                    child =>
+                        ({
+                          key: child.getAttribute("key"),
+                          createView:
+                            function () {
+                              const div = document.createElement("div")
+                              const cloned = child.cloneAll()
+                              div.appendChild(cloned)
+                              cloned.manualRender()
+                              return cloned.data;
+                            }
+                        })
+                  )
 
-          const expression =
-            Types.makeAssignmentValue(
-              parentElement.getAttribute("item-template-selector")
-            )
+              const expression =
+                Types.makeAssignmentValue(
+                  parentElement.getAttribute("item-template-selector")
+                )
 
-          parentElement.data.itemTemplateSelector = ($value, $index, _) => {
-            // Mangling the variable can affect the variables used in the expression
-            const replacedExpression = expression[0]
-              .replaceAll("$value", Object.keys({$value})[0])
-              .replaceAll("$index", Object.keys({$index})[0])
-            return eval(replacedExpression)
-          }
-          parentElement.data.itemTemplates = keyedTemplates
-          return
-        }
+              parentElement.data.itemTemplateSelector = ($value, $index, _) => {
+                // Mangling the variable can affect the variables used in the expression
+                const replacedExpression = expression[0]
+                  .replaceAll("$value", Object.keys({$value})[0])
+                  .replaceAll("$index", Object.keys({$index})[0])
+                return eval(replacedExpression)
+              }
+              parentElement.data.itemTemplates = keyedTemplates
+              return
+            }
 
-        return (parentElement.data.content = thisElement.data)
+            return (parentElement.data.content = thisElement.data)
+        })
     }
     `)
 
@@ -129,9 +131,11 @@ let addFormattedText: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
 
-        const children = Array.from(parentElement.children)
-        const index = children.indexOf(thisElement)
-        parentElement.data.formattedText = thisElement.data
+        requestAnimationFrame(() => {
+          const children = Array.from(parentElement.children)
+          const index = children.indexOf(thisElement)
+          parentElement.data.formattedText = thisElement.data
+        })
     }
     `)
 
@@ -139,9 +143,11 @@ let addSpan: (. Types.htmlElement, Types.htmlElement) => unit = %raw(`
     function(parentElement, thisElement) {
         if (parentElement.data == null) return
 
-        const children = Array.from(parentElement.children)
-        const index = children.indexOf(thisElement)
-        parentElement.data.spans.push(thisElement.data)
+        requestAnimationFrame(() => {
+          const children = Array.from(parentElement.children)
+          const index = children.indexOf(thisElement)
+          parentElement.data.spans.push(thisElement.data)
+        })
     }
     `)
 
