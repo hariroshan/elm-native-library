@@ -30,7 +30,7 @@ Consider this flow while building an application. This will help you to overcome
 
 Use the attributes from `Native.Attributes` and NOT `Html.Attributes`
 
-Checkout [examples](./examples/README.md)
+Checkout [examples](./examples)
 
 ### Supported Features
 
