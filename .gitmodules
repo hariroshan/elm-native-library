@@ -4,3 +4,6 @@
 [submodule "examples/ex1-counter"]
 	path = examples/ex1-counter
 	url = https://github.com/hariroshan/ex1-counter.git
+[submodule "examples/ex2-weather"]
+	path = examples/ex2-weather
+	url = https://github.com/hariroshan/ex2-weather
