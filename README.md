@@ -4,7 +4,7 @@ Build mobile apps with elm using NativeScript API. `elm/http` works with this li
 
 We can build simple apps like counter
 
-https://github.com/hariroshan/elm-native-library/blob/master/doc/counter.mp4
+https://user-images.githubusercontent.com/5707049/224556167-e4cc713f-79da-4c75-b1c6-9333d911f2f3.mp4
 
 or something like a blog
 
