@@ -12,6 +12,7 @@ type rec context = {
   isAndroid: bool,
   taskportInit: unit => unit,
   initPorts: Js.Nullable.t<Obj.t => unit>,
+  customElements: Js.Nullable.t<array<Types.customElement>>,
   withCustomElements: (. Obj.t, Types.handler) => Obj.t,
   elements: array<Types.customElement>,
   run: unit => unit,
@@ -32,10 +33,15 @@ type rec context = {
   let initElements = (params: context) => {
     let htmlElement = params.window->Mock.hTMLElement
     let customElements = params.window->Mock.customElements
-
-    params.elements->Belt.Array.forEach(element => {
+    let defineElements = (element: Types.customElement) => {
       let newClass = params.withCustomElements(. htmlElement, element.handler)
       customElements.define(. element.tagName, newClass)
+    }
+    params.elements->Belt.Array.forEach(defineElements)
+    params.customElements
+    ->Js.Nullable.toOption
+    ->Belt.Option.forEach((customElementsArray: array<Types.customElement>) => {
+      customElementsArray->Belt.Array.forEach(defineElements)
     })
   }
 )
@@ -45,6 +51,7 @@ type config = {
   elmModuleName: string,
   flags: Js.Nullable.t<Obj.t>,
   initPorts: Js.Nullable.t<Obj.t => unit>,
+  customElements: Js.Nullable.t<array<Types.customElement>>,
 }
 
 let start: config => unit = config => {
@@ -61,6 +68,7 @@ let start: config => unit = config => {
     initElements,
     flags: config.flags,
     initPorts: config.initPorts,
+    customElements: config.customElements,
     isIOS: Types.isIOS,
     isAndroid: Types.isAndroid,
     elm: config.elmModule,
