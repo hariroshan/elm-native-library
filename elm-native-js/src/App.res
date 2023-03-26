@@ -82,7 +82,7 @@ let start: config => unit = config => {
     node: document.getElementById('${elmRoot}'),
     flags: flags
   })
-  if(initPorts != null) initPorts(el.ports)
+  if(el != null && initPorts != null) initPorts(el.ports)
    `
 
   let html = `<html><head><title>App</title></head><body><div id='${elmRoot}'></div></body></html>`
