@@ -12,3 +12,5 @@ export var all: {
     };
 }[];
 import * as NativescriptCore from "./NativescriptCore.bs.js";
+
+export function buildHandler(newFunction: () => any, observedAttributes: string[], render) : void
