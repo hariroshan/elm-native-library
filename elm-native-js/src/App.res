@@ -13,6 +13,7 @@ type rec context = {
   taskportInit: unit => unit,
   initPorts: Js.Nullable.t<Obj.t => unit>,
   customElements: Js.Nullable.t<array<Types.customElement>>,
+  extendCustomElements: Js.Nullable.t<(. string, Obj.t) => Obj.t>,
   withCustomElements: (. Obj.t, Types.handler) => Obj.t,
   elements: array<Types.customElement>,
   run: unit => unit,
@@ -35,7 +36,14 @@ type rec context = {
     let customElements = params.window->Mock.customElements
     let defineElements = (element: Types.customElement) => {
       let newClass = params.withCustomElements(. htmlElement, element.handler)
-      customElements.define(. element.tagName, newClass)
+      let extendedClass =
+        params.extendCustomElements
+        ->Js.Nullable.toOption
+        ->Belt.Option.mapWithDefault(newClass, (fx: (. string, Obj.t) => Obj.t) =>
+          fx(. element.tagName, newClass)
+        )
+
+      customElements.define(. element.tagName, extendedClass)
     }
     params.elements->Belt.Array.forEach(defineElements)
     params.customElements
@@ -52,6 +60,7 @@ type config = {
   flags: Js.Nullable.t<Obj.t>,
   initPorts: Js.Nullable.t<Obj.t => unit>,
   customElements: Js.Nullable.t<array<Types.customElement>>,
+  extendCustomElements: Js.Nullable.t<(. string, Obj.t) => Obj.t>,
 }
 
 let start: config => unit = config => {
@@ -69,6 +78,7 @@ let start: config => unit = config => {
     flags: config.flags,
     initPorts: config.initPorts,
     customElements: config.customElements,
+    extendCustomElements: config.extendCustomElements,
     isIOS: Types.isIOS,
     isAndroid: Types.isAndroid,
     elm: config.elmModule,

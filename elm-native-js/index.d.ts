@@ -1,6 +1,7 @@
 import * as NativescriptCore from "./types/Native/NativescriptCore.bs";
 declare function render(current: any, param: any): void;
 
+type htmlElementClass = any
 type nativeObject = any
 type port = any
 /* You don't have to build this object from scratch. You can use helper function in
@@ -58,6 +59,7 @@ type config = {
   start(config)
   */
   customElements?: customElement[],
+  extendCustomElements?: (tagName: string, htmlElementClass: htmlElementClass) => htmlElementClass
 }
 
 export function start(config: config): void;
