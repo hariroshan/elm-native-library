@@ -1,22 +1,52 @@
-import Elm from "./src/Details.elm";
+import Elm from "./src/Flick.elm";
 import { start } from "../elm-native-js"
-import { knownFolders, path, ImageSource } from '@nativescript/core'
-import * as imagePicker from '@nativescript/imagepicker'
+import { AnimatedCircle } from "@nativescript/animated-circle";
+import { kebabCased, view } from "../elm-native-js/src/Native/Constants.bs"
+import { buildHandler, addViewRender } from "../elm-native-js/src/Native/Elements.bs"
 
-function getImageTempFolder() {
-  return knownFolders.temp().getFolder("nsimagepicker")
-}
+// import { knownFolders, path, ImageSource } from '@nativescript/core'
+// import * as imagePicker from '@nativescript/imagepicker'
 
-function clearImageTempFolder() {
-  getImageTempFolder().clear()
-}
+// function getImageTempFolder() {
+//   return knownFolders.temp().getFolder("nsimagepicker")
+// }
+
+// function clearImageTempFolder() {
+//   getImageTempFolder().clear()
+// }
+
+const animatedCircleAttributes =
+  ["backgroundColor",
+  "width",
+  "height",
+  "animated",
+  "animateFrom",
+  "rimColor",
+  "barColor",
+  "fillColor",
+  "clockwise",
+  "rimWidth",
+  "progress",
+  "text",
+  "textSize",
+  "textColor"].map(kebabCased)
 
 
 start(
   {
     elmModule: Elm,
-    elmModuleName: "Details",
-    initPorts: elmPorts => {
+    elmModuleName: "Flick",
+    customElements: [
+      {
+        tagName: 'ns-animated-circle',
+        handler: buildHandler(
+          () => new AnimatedCircle(),
+          view.concat(animatedCircleAttributes),
+          addViewRender
+        )
+      }
+    ]
+    /* initPorts: elmPorts => {
       elmPorts.pickImage.subscribe(_ => {
         // Clear the temp foler
         clearImageTempFolder()
@@ -47,7 +77,7 @@ start(
           .catch((errorMessage) => console.log(errorMessage))
 
       })
-    }
+    } */
   }
 )
 /*

@@ -9,6 +9,7 @@
     "build:webpack": "webpack --mode development"
   },
   "dependencies": {
+    "@nativescript/animated-circle": "^1.1.7",
     "@nativescript/core": "~8.4.0",
     "@nativescript/imagepicker": "^1.0.9",
     "@nativescript/theme": "~3.0.2",

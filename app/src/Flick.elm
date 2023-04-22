@@ -1,6 +1,8 @@
 module Flick exposing (main)
 
 import Browser
+import Html exposing (node)
+import Html.Attributes exposing (attribute)
 import Json.Decode as D
 import Json.Encode as E
 import Native exposing (Native)
@@ -75,6 +77,7 @@ main =
 type NavPage
     = HomePage
     | DetailsPage
+    | AnimatedCircle
 
 
 type alias Model =
@@ -96,7 +99,7 @@ encodeFlix flick =
 
 init : ( Model, Cmd Msg )
 init =
-    ( { rootFrame = Frame.init HomePage
+    ( { rootFrame = Frame.init AnimatedCircle
       , picked = Nothing
       , flick =
             Native.makeListViewModel encodeFlix response
@@ -155,33 +158,33 @@ update msg model =
 {-
 
 
-           Layout.asElement <|
-                   Layout.flexboxLayout
-                       [ NA.flexDirection "column"
+       Layout.asElement <|
+               Layout.flexboxLayout
+                   [ NA.flexDirection "column"
+                   ]
+                   [ Native.listPicker
+                       [ E.list E.string
+                           [ "2022", "2021", "2020" ]
+                           |> NA.items
+                       , NA.selectedIndex "1"
                        ]
-                       [ Native.listPicker
-                           [ E.list E.string
-                               [ "2022", "2021", "2020" ]
-                               |> NA.items
-                           , NA.selectedIndex "1"
-                           ]
-                           []
-                       ]
+                       []
+                   ]
 
-       Native.listView
-               [ E.list E.int [ 2022, 2021, 2020, 2019, 2018, 2017 ] |> NA.items
-               , NA.itemTemplateSelector "{{ $value % 2 == 0 ? 'even' : 'odd' }}"
-               ]
-               [ Layout.asElement <|
-                   Layout.stackLayout
-                       [ NA.key "even" ]
-                       [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "green" ] []
-                       ]
-               , Layout.asElement <|
-                   Layout.stackLayout
-                       [ NA.key "odd" ]
-                       [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "red" ] [] ]
-               ]
+   Native.listView
+           [ E.list E.int [ 2022, 2021, 2020, 2019, 2018, 2017 ] |> NA.items
+           , NA.itemTemplateSelector "{{ $value % 2 == 0 ? 'even' : 'odd' }}"
+           ]
+           [ Layout.asElement <|
+               Layout.stackLayout
+                   [ NA.key "even" ]
+                   [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "green" ] []
+                   ]
+           , Layout.asElement <|
+               Layout.stackLayout
+                   [ NA.key "odd" ]
+                   [ Native.label [ NA.text "{{ $value.toString() }}", NA.color "red" ] [] ]
+           ]
 -}
 
 
@@ -299,6 +302,33 @@ detailsPage model =
                 )
 
 
+animatedCirclePage : Native Msg
+animatedCirclePage =
+    Page.pageWithActionBar Back
+        []
+        (Native.actionBar [ NA.title "Animated Circle" ] [])
+        (Layout.stackLayout [ NA.height "100%" ]
+            [ node "ns-animated-circle"
+                [ attribute "background-color" "transparent"
+                , attribute "width" "200"
+                , attribute "height" "200"
+                , attribute "animated" "true"
+                , attribute "animate-from" "0"
+                , attribute "rim-color" "#FF5722"
+                , attribute "bar-color" "#3D8FF4"
+                , attribute "fill-color" "#eee"
+                , attribute "clockwise" "true"
+                , attribute "rim-width" "5"
+                , attribute "progress" "50"
+                , attribute "text" "50%"
+                , attribute "text-size" "28"
+                , attribute "text-color" "red"
+                ]
+                []
+            ]
+        )
+
+
 getPage : Model -> NavPage -> Native Msg
 getPage model page =
     case page of
@@ -307,6 +337,9 @@ getPage model page =
 
         HomePage ->
             homePage model
+
+        AnimatedCircle ->
+            animatedCirclePage
 
 
 view : Model -> Native Msg
