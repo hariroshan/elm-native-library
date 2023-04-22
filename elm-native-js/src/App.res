@@ -91,7 +91,7 @@ let start: config => unit = config => {
       }),
   }
 
-  let defineCustomElements = `initElements({window, withCustomElements, elements})`
+  let defineCustomElements = `initElements({window, withCustomElements, elements, extendCustomElements, customElements})`
   let elmRoot = "elm-root"
 
   let elmInitScript = `
