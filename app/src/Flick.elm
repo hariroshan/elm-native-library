@@ -307,8 +307,7 @@ animatedCirclePage =
     Page.pageWithActionBar Back
         []
         (Native.actionBar [ NA.title "Animated Circle" ] [])
-        (Layout.stackLayout [ NA.height "100%" ]
-            [ node "ns-animated-circle"
+        (node "ns-animated-circle"
                 [ attribute "background-color" "transparent"
                 , attribute "width" "200"
                 , attribute "height" "200"
@@ -324,10 +323,7 @@ animatedCirclePage =
                 , attribute "text-size" "28"
                 , attribute "text-color" "red"
                 ]
-                []
-            ]
-        )
-
+                [])
 
 getPage : Model -> NavPage -> Native Msg
 getPage model page =
