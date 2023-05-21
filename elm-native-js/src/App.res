@@ -12,6 +12,8 @@ type rec context = {
   isAndroid: bool,
   taskportInit: unit => unit,
   initPorts: Js.Nullable.t<Obj.t => unit>,
+  customElements: Js.Nullable.t<array<Types.customElement>>,
+  extendCustomElements: Js.Nullable.t<(. string, Obj.t) => Obj.t>,
   withCustomElements: (. Obj.t, Types.handler) => Obj.t,
   elements: array<Types.customElement>,
   run: unit => unit,
@@ -32,10 +34,22 @@ type rec context = {
   let initElements = (params: context) => {
     let htmlElement = params.window->Mock.hTMLElement
     let customElements = params.window->Mock.customElements
-
-    params.elements->Belt.Array.forEach(element => {
+    let defineElements = (element: Types.customElement) => {
       let newClass = params.withCustomElements(. htmlElement, element.handler)
-      customElements.define(. element.tagName, newClass)
+      let extendedClass =
+        params.extendCustomElements
+        ->Js.Nullable.toOption
+        ->Belt.Option.mapWithDefault(newClass, (fx: (. string, Obj.t) => Obj.t) =>
+          fx(. element.tagName, newClass)
+        )
+
+      customElements.define(. element.tagName, extendedClass)
+    }
+    params.elements->Belt.Array.forEach(defineElements)
+    params.customElements
+    ->Js.Nullable.toOption
+    ->Belt.Option.forEach((customElementsArray: array<Types.customElement>) => {
+      customElementsArray->Belt.Array.forEach(defineElements)
     })
   }
 )
@@ -45,6 +59,8 @@ type config = {
   elmModuleName: string,
   flags: Js.Nullable.t<Obj.t>,
   initPorts: Js.Nullable.t<Obj.t => unit>,
+  customElements: Js.Nullable.t<array<Types.customElement>>,
+  extendCustomElements: Js.Nullable.t<(. string, Obj.t) => Obj.t>,
 }
 
 let start: config => unit = config => {
@@ -61,6 +77,8 @@ let start: config => unit = config => {
     initElements,
     flags: config.flags,
     initPorts: config.initPorts,
+    customElements: config.customElements,
+    extendCustomElements: config.extendCustomElements,
     isIOS: Types.isIOS,
     isAndroid: Types.isAndroid,
     elm: config.elmModule,
@@ -73,7 +91,7 @@ let start: config => unit = config => {
       }),
   }
 
-  let defineCustomElements = `initElements({window, withCustomElements, elements})`
+  let defineCustomElements = `initElements({window, withCustomElements, elements, extendCustomElements, customElements})`
   let elmRoot = "elm-root"
 
   let elmInitScript = `
@@ -82,7 +100,7 @@ let start: config => unit = config => {
     node: document.getElementById('${elmRoot}'),
     flags: flags
   })
-  if(initPorts != null) initPorts(el.ports)
+  if(el != null && initPorts != null) initPorts(el.ports)
    `
 
   let html = `<html><head><title>App</title></head><body><div id='${elmRoot}'></div></body></html>`

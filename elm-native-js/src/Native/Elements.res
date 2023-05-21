@@ -18,6 +18,8 @@ let buildHandler: (
   removeEventListener: NativescriptCore.removeEventListener,
 }
 
+let addViewRender: Js.Nullable.t<(. Types.htmlElement, Types.nativeObject) => unit> = makeRender(Helper.addView)
+
 module Label = {
   %%private(
     @module("@nativescript/core") @new
@@ -25,7 +27,7 @@ module Label = {
   )
   let tagName = "ns-label"
 
-  let handler: Types.handler = buildHandler(new, Constants.textBase, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.textBase, addViewRender)
 }
 
 module Button = {
@@ -35,7 +37,7 @@ module Button = {
   )
   let tagName = "ns-button"
 
-  let handler: Types.handler = buildHandler(new, Constants.button, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.button, addViewRender)
 }
 
 module Placeholder = {
@@ -45,7 +47,7 @@ module Placeholder = {
   )
   let tagName = "ns-placeholder"
 
-  let handler: Types.handler = buildHandler(new, Constants.view, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.view, addViewRender)
 }
 
 module ActionBar = {
@@ -99,7 +101,7 @@ module ActivityIndicator = {
   let handler: Types.handler = buildHandler(
     new,
     Constants.activityIndicator,
-    makeRender(Helper.addView),
+    addViewRender,
   )
 }
 
@@ -132,7 +134,7 @@ module DatePicker = {
   )
   let tagName = "ns-datepicker"
 
-  let handler: Types.handler = buildHandler(new, Constants.datePicker, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.datePicker, addViewRender)
 }
 module HtmlView = {
   %%private(
@@ -141,7 +143,7 @@ module HtmlView = {
   )
   let tagName = "ns-html-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.htmlView, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.htmlView, addViewRender)
 }
 module Image = {
   %%private(
@@ -150,7 +152,7 @@ module Image = {
   )
   let tagName = "ns-image"
 
-  let handler: Types.handler = buildHandler(new, Constants.image, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.image, addViewRender)
 }
 
 module Progress = {
@@ -160,7 +162,7 @@ module Progress = {
   )
   let tagName = "ns-progress"
 
-  let handler: Types.handler = buildHandler(new, Constants.progress, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.progress, addViewRender)
 }
 module ListPicker = {
   %%private(
@@ -189,7 +191,7 @@ module ScrollView = {
   )
   let tagName = "ns-scroll-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.scrollView, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.scrollView, addViewRender)
 }
 
 module SearchBar = {
@@ -199,7 +201,7 @@ module SearchBar = {
   )
   let tagName = "ns-search-bar"
 
-  let handler: Types.handler = buildHandler(new, Constants.searchBar, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.searchBar, addViewRender)
 }
 
 module SegmentedBar = {
@@ -209,7 +211,7 @@ module SegmentedBar = {
   )
   let tagName = "ns-segmented-bar"
 
-  let handler: Types.handler = buildHandler(new, Constants.segmentedBar, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.segmentedBar, addViewRender)
 }
 
 module SegmentedBarItem = {
@@ -233,7 +235,7 @@ module Slider = {
   )
   let tagName = "ns-slider"
 
-  let handler: Types.handler = buildHandler(new, Constants.slider, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.slider, addViewRender)
 }
 
 module Switch = {
@@ -246,7 +248,7 @@ module Switch = {
   let handler: Types.handler = buildHandler(
     new,
     Constants.switchComponent,
-    makeRender(Helper.addView),
+    addViewRender,
   )
 }
 
@@ -257,7 +259,7 @@ module TabView = {
   )
   let tagName = "ns-tab-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.tabView, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.tabView, addViewRender)
 }
 
 module TabViewItem = {
@@ -289,7 +291,7 @@ module TextField = {
   )
   let tagName = "ns-textfield"
 
-  let handler: Types.handler = buildHandler(new, Constants.textField, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.textField, addViewRender)
 }
 
 module TextView = {
@@ -299,7 +301,7 @@ module TextView = {
   )
   let tagName = "ns-text-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.textView, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.textView, addViewRender)
 }
 
 module TimePicker = {
@@ -309,7 +311,7 @@ module TimePicker = {
   )
   let tagName = "ns-time-picker"
 
-  let handler: Types.handler = buildHandler(new, Constants.timePicker, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.timePicker, addViewRender)
 }
 
 module WebView = {
@@ -319,7 +321,7 @@ module WebView = {
   )
   let tagName = "ns-web-view"
 
-  let handler: Types.handler = buildHandler(new, Constants.webView, makeRender(Helper.addView))
+  let handler: Types.handler = buildHandler(new, Constants.webView, addViewRender)
 }
 module ListView = {
   %%private(

@@ -243,6 +243,11 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
+"@nativescript/animated-circle@^1.1.7":
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/@nativescript/animated-circle/-/animated-circle-1.1.7.tgz#3421c9ec6c21b16c53e4a171c12e843bf0f3c563"
+  integrity sha512-TTU1vLjBDiV+yNUtCYkN8GDFLqib661ZwGJh04cQlwQ356dJ+J7AEWFQDx14xD1GtBSOKY3aCLglaCGNWZhzmw==
+
 "@nativescript/core@~8.4.0":
   version "8.4.3"
   resolved "https://registry.npmjs.org/@nativescript/core/-/core-8.4.3.tgz"
@@ -1191,11 +1196,17 @@ electron-to-chromium@^1.4.251:
   integrity sha512-M8WEXFuKXMYMVr45fo8mq0wUrrJHheiKZf6BArTKk9ZBYCKJEOU5H8cdWgDT+qCVZf7Na4lVUaZsA+h6uA9+PA==
 
 elm-native-js@./elm-native-js:
-  version "0.1.0"
+  version "1.1.0"
   dependencies:
+    elm-taskport "^2.0.1"
     happy-dom "^6.0.4"
     rescript "^10.0.1"
     vm-shim "^0.0.6"
+
+elm-taskport@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/elm-taskport/-/elm-taskport-2.0.1.tgz#abaf091db79971b8354ddc2652c6c0c7abd91b5b"
+  integrity sha512-8UgIjzmGuoU6Wt6VC0tkJnzvc5xHL5yH7GdN+/QNxaaA3ckoyveCtV0QJqNCRa42bpyR1JhOwLSApwf2Id5xZg==
 
 elm-webpack-loader@^8.0.0:
   version "8.0.0"

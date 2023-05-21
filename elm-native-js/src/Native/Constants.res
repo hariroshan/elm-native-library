@@ -4,7 +4,7 @@ let camelCased: string => string = %raw(`
   }
 `)
 
-let dashed: string => string = %raw(`
+let kebabCased: string => string = %raw(`
     function(str) {
         return str.replace(/[A-Z]/g, m => "-" + m.toLowerCase());
     }
@@ -130,12 +130,12 @@ let view: array<string> =
     "width",
     "key",
   ]
-  ->Belt.Array.map(dashed)
+  ->Belt.Array.map(kebabCased)
   ->prefixWithBind
 
 let paddings: array<string> =
   ["padding", "paddingBottom", "paddingLeft", "paddingRight", "paddingTop"]
-  ->Belt.Array.map(dashed)
+  ->Belt.Array.map(kebabCased)
   ->prefixWithBind
   ->prefixWithBind
 
@@ -143,7 +143,7 @@ let layoutBase: array<string> =
   [
     view,
     paddings,
-    ["clipToBounds", "isPassThroughParentEnabled"]->Belt.Array.map(dashed)->prefixWithBind,
+    ["clipToBounds", "isPassThroughParentEnabled"]->Belt.Array.map(kebabCased)->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let textBase: array<string> =
@@ -166,34 +166,34 @@ let textBase: array<string> =
       "whiteSpace",
       "textWrap",
     ]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let dockLayout: array<string> =
-  [layoutBase, ["stretchLastChild"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [layoutBase, ["stretchLastChild"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let gridLayout: array<string> =
-  [layoutBase, ["columns", "rows"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [layoutBase, ["columns", "rows"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let stackLayout: array<string> =
-  [layoutBase, ["orientation"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [layoutBase, ["orientation"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let wrapLayout: array<string> =
   [
     stackLayout,
-    ["itemHeight", "itemWidth"]->Belt.Array.map(dashed)->prefixWithBind,
+    ["itemHeight", "itemWidth"]->Belt.Array.map(kebabCased)->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let flexboxLayout: array<string> =
   [
     layoutBase,
     ["alignContent", "alignItems", "flexDirection", "flexWrap", "justifyContent"]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
-let button = [textBase, ["textWrap"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+let button = [textBase, ["textWrap"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let frameBase =
   [
@@ -205,7 +205,7 @@ let frameBase =
       "defaultAnimatedNavigation",
       "defaultTransition",
     ]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
@@ -220,32 +220,32 @@ let pageBase =
       "enableSwipeBackNavigation",
       "statusBarStyle",
     ]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let activityIndicator =
-  [view, ["busy"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [view, ["busy"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 /* for simplicity using view instead of viewBase */
 let formattedString =
   [
     view,
-    ["fontStyle", "style", "fontFamily", "fontWeight"]->Belt.Array.map(dashed)->prefixWithBind,
+    ["fontStyle", "style", "fontFamily", "fontWeight"]->Belt.Array.map(kebabCased)->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let span =
-  [formattedString, ["text"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [formattedString, ["text"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let datePicker =
   [
     view,
     ["date", "day", "iosPreferredDatePickerStyle", "maxDate", "minDate", "month", "year"]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
-let htmlView = [view, ["html"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+let htmlView = [view, ["html"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let image =
   [
@@ -260,15 +260,15 @@ let image =
       "stretch",
       "tintColor",
     ]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let listPicker =
-  [view, ["selectedIndex"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [view, ["selectedIndex"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let progress =
-  [view, ["maxValue", "value"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [view, ["maxValue", "value"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let scrollView =
   [
@@ -282,7 +282,7 @@ let scrollView =
       "scrollableWidth",
       "verticalOffset",
     ]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
@@ -290,27 +290,27 @@ let searchBar =
   [
     view,
     ["hint", "text", "textFieldBackgroundColor", "textFieldHintColor"]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let segmentedBarItem =
-  [view, ["title"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [view, ["title"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let segmentedBar =
   [
     view,
-    ["selectedBackgroundColor", "selectedIndex"]->Belt.Array.map(dashed)->prefixWithBind,
+    ["selectedBackgroundColor", "selectedIndex"]->Belt.Array.map(kebabCased)->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let slider =
   [
     view,
-    ["value", "minValue", "maxValue"]->Belt.Array.map(dashed)->prefixWithBind,
+    ["value", "minValue", "maxValue"]->Belt.Array.map(kebabCased)->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let switchComponent =
-  [view, ["checked"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [view, ["checked"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let tabView =
   [
@@ -327,14 +327,14 @@ let tabView =
       "tabTextColor",
       "tabTextFontSize",
     ]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let tabViewItem =
   [
     view,
-    ["canBeLoaded", "iconSource", "textTransform", "title"]->Belt.Array.map(dashed)->prefixWithBind,
+    ["canBeLoaded", "iconSource", "textTransform", "title"]->Belt.Array.map(kebabCased)->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let commonTextBase =
@@ -361,7 +361,7 @@ let commonTextBase =
     "updateTextTrigger",
     "whiteSpace",
   ]
-  ->Belt.Array.map(dashed)
+  ->Belt.Array.map(kebabCased)
   ->prefixWithBind
 
 let textField =
@@ -369,7 +369,7 @@ let textField =
     view,
     paddings,
     commonTextBase,
-    ["closeOnReturn", "secure", "secureWithoutAutofill"]->Belt.Array.map(dashed)->prefixWithBind,
+    ["closeOnReturn", "secure", "secureWithoutAutofill"]->Belt.Array.map(kebabCased)->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let textView =
@@ -377,7 +377,7 @@ let textView =
     view,
     paddings,
     commonTextBase,
-    ["maxLines"]->Belt.Array.map(dashed)->prefixWithBind,
+    ["maxLines"]->Belt.Array.map(kebabCased)->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let timePicker =
@@ -394,24 +394,24 @@ let timePicker =
       "minuteInterval",
       "time",
     ]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let webView =
   [
     view,
-    ["canGoBack", "canGoForward", "src"]->Belt.Array.map(dashed)->prefixWithBind,
+    ["canGoBack", "canGoForward", "src"]->Belt.Array.map(kebabCased)->prefixWithBind,
   ]->Belt.Array.concatMany
 
 let actionBar =
-  [view, ["title", "flat"]->Belt.Array.map(dashed)->prefixWithBind]->Belt.Array.concatMany
+  [view, ["title", "flat"]->Belt.Array.map(kebabCased)->prefixWithBind]->Belt.Array.concatMany
 
 let actionItem =
   [
     view,
     ["text", "icon", "ios.position", "android.position", "ios.systemIcon", "android.systemIcon"]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
@@ -421,13 +421,13 @@ let listView =
   [
     view,
     ["itemTemplateSelector", "iosEstimatedRowHeight", "rowHeight", "separatorColor"]
-    ->Belt.Array.map(dashed)
+    ->Belt.Array.map(kebabCased)
     ->prefixWithBind,
   ]->Belt.Array.concatMany
 
 // Js.log("****************************")
 // ["iosEstimatedRowHeight", "rowHeight", "separatorColor"]
-// ->Belt.Array.map(dashed)
+// ->Belt.Array.map(kebabCased)
 // ->Belt.Array.forEach(prop =>
 //   Js.log(
 //     `
