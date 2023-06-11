@@ -25,6 +25,7 @@ Consider this flow while building an application. This will help you to overcome
 - Navigating page back and forth using frame functions
 - Has bindings for all Nativescript UI elements
 - Calling methods/setting attributes in the event object within elm (Will be improved in future)
-- Simple and complex listviews templates and much more
+- Simple and complex listviews templates
+- Define and use custom nativescript elements / plugins and much more
 
 More features will be added soon.
