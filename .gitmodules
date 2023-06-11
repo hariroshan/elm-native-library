@@ -7,3 +7,6 @@
 [submodule "examples/ex2-weather"]
 	path = examples/ex2-weather
 	url = https://github.com/hariroshan/ex2-weather
+[submodule "examples/webgl-triangle"]
+	path = examples/webgl-triangle
+	url = https://github.com/hariroshan/webgl-triangle
